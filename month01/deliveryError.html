@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delivery Error Dashboard - Part 2</title>
+    
+    <!-- นำเข้าฟอนต์ Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- นำเข้า Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- ตั้งค่าฟอนต์เริ่มต้น -->
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #050505;
+            color: #ffffff;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 lg:p-12 antialiased selection:bg-[#4FD1C5]/30">
+
+    <div class="max-w-7xl mx-auto relative">
+        
+        <!-- เส้นคั่นตรงกลางแบบจางๆ สีส้ม (แสดงเฉพาะบนจอใหญ่) -->
+        <div class="hidden lg:block absolute left-1/2 top-4 bottom-4 w-px bg-gradient-to-b from-transparent via-orange-600/40 to-transparent -translate-x-1/2"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
+            
+            <!-- ================= ส่วนที่ 1 (ด้านซ้าย) ================= -->
+            <div class="flex flex-col space-y-8">
+                
+                <!-- หัวข้อหลัก -->
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold tracking-wide">
+                        <span class="text-[#4DA8DA]">ส่วนที่ 2</span> ข้อผิดพลาดจากการจัดส่ง
+                    </h1>
+                </div>
+
+                <!-- ทีมงาน -->
+                <div class="space-y-2">
+                    <h3 class="text-xl font-medium text-gray-200 mb-3">ทีมงานที่รับผิดชอบ</h3>
+                    <p class="text-gray-400 font-light">
+                        <span class="text-gray-300 font-medium">พนักงานจัดส่ง:</span> ไชยา, สุมาต, หนุ่ย, สุรชัย, นาวี,
+                    </p>
+                    <p class="text-gray-400 font-light">
+                        <span class="text-gray-300 font-medium">พนักงานขับรถ:</span> วิชัย, บูรพา, โย, เรืองยศ
+                    </p>
+                </div>
+
+                <!-- สรุปผล -->
+                <div class="pt-4">
+                    <h2 class="text-2xl font-bold mb-6">สรุปผลการดำเนินงาน: การจัดส่ง</h2>
+                    
+                    <!-- กล่องตัวเลข 2 กล่อง -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <!-- เป้าหมาย -->
+                        <div class="bg-[#242A38] rounded-xl p-6 flex flex-col items-center justify-center border border-gray-700/50 shadow-lg">
+                            <h3 class="text-gray-300 font-medium mb-3">เป้าหมาย (Target)</h3>
+                            <div class="text-[#20C997] text-6xl md:text-7xl font-bold leading-none mb-3">
+                                &le; 2
+                            </div>
+                            <span class="text-gray-500 text-sm">ครั้ง / คน / เดือน</span>
+                        </div>
+                        
+                        <!-- เกิดขึ้นจริง -->
+                        <div class="bg-[#242A38] rounded-xl p-6 flex flex-col items-center justify-center border border-gray-700/50 shadow-lg">
+                            <h3 class="text-gray-300 font-medium mb-3">เกิดขึ้นจริง (Actual)</h3>
+                            <div class="text-[#20C997] text-6xl md:text-7xl font-bold leading-none mb-3 drop-shadow-[0_0_15px_rgba(32,201,151,0.2)]">
+                                1
+                            </div>
+                            <span class="text-[#20C997] text-sm font-medium">ผ่านเกณฑ์ (ยอดรวม)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ข้อความแจ้งเตือน (เชิงบวก) -->
+                <div class="flex items-center justify-center sm:justify-start gap-2 mt-4 text-[#20C997]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
+                    <p class="text-sm font-medium">ผลการปฏิบัติงานอยู่ในเกณฑ์ดี มีข้อผิดพลาดเพียง 1 ครั้งในเดือนนี้</p>
+                </div>
+
+            </div>
+
+            <!-- ================= ส่วนที่ 2 (ด้านขวา) ================= -->
+            <div class="flex flex-col space-y-8 relative pt-4 lg:pt-0">
+                
+                <!-- Logo Placeholder มุมขวาบน -->
+                <div class="absolute top-0 right-0 hidden md:flex items-center gap-2 text-[#4DA8DA]">
+                    <div class="flex flex-col items-end text-xs font-medium tracking-wider">
+                        <span>พัฒนสิน</span>
+                        <span class="text-[0.6rem] text-gray-500">M R. M H E N</span>
+                    </div>
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h-2v4H7v2h2v4h2v-4h2v-2h-2V7z"/>
+                    </svg>
+                </div>
+
+                <!-- หัวข้อตาราง -->
+                <h2 class="text-2xl font-bold mt-8 md:mt-0">รายการข้อผิดพลาด (การจัดส่ง)</h2>
+
+                <!-- ตารางข้อมูล -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="text-gray-400 border-b border-gray-700">
+                                <th class="pb-3 px-4 font-medium w-1/4">ลูกค้า</th>
+                                <th class="pb-3 px-4 font-medium w-2/4">ปัญหา / สาเหตุ</th>
+                                <th class="pb-3 px-4 font-medium w-1/4 text-center">ผู้รับผิดชอบ</th>
+                            </tr>
+                        </thead>
+                        <tbody class="space-y-2">
+                            <!-- แถวที่ 1 -->
+                            <tr class="bg-[#151A23] border-b-[4px] border-black hover:bg-[#1E2532] transition-colors">
+                                <td class="py-5 px-4 text-gray-200">ร้าน ช.คอนกรีต</td>
+                                <td class="py-5 px-4">
+                                    <div class="text-gray-200">ท่อ 1 1/2" x5 ไม่ครบ 1 มัด </div>
+                                    <div class="text-gray-400 text-xs mt-1">(ลงของผิดร้าน)</div>
+                                </td>
+                                <td class="py-5 px-4 text-center text-gray-200">โจ, หนุ่ย, เจ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="text-gray-300 text-sm mt-3 ml-2">* ข้อผิดพลาดเกิดขึ้น 1 ครั้ง โดยมีความรับผิดชอบร่วมกัน 3 คน</p>
+                </div>
+
+                <!-- หัวข้อแนวทางแก้ไข -->
+                <div class="pt-6">
+                    <h2 class="text-xl md:text-2xl font-bold mb-6 text-center lg:text-left">แนวทางแก้ไขและข้อเสนอแนะสำหรับจัดส่ง</h2>
+
+                    <!-- Grid กล่องข้อเสนอแนะ 4 กล่อง -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        
+                        <!-- Box 1 -->
+                        <div class="bg-[#212B36] p-5 rounded-lg border border-gray-700/50 hover:border-[#4FD1C5]/50 transition-colors">
+                            <h3 class="text-[#4FD1C5] font-bold text-sm mb-2 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                การตรวจสอบหน้างาน
+                            </h3>
+                            <p class="text-gray-400 text-xs leading-relaxed">
+                                ก่อนลงสินค้า ต้องตรวจสอบชื่อร้านค้าบนป้ายหน้าร้าน ให้ตรงกับใบส่งสินค้าทุกครั้ง เพื่อป้องกันการ <span class="text-gray-300">"ลงของผิดร้าน"</span>
+                            </p>
+                        </div>
+
+                        <!-- Box 2 -->
+                        <div class="bg-[#212B36] p-5 rounded-lg border border-gray-700/50 hover:border-[#4FD1C5]/50 transition-colors">
+                            <h3 class="text-[#4FD1C5] font-bold text-sm mb-2 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                </svg>
+                                การทวนรายการ
+                            </h3>
+                            <p class="text-gray-400 text-xs leading-relaxed">
+                                พนักงานจัดส่งต้อง นับจำนวนและเช็คสเปคสินค้า ร่วมกับลูกค้าหน้างานก่อนทำการเซ็นรับทุกครั้ง
+                            </p>
+                        </div>
+
+                        <!-- Box 3 -->
+                        <div class="bg-[#212B36] p-5 rounded-lg border border-gray-700/50 hover:border-[#4FD1C5]/50 transition-colors">
+                            <h3 class="text-[#4FD1C5] font-bold text-sm mb-2 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                การบันทึกภาพถ่าย
+                            </h3>
+                            <p class="text-gray-400 text-xs leading-relaxed">
+                                ถ่ายภาพสินค้าขณะวางอยู่ที่ร้านลูกค้า ให้เห็นชื่อร้านชัดเจน เพื่อเป็นหลักฐานยืนยันการจัดส่งที่ถูกต้อง
+                            </p>
+                        </div>
+
+                        <!-- Box 4 -->
+                        <div class="bg-[#212B36] p-5 rounded-lg border border-gray-700/50 hover:border-[#4FD1C5]/50 transition-colors">
+                            <h3 class="text-[#4FD1C5] font-bold text-sm mb-2 flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                                การสื่อสารในทีม
+                            </h3>
+                            <p class="text-gray-400 text-xs leading-relaxed">
+                                คนขับรถและพนักงานส่งของต้อง ประสานงานกันก่อนยอด เพื่อยืนยันว่าเป็นร้านที่ถูกต้องตามแผนที่จัดส่ง
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- แบนเนอร์เป้าหมายด้านล่างสุด -->
+                    <div class="mt-4 bg-[#14232C] border border-[#20C997]/20 rounded-lg p-3 text-center">
+                        <p class="text-[#4FD1C5] text-xs font-medium tracking-wide">
+                            "เป้าหมาย: ลดข้อผิดพลาดการลงของผิดร้านให้เป็น 0 ในเดือนถัดไป"
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+<a href="fuelefficiency.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;     หน้าถัดไป (fuel efficiency) ➜
+</body>
+</html>

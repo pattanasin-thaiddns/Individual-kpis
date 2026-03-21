@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard รายงานการฝึกอบรม - มกราคม 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* CSS resets and base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f4f7f9; /* Clean light grayish-blue background */
+            color: #334155; /* Slate text for readability */
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        /* Dashboard Wrapper */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        /* Modern Card Component */
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 4px 10px -5px rgba(15, 23, 42, 0.02);
+            padding: 30px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 20px 35px -5px rgba(15, 23, 42, 0.06), 0 8px 15px -5px rgba(15, 23, 42, 0.03);
+            transform: translateY(-2px);
+        }
+
+        /* Header Section */
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 6px solid #3b82f6; /* Executive Blue accent for January */
+            padding: 24px 30px;
+        }
+
+        .header-section h1 {
+            color: #0f172a; 
+            font-size: 32px;
+            margin-bottom: 6px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-section p {
+            color: #64748b;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .executive-badge {
+            background-color: #eff6ff;
+            color: #2563eb;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #bfdbfe;
+        }
+
+        /* KPI Section */
+        .kpi-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .kpi-card {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 30px;
+        }
+
+        .kpi-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        /* Clean Accent Colors for Icons */
+        .accent-blue {
+            color: #0284c7;
+            background: #e0f2fe;
+        }
+        .accent-green {
+            color: #059669;
+            background: #d1fae5;
+        }
+        .accent-purple {
+            color: #7c3aed;
+            background: #ede9fe;
+        }
+
+        .kpi-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .kpi-content h3 {
+            font-size: 16px;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .kpi-content .number {
+            font-size: 42px;
+            font-weight: 700;
+            color: #0f172a;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+        .kpi-content .unit {
+            font-size: 16px;
+            color: #94a3b8;
+            font-weight: 400;
+            margin-left: 4px;
+        }
+
+        /* Main Content Grid */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title i {
+            color: #94a3b8;
+            font-size: 22px;
+        }
+
+        /* Table Styles (Clean Light Mode) */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+        }
+
+        th, td {
+            padding: 16px 12px;
+            text-align: left;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        td strong {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .badge-success {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-info {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        
+        .id-badge {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-family: monospace;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Chart/Progress Bar Styles */
+        .progress-container {
+            margin-bottom: 24px;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+            color: #475569;
+            font-weight: 500;
+        }
+
+        .progress-bar-bg {
+            background-color: #f1f5f9;
+            border-radius: 10px;
+            height: 16px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease-in-out;
+        }
+
+        .fill-purple { background-color: #8b5cf6; }
+        .fill-blue { background-color: #3b82f6; }
+
+        /* Course Highlight Styles */
+        .highlight-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .highlight-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+        }
+
+        .highlight-card h4 {
+            color: #0f172a;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .highlight-card p {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 768px) {
+            .header-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+                border-left: none;
+                border-top: 6px solid #3b82f6;
+            }
+            .dashboard-container {
+                padding: 10px;
+            }
+            .kpi-card {
+                padding: 20px;
+            }
+            .main-content {
+                display: flex;
+                flex-direction: column-reverse;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+    
+    <!-- 1. Header Section -->
+    <div class="card header-section">
+        <div>
+            <h1>รายงานผลการฝึกอบรมพนักงาน</h1>
+            <p>ประจำเดือน มกราคม 2026 | บริษัท พัฒนาสิน ไทยเทรดดิ้ง</p>
+        </div>
+        <div class="executive-badge">
+            <i class="fa-solid fa-chart-pie"></i> Executive Summary
+        </div>
+    </div>
+
+    <!-- 2. KPI Section -->
+    <div class="kpi-section">
+        <div class="card kpi-card">
+            <div class="kpi-icon accent-green">
+                <i class="fa-solid fa-bullseye"></i>
+            </div>
+            <div class="kpi-content">
+                <h3>บรรลุเป้าหมายการอบรม</h3>
+                <div class="number">100<span class="unit">%</span></div>
+            </div>
+        </div>
+        <div class="card kpi-card">
+            <div class="kpi-icon accent-blue">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="kpi-content">
+                <h3>ผู้เข้ารับการอบรม (เดือน ม.ค.)</h3>
+                <div class="number">4<span class="unit">ท่าน</span></div>
+            </div>
+        </div>
+        <div class="card kpi-card">
+            <div class="kpi-icon accent-purple">
+                <i class="fa-solid fa-book-open"></i>
+            </div>
+            <div class="kpi-content">
+                <h3>หลักสูตรที่จัดอบรม</h3>
+                <div class="number">2<span class="unit">หลักสูตร</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Main Content Area -->
+    <div class="main-content">
+        
+        <!-- Left Column (Tables) -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            
+            <!-- Table Section -->
+            <div class="card">
+                <h2 class="section-title">
+                    <i class="fa-solid fa-list-check" style="color: #3b82f6;"></i>
+                    รายชื่อผู้เข้ารับการอบรม (มกราคม 2026)
+                </h2>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 5%; text-align: center;">ลำดับ</th>
+                                <th style="width: 25%;">ชื่อ-สกุลพนักงาน</th>
+                                <th style="width: 15%;">รหัสพนักงาน</th>
+                                <th style="width: 20%;">ตำแหน่ง</th>
+                                <th style="width: 35%;">หลักสูตรที่เข้าอบรม</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align: center; color: #64748b;">1</td>
+                                <td><strong>สุรชัย สมสนุก</strong></td>
+                                <td><span class="badge id-badge">PTS-096</span></td>
+                                <td>พนักงานจัดส่ง</td>
+                                <td>
+                                    ความปลอดภัย & 5ส
+                                    <span class="badge badge-success" style="float: right;">ผ่าน</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; color: #64748b;">2</td>
+                                <td><strong>เรื่องยศ นาจะรุณ</strong></td>
+                                <td><span class="badge id-badge">PTS-098</span></td>
+                                <td>พนักงานขับรถ</td>
+                                <td>
+                                    ความปลอดภัย & 5ส
+                                    <span class="badge badge-success" style="float: right;">ผ่าน</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; color: #64748b;">3</td>
+                                <td><strong>นาวี มอโท</strong></td>
+                                <td><span class="badge id-badge">PTS-099</span></td>
+                                <td>พนักงานจัดส่ง</td>
+                                <td>
+                                    ความปลอดภัย & 5ส
+                                    <span class="badge badge-success" style="float: right;">ผ่าน</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align: center; color: #64748b;">4</td>
+                                <td><strong>ธงชัย คุยดี</strong></td>
+                                <td><span class="badge id-badge">PTS-025</span></td>
+                                <td>ผู้จัดการฝ่ายปฏิบัติการ</td>
+                                <td>
+                                    TSM ประเภท 2
+                                    <span class="badge badge-info" style="float: right;">ผ่าน</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column (Charts & Highlights) -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            
+            <!-- Charts/Progress Section -->
+            <div class="card">
+                <h2 class="section-title">
+                    <i class="fa-solid fa-chart-pie" style="color: #8b5cf6;"></i>
+                    สัดส่วนผู้เข้าอบรมแยกตามหลักสูตร
+                </h2>
+                
+                <div style="margin-top: 20px;">
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span style="color: #0f172a;">ความปลอดภัย & 5ส (3 ท่าน)</span>
+                            <strong>75%</strong>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-blue" style="width: 75%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span style="color: #0f172a;">TSM ประเภท 2 (1 ท่าน)</span>
+                            <strong>25%</strong>
+                        </div>
+                        <div class="progress-bar-bg">
+                            <div class="progress-bar-fill fill-purple" style="width: 25%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Highlight Section -->
+            <div class="card highlight-card">
+                 <h2 class="section-title" style="margin-bottom: 10px;">
+                    <i class="fa-solid fa-star" style="color: #f59e0b;"></i>
+                    สรุปหลักสูตรที่จัดอบรม
+                </h2>
+                
+                <h4><i class="fa-solid fa-helmet-safety" style="color:#3b82f6;"></i> ความปลอดภัย & 5ส</h4>
+                <p>
+                    เน้นย้ำมาตรฐานความปลอดภัยในการทำงานและการจัดระเบียบพื้นที่ (5ส) สำหรับพนักงานสายปฏิบัติการและจัดส่ง เพื่อลดอุบัติเหตุให้เป็นศูนย์ (Zero Accident)
+                </p>
+
+                <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 20px 0;">
+                
+                <h4><i class="fa-solid fa-truck-fast" style="color:#8b5cf6;"></i> TSM ประเภท 2</h4>
+                <p style="margin-bottom: 0;">
+                    การจัดการความปลอดภัยด้านการขนส่ง (Transport Safety Manager) สำหรับบุคลากรระดับผู้จัดการ เพื่อยกระดับมาตรฐานความปลอดภัยในการขนส่งตามข้อกำหนดของกรมการขนส่งทางบก
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+<a href="newcustomersales.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (new customer sale) ➜
+</body>
+</html>
