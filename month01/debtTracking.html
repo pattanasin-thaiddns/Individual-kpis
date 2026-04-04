@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แดชบอร์ดติดตามการชำระหนี้ - มกราคม 2569</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Sarabun', sans-serif; }
+.chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    height: 350px;
+    max-height: 400px;
+}
+@media (min-width: 768px) {
+    .chart-container { height: 400px; }
+}
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -29px;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #2563eb;
+    border: 3px solid #eff6ff;
+}
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+
+<!-- Chosen Palette: Slate-50 (Background), Slate-800 (Text), Blue-600 (Primary/Action), Emerald-500 (Success/Target), Amber-500 (Warning) -->
+<!-- Application Structure Plan: The SPA is structured as a top-down executive dashboard. It begins with high-level KPIs (Executive Summary) for immediate performance visibility. Next, an interactive visual analysis section allows users to toggle between overall bill status and a deep-dive into late bills, reducing cognitive load. This is followed by contextual data (Sales Returns) and concludes with an actionable insights section (Root Cause & Action Plan) presented as an HTML-based timeline to show the process change clearly. -->
+<!-- Visualization & Content Choices: KPIs -> Goal: Inform -> Big Number Cards -> No interaction needed, quick summary. Bill Status -> Goal: Compare/Organize -> Chart.js Doughnut Charts -> Button toggles to switch views -> Clean comparison of on-time vs late, and price group proportions. Action Plan -> Goal: Change -> HTML/CSS Timeline -> Visualizing the new follow-up process without SVG -> Easy to read process flow. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <header class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-bold text-slate-900 mb-2">📊 แดชบอร์ดติดตามการชำระหนี้ลูกค้า</h1>
+        <p class="text-lg text-slate-600">สรุปผลการดำเนินงานประจำเดือน มกราคม 2569</p>
+    </header>
+
+    <section class="mb-10">
+        <div class="mb-4">
+            <h2 class="text-2xl font-semibold text-slate-800">ภาพรวมการดำเนินงาน (Executive Summary)</h2>
+            <p class="text-slate-600 mt-2">ส่วนนี้แสดงผลสัมฤทธิ์หลักของเดือนมกราคม 2569 โดยเปรียบเทียบอัตราการชำระหนี้ทันกำหนดที่ทำได้จริงกับเป้าหมายที่ตั้งไว้ เพื่อให้เห็นสถานะความสำเร็จและช่องว่างที่ต้องปรับปรุงอย่างรวดเร็ว</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200 border-l-4 border-l-emerald-500">
+                <p class="text-sm font-medium text-slate-500 mb-1">เป้าหมาย (Target)</p>
+                <p class="text-3xl font-bold text-slate-800" id="kpi-target">80.00%</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200 border-l-4 border-l-amber-500">
+                <p class="text-sm font-medium text-slate-500 mb-1">ผลงานจริง (Actual)</p>
+                <div class="flex items-end gap-2">
+                    <p class="text-3xl font-bold text-amber-600" id="kpi-actual">77.05%</p>
+                    <p class="text-sm font-semibold text-red-500 mb-1">⚠️ ต่ำกว่าเป้า 2.95%</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+                <p class="text-sm font-medium text-slate-500 mb-1">บิลขายทั้งหมด</p>
+                <p class="text-3xl font-bold text-slate-800" id="kpi-total-bills">863</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-200">
+                <p class="text-sm font-medium text-slate-500 mb-1">ชำระทันกำหนด</p>
+                <p class="text-3xl font-bold text-emerald-600" id="kpi-ontime-bills">665</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-10 bg-white rounded-xl shadow-sm border border-slate-200 p-6 sm:p-8">
+        <div class="mb-6">
+            <h2 class="text-2xl font-semibold text-slate-800">สถิติและเจาะลึกสถานะบิล (Monthly Statistics)</h2>
+            <p class="text-slate-600 mt-2">ส่วนนี้ให้คุณสำรวจสัดส่วนของบิลที่ชำระตรงเวลาและบิลที่ล่าช้า คุณสามารถคลิกปุ่มด้านล่างเพื่อสลับมุมมองระหว่าง "ภาพรวมบิลทั้งหมด" และ "การเจาะลึกเฉพาะบิลที่ล่าช้าแยกตามกลุ่มราคา" เพื่อวิเคราะห์ว่ากลุ่มใดเป็นสาเหตุหลักของความล่าช้า</p>
+        </div>
+
+        <div class="flex flex-wrap gap-4 mb-8 border-b border-slate-200 pb-4">
+            <button id="btn-view-overall" class="px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                📂 ภาพรวมสถานะบิลทั้งหมด
+            </button>
+            <button id="btn-view-late" class="px-5 py-2.5 bg-slate-100 text-slate-700 font-medium rounded-lg hover:bg-slate-200 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 border border-slate-300">
+                🔍 เจาะลึกกลุ่มบิลล่าช้า (186 บิล)
+            </button>
+        </div>
+
+        <div id="view-overall" class="flex flex-col lg:flex-row items-center gap-8">
+            <div class="w-full lg:w-1/2">
+                <div class="chart-container">
+                    <canvas id="chartOverall"></canvas>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2 space-y-4">
+                <div class="p-5 bg-emerald-50 rounded-lg border border-emerald-100">
+                    <h3 class="text-lg font-semibold text-emerald-800">✅ ชำระทันกำหนด</h3>
+                    <p class="text-3xl font-bold text-emerald-600 mt-1">665 <span class="text-base font-normal">บิล</span></p>
+                    <p class="text-sm text-emerald-700 mt-1">สะท้อนถึงลูกค้าส่วนใหญ่ที่ยังคงรักษาเครดิตได้ดี</p>
+                </div>
+                <div class="p-5 bg-amber-50 rounded-lg border border-amber-100">
+                    <h3 class="text-lg font-semibold text-amber-800">⚠️ ชำระไม่ทันกำหนด</h3>
+                    <p class="text-3xl font-bold text-amber-600 mt-1">186 <span class="text-base font-normal">บิล</span></p>
+                    <p class="text-sm text-amber-700 mt-1">เป็นสาเหตุหลักที่ทำให้อัตราความสำเร็จต่ำกว่าเป้าหมายที่ 80%</p>
+                </div>
+                <div class="p-3 bg-slate-50 rounded-lg text-sm text-slate-500 border border-slate-100">
+                    * บิลที่รับชำระทั้งหมด (รวมล่าช้า) มีจำนวน 851 บิล จากบิลขายทั้งหมด 863 บิล
+                </div>
+            </div>
+        </div>
+
+        <div id="view-late" class="hidden flex flex-col lg:flex-row items-center gap-8">
+            <div class="w-full lg:w-1/2">
+                <div class="chart-container">
+                    <canvas id="chartLateBreakdown"></canvas>
+                </div>
+            </div>
+            <div class="w-full lg:w-1/2 space-y-4">
+                <div class="p-5 bg-blue-50 rounded-lg border border-blue-100">
+                    <h3 class="text-lg font-semibold text-blue-800">กลุ่มลูกค้าราคา 1</h3>
+                    <p class="text-3xl font-bold text-blue-600 mt-1">125 <span class="text-base font-normal">บิล (67%)</span></p>
+                    <p class="text-sm text-blue-700 mt-2 font-medium">📌 กลุ่มเป้าหมายหลักที่ต้องเร่งแก้ไข เนื่องจากมีสัดส่วนความล่าช้าสูงที่สุด</p>
+                </div>
+                <div class="p-5 bg-indigo-50 rounded-lg border border-indigo-100">
+                    <h3 class="text-lg font-semibold text-indigo-800">กลุ่มลูกค้าราคา 2</h3>
+                    <p class="text-3xl font-bold text-indigo-600 mt-1">61 <span class="text-base font-normal">บิล (33%)</span></p>
+                    <p class="text-sm text-indigo-700 mt-2 font-medium">📌 กลุ่มเป้าหมายรองที่ต้องมีการปรับกระบวนการติดตามเช่นกัน</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+        
+        <section class="lg:col-span-1 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-xl font-semibold text-slate-800 mb-4">ข้อมูลการรับคืนสินค้า</h2>
+            <p class="text-sm text-slate-600 mb-6">ข้อมูลยอดการรับคืนสินค้า ซึ่งเป็นปัจจัยหนึ่งที่อาจส่งผลกระทบต่อความล่าช้าในกระบวนการวางบิลและการชำระเงินของลูกค้า</p>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-600">
+                    <thead class="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200">
+                        <tr>
+                            <th class="py-3 px-4">ประเภท</th>
+                            <th class="py-3 px-4 text-right">บิล</th>
+                            <th class="py-3 px-4 text-right">มูลค่า (บาท)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100" id="table-returns">
+                    </tbody>
+                    <tfoot class="bg-slate-50 font-bold text-slate-800 border-t-2 border-slate-200">
+                        <tr>
+                            <td class="py-3 px-4">รวมทั้งหมด</td>
+                            <td class="py-3 px-4 text-right" id="returns-total-bills"></td>
+                            <td class="py-3 px-4 text-right" id="returns-total-value"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+        <section class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-xl font-semibold text-slate-800 mb-4">การวิเคราะห์สาเหตุ & แผนการดำเนินงานแก้ไข</h2>
+            <p class="text-sm text-slate-600 mb-6">ส่วนนี้สรุปปัญหาที่พบในเดือนมกราคมและแผนปฏิบัติการ (Action Plan) ที่ปรับปรุงใหม่สำหรับเดือนถัดไป เพื่อให้บรรลุเป้าหมาย 80% แสดงในรูปแบบกระบวนการติดตามที่ชัดเจน</p>
+
+            <div class="bg-red-50 border border-red-200 rounded-lg p-5 mb-8">
+                <h3 class="text-red-800 font-bold text-lg mb-2">🛑 ปัญหาหลักที่พบ (Root Cause)</h3>
+                <ul class="list-disc pl-5 text-red-700 space-y-1">
+                    <li><strong>ระยะเวลา:</strong> ฝ่ายบัญชีติดตามยอดก่อนวันครบกำหนดเพียง 1-2 วัน ซึ่งกระชั้นชิดเกินไป</li>
+                    <li><strong>พฤติกรรมลูกค้า:</strong> เมื่อแจ้งกระชั้นชิด ลูกค้าบางรายเตรียมโอนชำระไม่ทันที</li>
+                    <li><strong>ความสูญเปล่า:</strong> ทีมงานต้องเสียเวลาติดตามซ้ำและโทรสอบถามหลายครั้ง ทำให้หลุดกำหนด</li>
+                </ul>
+            </div>
+
+            <h3 class="text-slate-800 font-bold text-lg mb-4">🚀 แผนปฏิบัติการใหม่ (New Early Warning Workflow)</h3>
+            <div class="pl-8 border-l-2 border-slate-200 relative pb-4">
+                
+                <div class="timeline-item relative mb-8">
+                    <h4 class="font-bold text-blue-700 text-lg">เริ่มก่อนครบกำหนด 5 วัน</h4>
+                    <p class="text-slate-700 font-medium">เป้าหมาย: ลูกค้ากลุ่มราคา 2</p>
+                    <p class="text-slate-600 text-sm mt-1">ใช้ Line ในการส่งข้อความแจ้งเตือนยอดชำระเป็นอันดับแรก</p>
+                </div>
+
+                <div class="timeline-item relative mb-8">
+                    <h4 class="font-bold text-blue-700 text-lg">เริ่มก่อนครบกำหนด 3 วัน</h4>
+                    <p class="text-slate-700 font-medium">เป้าหมาย: ลูกค้ากลุ่มราคา 1 (กลุ่มที่มีปัญหาล่าช้าสูงสุด 67%)</p>
+                    <p class="text-slate-600 text-sm mt-1">ใช้ Line ในการส่งข้อความแจ้งเตือนยอดชำระเป็นอันดับแรก</p>
+                </div>
+
+                <div class="timeline-item relative mb-8">
+                    <h4 class="font-bold text-amber-600 text-lg">กรณีไม่มีการตอบรับทาง Line</h4>
+                    <p class="text-slate-700 font-medium">การติดตามขั้นที่ 2</p>
+                    <p class="text-slate-600 text-sm mt-1">ให้เจ้าหน้าที่ดำเนินการโทรศัพท์สอบถามทันที เพื่อพูดคุยและยืนยันวันนัดชำระที่แน่นอนกับลูกค้า</p>
+                </div>
+
+                <div class="timeline-item relative">
+                    <h4 class="font-bold text-emerald-600 text-lg">การตรวจสอบประจำวัน</h4>
+                    <p class="text-slate-700 font-medium">การติดตามผลลัพธ์ (Monitoring)</p>
+                    <p class="text-slate-600 text-sm mt-1">ตรวจสอบสถานะการชำระเงินทุกวันอย่างต่อเนื่อง เพื่อลดการตกหล่นของบิลที่ใกล้ครบกำหนด</p>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="text-center text-slate-500 text-sm pb-8 border-t border-slate-200 pt-8">
+        <p>รายงานจัดทำโดย: ฝ่ายบัญชี / ฝ่ายติดตามหนี้สิน</p>
+        <p class="mt-1">ข้อมูลอ้างอิงประจำเดือน: มกราคม 2569</p>
+    </footer>
+
+</div>
+
+<script>
+const reportData = {
+    performance: {
+        target: 80.00,
+        actual: 77.05,
+        totalBills: 863,
+        paidTotal: 851,
+        paidOnTime: 665,
+        paidLate: 186
+    },
+    lateBreakdown: {
+        group1: { bills: 125, percentage: 67 },
+        group2: { bills: 61, percentage: 33 }
+    },
+    returns: [
+        { type: "รับคืนสินค้าขายปลีก", bills: 17, value: 3739.00 },
+        { type: "รับคืนสินค้าขายส่ง", bills: 29, value: 39227.03 }
+    ]
+};
+
+const appState = {
+    currentView: 'overall' 
+};
+
+function formatCurrency(num) {
+    return num.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function initDataTables() {
+    const tableBody = document.getElementById('table-returns');
+    let totalBills = 0;
+    let totalValue = 0;
+
+    reportData.returns.forEach(item => {
+        totalBills += item.bills;
+        totalValue += item.value;
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="py-3 px-4">${item.type}</td>
+            <td class="py-3 px-4 text-right">${item.bills}</td>
+            <td class="py-3 px-4 text-right">${formatCurrency(item.value)}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    document.getElementById('returns-total-bills').textContent = totalBills;
+    document.getElementById('returns-total-value').textContent = formatCurrency(totalValue);
+}
+
+let chartOverallInstance = null;
+let chartLateInstance = null;
+
+function initCharts() {
+    Chart.defaults.font.family = "'Sarabun', sans-serif";
+
+    const ctxOverall = document.getElementById('chartOverall').getContext('2d');
+    chartOverallInstance = new Chart(ctxOverall, {
+        type: 'doughnut',
+        data: {
+            labels: ['ชำระทันกำหนด', 'ชำระไม่ทันกำหนด'],
+            datasets: [{
+                data: [reportData.performance.paidOnTime, reportData.performance.paidLate],
+                backgroundColor: ['#10b981', '#f59e0b'],
+                borderWidth: 0,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 20, font: { size: 14 } } },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) { label += ': '; }
+                            label += context.raw + ' บิล';
+                            return label;
+                        }
+                    }
+                }
+            },
+            cutout: '65%'
+        }
+    });
+
+    const ctxLate = document.getElementById('chartLateBreakdown').getContext('2d');
+    chartLateInstance = new Chart(ctxLate, {
+        type: 'doughnut',
+        data: {
+            labels: ['ลูกค้าราคา 1', 'ลูกค้าราคา 2'],
+            datasets: [{
+                data: [reportData.lateBreakdown.group1.bills, reportData.lateBreakdown.group2.bills],
+                backgroundColor: ['#2563eb', '#6366f1'],
+                borderWidth: 0,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { padding: 20, font: { size: 14 } } },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) { label += ': '; }
+                            label += context.raw + ' บิล';
+                            return label;
+                        }
+                    }
+                }
+            },
+            cutout: '65%'
+        }
+    });
+}
+
+function handleNavigation() {
+    const btnOverall = document.getElementById('btn-view-overall');
+    const btnLate = document.getElementById('btn-view-late');
+    const viewOverall = document.getElementById('view-overall');
+    const viewLate = document.getElementById('view-late');
+
+    function setActiveTab(view) {
+        appState.currentView = view;
+        if (view === 'overall') {
+            viewOverall.classList.remove('hidden');
+            viewLate.classList.add('hidden');
+            
+            btnOverall.classList.replace('bg-slate-100', 'bg-blue-600');
+            btnOverall.classList.replace('text-slate-700', 'text-white');
+            btnOverall.classList.remove('border', 'border-slate-300');
+            
+            btnLate.classList.replace('bg-blue-600', 'bg-slate-100');
+            btnLate.classList.replace('text-white', 'text-slate-700');
+            btnLate.classList.add('border', 'border-slate-300');
+        } else {
+            viewOverall.classList.add('hidden');
+            viewLate.classList.remove('hidden');
+            
+            btnLate.classList.replace('bg-slate-100', 'bg-blue-600');
+            btnLate.classList.replace('text-slate-700', 'text-white');
+            btnLate.classList.remove('border', 'border-slate-300');
+            
+            btnOverall.classList.replace('bg-blue-600', 'bg-slate-100');
+            btnOverall.classList.replace('text-white', 'text-slate-700');
+            btnOverall.classList.add('border', 'border-slate-300');
+        }
+    }
+
+    btnOverall.addEventListener('click', () => setActiveTab('overall'));
+    btnLate.addEventListener('click', () => setActiveTab('late'));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initDataTables();
+    initCharts();
+    handleNavigation();
+});
+</script>
+<a href="retailsales.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (retail sales) ➜
+</body>
+</html>

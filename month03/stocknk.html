@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard วิเคราะห์สต๊อก สาขาหนองคาย - มีนาคม 2026</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Chosen Palette: Success Emerald & Slate (Slate-50 background, Emerald-600 for primary success metrics to celebrate hitting the 96% KPI, Rose-500/Amber-500 for minor variances). -->
+    <!-- Application Structure Plan: A 3-Tab Dashboard focusing on "Success & Fine-Tuning".
+         - Tab 1: "Overview" Celebrates the 96% accuracy KPI. Shows minimal financial impact. Focuses on positive reinforcement.
+         - Tab 2: "Deep Dive" Details the remaining 4% anomalies (only 12 items). Highlights the minor mix-ups and fractional weighing issues that are typical of physical retail.
+         - Tab 3: "Action Plan" Shifts from "Crisis Management" to "Continuous Improvement". Focuses on sustaining the good work and fixing tiny process gaps. -->
+    <!-- Visualization & Content Choices: 
+         - Goal: Inform/Celebrate -> Large KPI cards in Emerald green. 
+         - Goal: Compare -> Doughnut Chart showing the overwhelming proportion of matched SKUs vs the tiny sliver of mismatched ones. Bar chart showing the very low financial variance.
+         - Goal: Organize & Interact -> A clean, filterable data table for the 12 mismatched SKUs.
+         - Goal: Present Text -> Grid-based cards with Unicode icons for remaining minor Root Causes and Continuous Improvement Recommendations.
+         - Confirming NO SVG or Mermaid JS used. Native Canvas for charts and HTML/Unicode for icons. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; color: #334155; }
+        
+        /* Strict Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (max-width: 768px) {
+            .chart-container { height: 250px; max-height: 280px; }
+        }
+
+        /* Tab Transitions */
+        .tab-content { display: none; animation: fadeIn 0.4s ease-out forwards; opacity: 0; }
+        .tab-content.active { display: block; }
+        
+        .tab-btn { transition: all 0.2s ease; border-bottom: 3px solid transparent; }
+        .tab-btn.active { 
+            border-bottom-color: #059669; 
+            color: #065f46; 
+            font-weight: 700; 
+            background-color: #ecfdf5;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header Section (Celebratory Tone) -->
+    <header class="bg-white shadow-sm border-b border-emerald-100 sticky top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-slate-800">🎉 สรุปการตรวจนับสินค้าคงคลัง (สาขาหนองคาย)</h1>
+                    <p class="text-sm md:text-base text-slate-500 mt-1">บริษัท พัฒนาสิน (หนองคาย) จำกัด | 📅 ประจำเดือน: มีนาคม 2026</p>
+                    <div class="mt-2 text-xs text-slate-500 bg-slate-100 px-3 py-1.5 rounded-md border border-slate-200 inline-block">
+                        <strong>หมวดหมู่:</strong> ท่อพีวีซี, ปุ๋ย, อาหารสัตว์, เมล็ดพันธุ์, ปูน, เหล็ก, กลุ่ม B วัสดุก่อสร้าง, ไม้ฝา/บอร์ด
+                    </div>
+                </div>
+                <!-- Success KPI -->
+                <div class="bg-emerald-50 border border-emerald-200 px-6 py-3 rounded-xl text-center shadow-sm w-full md:w-auto transform transition hover:scale-105">
+                    <p class="text-xs text-emerald-700 font-bold uppercase tracking-wider mb-1 flex items-center justify-center gap-1">
+                        🌟 ทะลุเป้าหมาย (KPI Achieved)
+                    </p>
+                    <div class="flex items-baseline justify-center gap-2">
+                        <p class="text-4xl font-extrabold text-emerald-600">96%</p>
+                        <p class="text-sm text-emerald-700 font-medium">/ เป้า 95%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto custom-scrollbar border-t border-slate-100 mt-2">
+            <button class="tab-btn active px-6 py-3 text-slate-600 hover:text-emerald-700 focus:outline-none whitespace-nowrap text-sm md:text-base" data-tab="overview">
+                📊 1. ภาพรวมความสำเร็จ
+            </button>
+            <button class="tab-btn px-6 py-3 text-slate-600 hover:text-emerald-700 focus:outline-none whitespace-nowrap text-sm md:text-base" data-tab="deepdive">
+                🔍 2. ตรวจสอบส่วนต่าง 4%
+            </button>
+            <button class="tab-btn px-6 py-3 text-slate-600 hover:text-emerald-700 focus:outline-none whitespace-nowrap text-sm md:text-base" data-tab="actionplan">
+                💡 3. แผนรักษามาตรฐาน
+            </button>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- ================= TAB 1: OVERVIEW ================= -->
+        <section id="overview" class="tab-content active">
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-slate-800 mb-3 border-l-4 border-emerald-500 pl-3">ผลการดำเนินงานยอดเยี่ยม (Outstanding Performance)</h2>
+                <p class="text-slate-600 text-base leading-relaxed bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    สาขาหนองคายทำผลงานได้ดีเยี่ยมในเดือนมีนาคม โดยสามารถรักษาความแม่นยำของสต๊อกได้ถึง <strong class="text-emerald-600">96% (ตรง 265 จาก 277 รายการ)</strong> มูลค่าความคลาดเคลื่อนสุทธิมีเพียง <strong class="text-emerald-600">870 บาท</strong> ซึ่งถือว่าน้อยมากเมื่อเทียบกับปริมาณสินค้าที่หมุนเวียนในสาขา
+                </p>
+            </div>
+
+            <!-- KPI Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 relative overflow-hidden">
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">รายการนับทั้งหมด (SKUs)</p>
+                    <h3 class="text-3xl font-bold text-slate-800">277 <span class="text-base font-normal text-slate-500">รายการ</span></h3>
+                    <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between text-sm">
+                        <span class="text-emerald-600 font-medium">✔️ ตรง 265 รายการ</span>
+                        <span class="text-slate-400 font-medium">⚠️ ไม่ตรง 12 รายการ</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6 relative overflow-hidden">
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">จำนวนชิ้นสุทธิที่ผิดพลาด</p>
+                    <h3 class="text-3xl font-bold text-amber-600">14 <span class="text-base font-normal text-slate-500">ชิ้น</span></h3>
+                    <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between text-sm">
+                        <span class="text-rose-600">ขาด 3 ชิ้น</span>
+                        <span class="text-blue-600">เกิน 11 ชิ้น</span>
+                    </div>
+                </div>
+
+                <div class="bg-emerald-50 rounded-xl border border-emerald-100 shadow-sm p-6 relative overflow-hidden">
+                    <p class="text-xs text-emerald-700 font-bold uppercase tracking-wider mb-1">มูลค่าความต่างสุทธิ</p>
+                    <h3 class="text-3xl font-bold text-emerald-700">฿870<span class="text-lg font-normal">.00</span></h3>
+                    <div class="mt-3 pt-3 border-t border-emerald-200/50 flex justify-between text-sm">
+                        <span class="text-rose-600 font-medium">ขาด ฿264</span>
+                        <span class="text-blue-600 font-medium">เกิน ฿606</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Area -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Doughnut Chart for SKUs -->
+                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 text-center">สัดส่วนความแม่นยำ (SKU Accuracy)</h3>
+                    <div class="chart-container">
+                        <canvas id="accuracyChart"></canvas>
+                    </div>
+                </div>
+                <!-- Bar Chart for Value -->
+                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 text-center">มูลค่าความเสียหาย (THB)</h3>
+                    <div class="chart-container">
+                        <canvas id="impactChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: DEEP DIVE (DATA) ================= -->
+        <section id="deepdive" class="tab-content">
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-slate-800 mb-3 border-l-4 border-amber-500 pl-3">ตรวจสอบส่วนต่าง 4% ที่เหลือ (The Last 4%)</h2>
+                <p class="text-slate-600 text-base leading-relaxed bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    เมื่อพิจารณารายการสินค้า 12 SKUs ที่ไม่ตรง จะพบรูปแบบเล็กๆ น้อยๆ ที่เกิดขึ้นได้ทั่วไปในการปฏิบัติงาน เช่น <strong>การชั่งเหล็กเส้น/ปอกคาน</strong> ที่มีเศษทศนิยมคลาดเคลื่อนเล็กน้อย (0.2 - 0.3 กก.) และ <strong>การสลับขนาดสินค้า</strong> เช่น เหล็กข้ออ้อย 10 มิล กับ 12 มิล หรือ ไดมอนด์บอร์ดขนาดต่างๆ
+                </p>
+            </div>
+
+            <!-- Interactive Table Section -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-5 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><span>📋</span> รายการสินค้า 12 รายการที่ไม่ตรง (Anomalies)</h3>
+                    
+                    <!-- Filters -->
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <label for="statusFilter" class="text-sm font-medium text-slate-600 whitespace-nowrap">ตัวกรอง:</label>
+                        <select id="statusFilter" class="bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block w-full p-2 outline-none">
+                            <option value="all">แสดงทั้งหมด 12 รายการ</option>
+                            <option value="ขาด">เฉพาะสต๊อกขาด (3)</option>
+                            <option value="เกิน">เฉพาะสต๊อกเกิน (9)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse whitespace-nowrap">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-sm border-b border-slate-200">
+                                <th class="p-4 font-semibold">รหัสสินค้า</th>
+                                <th class="p-4 font-semibold">ชื่อสินค้า</th>
+                                <th class="p-4 font-semibold text-center">หน่วยนับ</th>
+                                <th class="p-4 font-semibold text-right">ยอดในระบบ</th>
+                                <th class="p-4 font-semibold text-right">นับได้จริง</th>
+                                <th class="p-4 font-semibold text-right">ผลต่าง</th>
+                                <th class="p-4 font-semibold text-center">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody" class="text-sm">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="mt-4 bg-blue-50 border border-blue-200 p-4 rounded-xl text-sm text-blue-800">
+                <strong>💡 ข้อสังเกตพิเศษ:</strong> รหัส <code>B3-1701-01 ไดมอนด์บอร์ด 4 มิล 60*240</code> ยอดในระบบเป็นค่าว่าง (0) แต่ตรวจนับได้ 3 แผ่น อาจเกิดจากการรับสินค้าเข้าผิดรหัส (ไปรับเข้ารหัส 120*240 แทน) ควรตรวจสอบเอกสารรับเข้าของ Supplier
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: ACTION PLAN ================= -->
+        <section id="actionplan" class="tab-content">
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-slate-800 mb-3 border-l-4 border-emerald-500 pl-3">แผนรักษามาตรฐานและการปรับจูน (Continuous Improvement)</h2>
+                <p class="text-slate-600 text-base leading-relaxed bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    เป้าหมายหลักในเดือนนี้คือการ <strong>"ชื่นชมทีมงาน และ รักษามาตรฐานที่ดีนี้ไว้"</strong> ความผิดพลาดที่เหลือเป็นความผิดพลาดระดับปฏิบัติการ (Operational Tolerance) ที่ยอมรับได้ แต่เราสามารถอุดรอยรั่วเล็กๆ เหล่านี้ได้ด้วยแผนงานดังนี้
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Maintaining Success -->
+                <div class="bg-white border border-emerald-200 p-6 rounded-xl shadow-sm">
+                    <h3 class="text-lg font-bold text-emerald-800 mb-4 border-b border-emerald-100 pb-2 flex items-center gap-2">
+                        <span>🌟</span> การรักษามาตรฐาน (Sustain)
+                    </h3>
+                    <ul class="space-y-4 text-sm text-slate-700">
+                        <li class="flex items-start gap-3">
+                            <span class="text-emerald-500 mt-0.5">✅</span> 
+                            <div>
+                                <strong>แจ้งผลและชื่นชมทีมงาน:</strong> แจ้งผลคะแนน 96% ให้พนักงานสาขาหนองคายทุกคนทราบในการประชุมเช้า (Morning Brief) เพื่อเป็นขวัญกำลังใจ
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-emerald-500 mt-0.5">✅</span> 
+                            <div>
+                                <strong>ถอดบทเรียน (Best Practice):</strong> วิเคราะห์ว่ากระบวนการไหนที่สาขาหนองคายทำได้ดี (เช่น การวางเลย์เอาท์, วินัยการสแกนของแคชเชียร์) เพื่อนำไปเป็นตัวอย่างให้สาขาอื่น
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Fine Tuning -->
+                <div class="bg-white border border-indigo-200 p-6 rounded-xl shadow-sm">
+                    <h3 class="text-lg font-bold text-indigo-800 mb-4 border-b border-indigo-100 pb-2 flex items-center gap-2">
+                        <span>🔧</span> การปรับจูนจุดเล็กๆ (Fine Tuning)
+                    </h3>
+                    <ul class="space-y-4 text-sm text-slate-700">
+                        <li class="flex items-start gap-3">
+                            <span class="text-indigo-500 mt-0.5">📌</span> 
+                            <div>
+                                <strong>จัดเรียงสินค้าที่คล้ายกันให้ห่างกัน:</strong> เหล็ก 10 มิล กับ 12 มิล หรือ ไดมอนด์บอร์ดคนละขนาด ควรทาสีแต้มที่ปลายวัสดุ หรือวางกั้นด้วย Divider ให้ชัดเจนเพื่อกันการหยิบสลับ
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-indigo-500 mt-0.5">📌</span> 
+                            <div>
+                                <strong>ตรวจสอบเอกสารรับเข้า (GR):</strong> ให้แอดมินสาขาเช็คใบรับของ (GR) ของไดมอนด์บอร์ดรอบล่าสุด ว่ามีการคีย์รหัสสินค้าผิดสลับขนาดกันตั้งแต่ตอนรับของหรือไม่
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="text-indigo-500 mt-0.5">📌</span> 
+                            <div>
+                                <strong>ตัดเศษทศนิยม (Rounding adjustment):</strong> สำหรับสินค้าตระกูลกิโลกรัม (เช่น ปอกคาน) ที่มีเศษ 0.2 - 0.3 กก. ให้ตั้งค่ายอมรับเศษทศนิยมในระบบ (Tolerance limit) เพื่อให้ระบบปรับปรุงยอดอัตโนมัติ
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- 1. STATE & DATA ---
+        // Complete 12 items dataset from the Nong Khai March Report
+        const inventoryData = [
+            { id: "P0-0707", name: "ท่อพีวีซี 1 1/4\" ชั้น 5", unit: "เส้น", sys: 142, count: 143, diff: 1, status: "เกิน" },
+            { id: "P0-0708-01", name: "ท่อพีวีซี 1 1/4\" ชั้น 8.5", unit: "เส้น", sys: 143, count: 142, diff: -1, status: "ขาด" },
+            { id: "B9-1010", name: "ปอกคาน 10\"x15\"", unit: "กิโลกรัม", sys: 3.5, count: 3.8, diff: 0.3, status: "เกิน" },
+            { id: "B9-1504", name: "ผนังเบา ตัวซี เบอร์26*75", unit: "เส้น", sys: 95, count: 97, diff: 2, status: "เกิน" },
+            { id: "B9-1602", name: "ตะขอซีลาย", unit: "ตัว", sys: 995, count: 997, diff: 2, status: "เกิน" },
+            { id: "B9-3001", name: "เหล็กข้ออ้อย 10 มิล", unit: "เส้น", sys: 14, count: 13, diff: -1, status: "ขาด" },
+            { id: "B9-3002", name: "เหล็กข้ออ้อย 12 มิล", unit: "เส้น", sys: 9, count: 10, diff: 1, status: "เกิน" },
+            { id: "B9-9002", name: "ปลอกเสา 15\"x15\"", unit: "กิโลกรัม", sys: 18.8, count: 19, diff: 0.2, status: "เกิน" },
+            { id: "B3-0302-01-03", name: "ไม้ฝา6\" สีแดงเชอรี่", unit: "แผ่น", sys: 19, count: 20, diff: 1, status: "เกิน" },
+            { id: "B3-1701-01", name: "ไดมอนด์บอร์ด 4 มิล 60*240", unit: "แผ่น", sys: 0, count: 3, diff: 3, status: "เกิน" }, // Note: system was blank, assumed 0
+            { id: "B3-1701-02", name: "ไดมอนด์บอร์ด 4 มิล 120*240", unit: "แผ่น", sys: 52, count: 51, diff: -1, status: "ขาด" },
+            { id: "B3-1801-01", name: "แผ่นยิปซั่ม เพชร", unit: "แผ่น", sys: 15, count: 16, diff: 1, status: "เกิน" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 2. TAB NAVIGATION LOGIC ---
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-tab');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+
+            // --- 3. TABLE FILTERING LOGIC ---
+            const tableBody = document.getElementById('inventoryTableBody');
+            const filterSelect = document.getElementById('statusFilter');
+
+            const renderTable = (filter) => {
+                tableBody.innerHTML = ''; 
+                let filteredData = inventoryData;
+
+                if (filter !== 'all') {
+                    filteredData = inventoryData.filter(item => item.status === filter);
+                }
+
+                if (filteredData.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-500">ไม่พบข้อมูล</td></tr>`;
+                    return;
+                }
+
+                filteredData.forEach(item => {
+                    const diffColor = item.diff < 0 ? 'text-rose-600' : 'text-blue-600';
+                    const diffSign = item.diff > 0 ? '+' : '';
+                    const statusBadge = item.status === 'ขาด' 
+                        ? '<span class="bg-rose-100 text-rose-700 px-2 py-1 rounded border border-rose-200 text-xs">📉 ขาด</span>'
+                        : '<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded border border-blue-200 text-xs">📈 เกิน</span>';
+                    
+                    const sysDisplay = item.sys === 0 ? '<span class="text-slate-400 italic">ไม่มีข้อมูล</span>' : item.sys.toLocaleString();
+                    const highlightClass = item.sys === 0 ? 'bg-amber-50/50' : '';
+
+                    const row = `
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors ${highlightClass}">
+                            <td class="p-4 font-mono text-slate-500">${item.id}</td>
+                            <td class="p-4 text-slate-800 font-medium">${item.name}</td>
+                            <td class="p-4 text-center text-slate-600">${item.unit}</td>
+                            <td class="p-4 text-right text-slate-600">${sysDisplay}</td>
+                            <td class="p-4 text-right text-slate-600">${item.count.toLocaleString()}</td>
+                            <td class="p-4 text-right font-bold ${diffColor}">${diffSign}${item.diff.toLocaleString()}</td>
+                            <td class="p-4 text-center">${statusBadge}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            };
+
+            renderTable('all');
+            filterSelect.addEventListener('change', (e) => {
+                renderTable(e.target.value);
+            });
+
+            // --- 4. CHART.JS INITIALIZATION ---
+            Chart.defaults.font.family = "'Sarabun', sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            // Chart 1: SKU Accuracy Doughnut
+            const ctxAccuracy = document.getElementById('accuracyChart').getContext('2d');
+            new Chart(ctxAccuracy, {
+                type: 'doughnut',
+                data: {
+                    labels: ['รายการยอดตรง (Matched)', 'รายการที่ขาด (Shortage)', 'รายการที่เกิน (Overage)'],
+                    datasets: [{
+                        data: [265, 3, 9], // 277 total, 265 match, 3 short, 9 over
+                        backgroundColor: ['#059669', '#f43f5e', '#3b82f6'],
+                        borderWidth: 0,
+                        hoverOffset: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const percentage = ((value / 277) * 100).toFixed(1);
+                                    return ` ${context.label}: ${value} SKU (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Value Impact Bar Chart
+            const ctxImpact = document.getElementById('impactChart').getContext('2d');
+            new Chart(ctxImpact, {
+                type: 'bar',
+                data: {
+                    labels: ['มูลค่ารวม (THB)'],
+                    datasets: [
+                        {
+                            label: 'มูลค่าสต๊อกขาด',
+                            data: [264],
+                            backgroundColor: '#f43f5e',
+                            borderRadius: 6,
+                            maxBarThickness: 80
+                        },
+                        {
+                            label: 'มูลค่าสต๊อกเกิน',
+                            data: [606],
+                            backgroundColor: '#3b82f6',
+                            borderRadius: 6,
+                            maxBarThickness: 80
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            ticks: { callback: function(value) { return '฿' + value.toLocaleString(); } }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ฿${context.raw.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+    </script>
+<a href="caruseefficiency.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (caruse efficiency) ➜
+</body>
+</html>

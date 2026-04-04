@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Dashboard - Pattanasin</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Noto Sans Thai -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Noto Sans Thai"', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            /* พื้นหลังสีอ่อนแบบไล่เฉด เพื่อให้ Glassmorphism โดดเด่น */
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #cbd5e1 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        /* คลาสสำหรับ Glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+        .glass-header {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased font-sans">
+
+    <!-- Header -->
+    <header class="glass-header sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <div class="bg-blue-600 text-white p-2 rounded-lg shadow-md">
+                    <i class="fas fa-chart-line text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-800">สรุปผลยอดขายสินค้าในกลุ่มสินค้าใหม่ ปี 2026</h1>
+                    <p class="text-sm text-slate-500">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด (อุดร-หนองคาย) | ข้อมูลประจำเดือน: มีนาคม</p>
+                </div>
+            </div>
+            <div class="hidden md:block text-right">
+                <p class="text-sm font-semibold text-slate-600"><i class="far fa-calendar-alt mr-1"></i> มีนาคม 2026</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- ยอดขายจริง (มี.ค.) -->
+            <div class="glass-card rounded-2xl p-6 relative overflow-hidden transition-transform hover:-translate-y-1 duration-300">
+                <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-coins text-6xl text-blue-600"></i></div>
+                <p class="text-sm font-medium text-slate-500 mb-1">ยอดขายจริง (มีนาคม)</p>
+                <h3 class="text-3xl font-bold text-slate-800">฿100,610.41</h3>
+                <div class="mt-4 flex items-center text-sm">
+                    <span class="text-emerald-600 font-semibold bg-emerald-100 px-2 py-1 rounded-full flex items-center">
+                        <i class="fas fa-arrow-up mr-1"></i> 278.2%
+                    </span>
+                    <span class="text-slate-500 ml-2">เทียบกับเดือน ก.พ.</span>
+                </div>
+            </div>
+
+            <!-- เป้าหมายต่อเดือน -->
+            <div class="glass-card rounded-2xl p-6 relative overflow-hidden transition-transform hover:-translate-y-1 duration-300">
+                <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-bullseye text-6xl text-indigo-600"></i></div>
+                <p class="text-sm font-medium text-slate-500 mb-1">เป้าหมาย (รายเดือน)</p>
+                <h3 class="text-3xl font-bold text-slate-800">฿600,000.00</h3>
+                <div class="mt-4 flex items-center text-sm w-full bg-slate-200 rounded-full h-2.5">
+                    <div class="bg-indigo-500 h-2.5 rounded-full" style="width: 16.76%"></div>
+                </div>
+                <p class="text-xs text-slate-500 mt-2">ทำได้ 16.76% ของเป้าหมาย</p>
+            </div>
+
+            <!-- ยอดขายสะสม YTD -->
+            <div class="glass-card rounded-2xl p-6 relative overflow-hidden transition-transform hover:-translate-y-1 duration-300">
+                <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-chart-pie text-6xl text-purple-600"></i></div>
+                <p class="text-sm font-medium text-slate-500 mb-1">ยอดขายสะสม (ม.ค. - มี.ค.)</p>
+                <h3 class="text-3xl font-bold text-slate-800">฿130,150.01</h3>
+                <div class="mt-4 flex items-center text-sm">
+                    <span class="text-slate-500"><i class="fas fa-info-circle mr-1"></i> ยอดรวมสะสม 3 เดือน</span>
+                </div>
+            </div>
+
+            <!-- จำนวนรายการสินค้าขายดี -->
+            <div class="glass-card rounded-2xl p-6 relative overflow-hidden transition-transform hover:-translate-y-1 duration-300">
+                <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-boxes text-6xl text-amber-600"></i></div>
+                <p class="text-sm font-medium text-slate-500 mb-1">สินค้าที่ขับเคลื่อนยอดขาย</p>
+                <h3 class="text-2xl font-bold text-slate-800">กลุ่มเหล็ก/ท่อ</h3>
+                <div class="mt-4 flex items-center text-sm">
+                    <span class="text-amber-600 font-semibold bg-amber-100 px-2 py-1 rounded-full">
+                         ทำยอด > 50% ของเดือน
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Trend Chart -->
+            <div class="glass-card rounded-2xl p-6 lg:col-span-2">
+                <h2 class="text-lg font-bold text-slate-800 mb-4">แนวโน้มยอดขายเทียบกับเป้าหมาย (ม.ค. - มี.ค.)</h2>
+                <div class="relative h-72 w-full">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top Products Chart -->
+            <div class="glass-card rounded-2xl p-6">
+                <h2 class="text-lg font-bold text-slate-800 mb-4">สัดส่วนยอดขายตามสินค้า (มี.ค.)</h2>
+                <div class="relative h-64 w-full flex justify-center">
+                    <canvas id="productChart"></canvas>
+                </div>
+                <p class="text-xs text-center text-slate-500 mt-4">* ข้อมูลจากการรวมบิลยอด 56,595.00 และ 44,015.41</p>
+            </div>
+        </div>
+
+        <!-- Analysis & Top Products Table -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Analysis Text -->
+            <div class="glass-card rounded-2xl p-6 lg:col-span-1 flex flex-col">
+                <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center">
+                    <i class="fas fa-search-dollar text-blue-600 mr-2"></i> วิเคราะห์ผลการดำเนินงาน
+                </h2>
+                <div class="space-y-4 text-sm text-slate-700 flex-grow">
+                    <div class="bg-white/50 p-4 rounded-xl border border-white/60">
+                        <h4 class="font-bold text-emerald-700"><i class="fas fa-chart-line mr-1"></i> อัตราการเติบโตดีเยี่ยม</h4>
+                        <p class="mt-1">แม้ยอดขายจะยังไม่ถึงเป้า 600,000 บาท/เดือน (ทำได้ 16.7%) แต่พบว่ามีอัตราการเติบโตแบบก้าวกระโดด จากเดือนมกราคม (2,943฿) สู่มีนาคม (100,610.41฿) คิดเป็นการเติบโตถึง 278% จากเดือนที่ผ่านมา แสดงให้เห็นว่าสินค้าใหม่เริ่มเป็นที่รู้จักและเข้าถึงลูกค้าได้มากขึ้น</p>
+                    </div>
+                    <div class="bg-white/50 p-4 rounded-xl border border-white/60">
+                        <h4 class="font-bold text-blue-700"><i class="fas fa-star mr-1"></i> สินค้าตัวชูโรง (Hero Products)</h4>
+                        <p class="mt-1">ยอดขายในเดือนมีนาคมส่วนใหญ่ถูกขับเคลื่อนโดย <b>กลุ่มวัสดุก่อสร้างและท่อขนาดใหญ่</b> ได้แก่ "แป๊ปแบนดำ", "ข้อต่อหน้าจาน 6 นิ้ว", และ "แป๊ปแบนสังกะสี" ซึ่ง 3 รายการนี้สร้างยอดขายรวมกว่า 57,400 บาท (เกินครึ่งของยอดทั้งเดือน)</p>
+                    </div>
+                    <div class="bg-white/50 p-4 rounded-xl border border-white/60">
+                        <h4 class="font-bold text-amber-700"><i class="fas fa-lightbulb mr-1"></i> ข้อเสนอแนะ</h4>
+                        <ul class="list-disc pl-5 mt-1 space-y-1">
+                            <li>ควรเน้นทำโปรโมชั่นพ่วง (Bundle) สินค้ากลุ่มเหล็กแป๊ป กับสินค้าชิ้นเล็กที่ยอดขายยังน้อย (เช่น สีน้ำมัน, สวิทช์)</li>
+                            <li>กลุ่มสินค้าเกษตร เช่น "เทปน้ำหยด" เริ่มมียอดขายเข้ามา ควรผลักดันเพิ่มในช่วงเข้าสู่ฤดูเพาะปลูก</li>
+                            <li>เป้าหมาย 600,000 บาท อาจจะสูงเกินไปสำหรับระยะเริ่มต้นของสินค้าใหม่ อาจต้องปรับเป้าหมายระยะสั้นให้สอดคล้องกับ Traction จริงเพื่อสร้างกำลังใจให้ทีมขาย</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Products Table -->
+            <div class="glass-card rounded-2xl p-6 lg:col-span-2">
+                <h2 class="text-lg font-bold text-slate-800 mb-4">Top 5 สินค้าใหม่ยอดขายสูงสุด (ประจำเดือนมีนาคม)</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs text-slate-600 uppercase bg-slate-100/50 rounded-t-lg">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 rounded-tl-lg">อันดับ</th>
+                                <th scope="col" class="px-4 py-3">รหัสสินค้า</th>
+                                <th scope="col" class="px-4 py-3">ชื่อสินค้า</th>
+                                <th scope="col" class="px-4 py-3 text-center">จำนวนขาย</th>
+                                <th scope="col" class="px-4 py-3 text-right rounded-tr-lg">มูลค่าขาย (บาท)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-white/40 hover:bg-white/40 transition-colors">
+                                <td class="px-4 py-3 font-bold text-amber-500">1</td>
+                                <td class="px-4 py-3 text-slate-500">B9-5005</td>
+                                <td class="px-4 py-3 font-medium text-slate-800">แป๊ปแบนดำ 3"x1 1/2" 1.6mm</td>
+                                <td class="px-4 py-3 text-center">65 เส้น</td>
+                                <td class="px-4 py-3 text-right font-bold text-slate-700">26,455.00</td>
+                            </tr>
+                            <tr class="border-b border-white/40 hover:bg-white/40 transition-colors">
+                                <td class="px-4 py-3 font-bold text-slate-400">2</td>
+                                <td class="px-4 py-3 text-slate-500">P1-7807-03</td>
+                                <td class="px-4 py-3 font-medium text-slate-800">ข้อต่อหน้าจาน 6"</td>
+                                <td class="px-4 py-3 text-center">10 ตัว</td>
+                                <td class="px-4 py-3 text-right font-bold text-slate-700">18,286.50</td>
+                            </tr>
+                            <tr class="border-b border-white/40 hover:bg-white/40 transition-colors">
+                                <td class="px-4 py-3 font-bold text-amber-700">3</td>
+                                <td class="px-4 py-3 text-slate-500">B9-7002-03</td>
+                                <td class="px-4 py-3 font-medium text-slate-800">แป๊ปแบนสังกะสี 3"x1 1/2" 1.5mm</td>
+                                <td class="px-4 py-3 text-center">30 เส้น</td>
+                                <td class="px-4 py-3 text-right font-bold text-slate-700">12,750.00</td>
+                            </tr>
+                            <tr class="border-b border-white/40 hover:bg-white/40 transition-colors">
+                                <td class="px-4 py-3 font-bold text-slate-500">4</td>
+                                <td class="px-4 py-3 text-slate-500">P4-0131-*</td>
+                                <td class="px-4 py-3 font-medium text-slate-800">เทปน้ำหยด (รวมทุกขนาด)</td>
+                                <td class="px-4 py-3 text-center">15 ม้วน</td>
+                                <td class="px-4 py-3 text-right font-bold text-slate-700">9,770.00</td>
+                            </tr>
+                            <tr class="hover:bg-white/40 transition-colors">
+                                <td class="px-4 py-3 font-bold text-slate-500">5</td>
+                                <td class="px-4 py-3 text-slate-500">B9-1922</td>
+                                <td class="px-4 py-3 font-medium text-slate-800">เสารั้วอัดแรง 3"x3"x2m</td>
+                                <td class="px-4 py-3 text-center">45 ต้น</td>
+                                <td class="px-4 py-3 text-right font-bold text-slate-700">5,400.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="mt-8 text-center text-sm text-slate-400">
+            &copy; 2026 Pattanasin Thai Trading Co., Ltd. - Internal Sales Report
+        </footer>
+    </main>
+
+    <script>
+        // Data Setup
+        const chartFont = "'Noto Sans Thai', sans-serif";
+        
+        // 1. Trend Chart (Bar + Line)
+        const ctxTrend = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctxTrend, {
+            type: 'bar',
+            data: {
+                labels: ['ม.ค. 26', 'ก.พ. 26', 'มี.ค. 26'],
+                datasets: [
+                    {
+                        label: 'ยอดขายจริง (บาท)',
+                        data: [2943.00, 26596.60, 100610.41],
+                        backgroundColor: 'rgba(59, 130, 246, 0.7)', // Blue
+                        borderColor: 'rgb(37, 99, 235)',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        order: 2
+                    },
+                    {
+                        label: 'เป้าหมาย (บาท)',
+                        data: [600000, 600000, 600000],
+                        type: 'line',
+                        borderColor: 'rgba(220, 38, 38, 0.5)', // Red
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 4,
+                        order: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { font: { family: chartFont } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: { family: chartFont },
+                            callback: function(value) {
+                                return value / 1000 + 'k';
+                            }
+                        },
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                    },
+                    x: {
+                        ticks: { font: { family: chartFont } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 2. Top Products Doughnut Chart
+        // คำนวณยอดขายที่เหลือ (สินค้าอื่นๆ)
+        const totalSalesMar = 100610.41;
+        const top5Sales = 26455.00 + 18286.50 + 12750.00 + 9770.00 + 5400.00;
+        const otherSales = totalSalesMar - top5Sales;
+
+        const ctxProduct = document.getElementById('productChart').getContext('2d');
+        new Chart(ctxProduct, {
+            type: 'doughnut',
+            data: {
+                labels: ['แป๊ปแบนดำ', 'ข้อต่อหน้าจาน 6"', 'แป๊ปแบนสังกะสี', 'เทปน้ำหยด', 'เสารั้วอัดแรง', 'อื่นๆ'],
+                datasets: [{
+                    data: [26455.00, 18286.50, 12750.00, 9770.00, 5400.00, otherSales],
+                    backgroundColor: [
+                        'rgba(30, 58, 138, 0.8)',   // Dark Blue
+                        'rgba(59, 130, 246, 0.8)',  // Blue
+                        'rgba(147, 197, 253, 0.8)', // Light Blue
+                        'rgba(16, 185, 129, 0.8)',  // Emerald
+                        'rgba(245, 158, 11, 0.8)',  // Amber
+                        'rgba(203, 213, 225, 0.6)'  // Slate/Gray
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 1)',
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { 
+                            font: { family: chartFont, size: 11 },
+                            boxWidth: 12
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed !== null) {
+                                    label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(context.parsed);
+                                    let percentage = ((context.parsed / totalSalesMar) * 100).toFixed(1) + "%";
+                                    label += ' (' + percentage + ')';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+<a href="trainingemployee.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;   หน้าถัดไป (training employee) ➜
+</body>
+</html>

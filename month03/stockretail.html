@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard วิเคราะห์สต๊อกหน้าร้าน (กลุ่มน็อต/พุก) - มีนาคม 2026</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Chosen Palette: Warm Neutrals with Alert Accents (Slate-50 for background, Amber-500 for the 67% warning state, Indigo-600 for interactions, Rose-500/Emerald-500 for variance). -->
+    <!-- Application Structure Plan: A 3-Tab Interactive Dashboard tailored for High-Volume/Low-Value inventory analysis.
+         - Tab 1: "Overview" Highlights the contrast between massive quantity variances (21k+ items) vs relatively low financial impact (~11k THB).
+         - Tab 2: "Deep Dive" Features a data table focusing on the massive piece-count discrepancies, allowing filtering by status to easily spot items missing thousands of units.
+         - Tab 3: "Action Plan" Addresses the specific root causes for fasteners (weighing errors, loose vs packed selling, freebies) and provides targeted solutions. -->
+    <!-- Visualization & Content Choices: 
+         - Goal: Inform -> KPI cards emphasizing the 67% accuracy and the "Cost per missing unit" metric to prove the items are tiny/cheap.
+         - Goal: Compare -> Doughnut Chart (SKU Accuracy) & Bar Chart (Financial Impact vs Quantity Impact) using Chart.js.
+         - Goal: Organize & Interact -> Filterable HTML Table for the 249 SKUs, highlighting the extreme variance numbers.
+         - Goal: Present Text -> Structured grid cards using Unicode icons for Fastener-specific Root Causes and Recommendations.
+         - Confirming NO SVG or Mermaid JS used. Native Canvas and HTML/Unicode only. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; color: #334155; }
+        
+        /* Strict Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container { height: 280px; max-height: 300px; }
+        }
+
+        /* Tab Transitions */
+        .tab-content { display: none; animation: fadeIn 0.4s ease-out forwards; opacity: 0; }
+        .tab-content.active { display: block; }
+        
+        .tab-btn { transition: all 0.2s ease; border-bottom: 3px solid transparent; }
+        .tab-btn.active { 
+            border-bottom-color: #f59e0b; 
+            color: #b45309; 
+            font-weight: 700; 
+            background-color: #fffbeb;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-slate-800">🔩 สรุปการตรวจนับสินค้าคงคลัง (หน้าร้าน)</h1>
+                    <p class="text-sm md:text-base text-slate-500 mt-1">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | 📅 ประจำเดือน: มีนาคม 2026</p>
+                    <div class="mt-2 inline-block bg-amber-50 text-amber-700 text-xs px-3 py-1.5 rounded-md font-semibold border border-amber-200 shadow-sm">
+                        หมวดหมู่: สินค้าน็อต พุก เครื่องมือช่างทั่วไป
+                    </div>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 px-5 py-3 rounded-xl text-center shadow-sm w-full md:w-auto">
+                    <p class="text-xs text-amber-700 font-bold uppercase tracking-wider mb-1">ความแม่นยำรวม (ต่ำกว่าเป้า)</p>
+                    <div class="flex items-baseline justify-center gap-2">
+                        <p class="text-3xl font-extrabold text-amber-600">67%</p>
+                        <p class="text-sm text-amber-700 font-medium">/ เป้า 90%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto custom-scrollbar border-t border-slate-100 mt-2">
+            <button class="tab-btn active px-5 py-3 text-slate-600 hover:text-amber-700 focus:outline-none whitespace-nowrap text-sm md:text-base" data-tab="overview">
+                📊 1. ภาพรวมและสถิติ
+            </button>
+            <button class="tab-btn px-5 py-3 text-slate-600 hover:text-amber-700 focus:outline-none whitespace-nowrap text-sm md:text-base" data-tab="deepdive">
+                🔍 2. เจาะลึกความคลาดเคลื่อน (Data)
+            </button>
+            <button class="tab-btn px-5 py-3 text-slate-600 hover:text-amber-700 focus:outline-none whitespace-nowrap text-sm md:text-base" data-tab="actionplan">
+                💡 3. แผนแก้ปัญหาสินค้าชิ้นเล็ก
+            </button>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- ================= TAB 1: OVERVIEW ================= -->
+        <section id="overview" class="tab-content active">
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-slate-800 mb-3 border-l-4 border-amber-500 pl-3">วิเคราะห์พฤติกรรมข้อมูล (Data Behavior Analysis)</h2>
+                <p class="text-slate-600 text-base leading-relaxed bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    ในเดือนมีนาคม หมวดหมู่น็อตและเครื่องมือช่างมี <strong class="text-amber-600">ความแม่นยำอยู่ที่ 67%</strong> (ตรง 168 จาก 249 SKU) ลักษณะเด่นของความผิดปกติในหมวดหมู่นี้คือ <strong>"High Volume, Low Value"</strong> กล่าวคือ มีจำนวนชิ้นสินค้าที่คลาดเคลื่อนรวมกันมากถึง <span class="underline">21,328 ชิ้น</span> แต่มูลค่าความเสียหายกลับมีเพียง <span class="underline">11,073 บาท</span> (เฉลี่ยมูลค่าความต่างเพียง 0.5 บาท/ชิ้น) ซึ่งสะท้อนถึงปัญหาระบบการขายสินค้าชิ้นเล็ก/แบ่งขาย
+                </p>
+            </div>
+
+            <!-- KPI Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 relative overflow-hidden">
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">รายการนับทั้งหมด (SKUs)</p>
+                    <h3 class="text-2xl font-bold text-slate-800">249 <span class="text-sm font-normal text-slate-500">รายการ</span></h3>
+                    <div class="mt-3 text-sm font-medium text-emerald-600 bg-emerald-50 px-2 py-1 rounded inline-block">
+                        ✔️ ยอดตรง 168 รายการ
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 relative overflow-hidden">
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">จำนวนชิ้นสุทธิที่ผิดพลาด</p>
+                    <h3 class="text-2xl font-bold text-amber-600">21,328 <span class="text-sm font-normal text-slate-500">ชิ้น</span></h3>
+                    <div class="mt-3 text-xs text-slate-600 flex justify-between">
+                        <span class="text-rose-600">ขาด 14,948</span>
+                        <span class="text-blue-600">เกิน 6,380</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-5 relative overflow-hidden">
+                    <p class="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">มูลค่าความต่างสุทธิ</p>
+                    <h3 class="text-2xl font-bold text-rose-600">฿11,073<span class="text-base font-normal">.00</span></h3>
+                    <div class="mt-3 text-xs text-slate-600 flex justify-between">
+                        <span class="text-rose-600">ขาด ฿7,180</span>
+                        <span class="text-blue-600">เกิน ฿3,893</span>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 rounded-xl border border-slate-700 shadow-sm p-5 relative overflow-hidden text-white">
+                    <p class="text-xs text-slate-300 font-bold uppercase tracking-wider mb-1">มูลค่าเฉลี่ยต่อชิ้นที่หายไป</p>
+                    <h3 class="text-2xl font-bold text-emerald-400">฿0.48 <span class="text-sm font-normal text-slate-400">/ ชิ้น</span></h3>
+                    <p class="mt-3 text-xs text-slate-300 leading-snug">
+                        💡 สะท้อนชัดเจนว่าชิ้นส่วนที่ขาดหายส่วนใหญ่คือ น็อต/สกรู ตัวจิ๋วที่มีราคาต่ำมาก
+                    </p>
+                </div>
+            </div>
+
+            <!-- Charts Area -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Doughnut Chart for SKUs -->
+                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 text-center">สัดส่วนความแม่นยำ (นับตาม SKU)</h3>
+                    <div class="chart-container">
+                        <canvas id="accuracyChart"></canvas>
+                    </div>
+                </div>
+                <!-- Dual Axis Bar Chart for Qty vs Value -->
+                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-800 mb-1 text-center">เปรียบเทียบ จำนวนชิ้น (Qty) vs มูลค่า (THB)</h3>
+                    <p class="text-xs text-center text-slate-500 mb-4">แสดงให้เห็นว่าจำนวนชิ้นที่หายมีมหาศาล แต่มูลค่าต่ำ</p>
+                    <div class="chart-container">
+                        <canvas id="impactChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: DEEP DIVE (DATA) ================= -->
+        <section id="deepdive" class="tab-content">
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-slate-800 mb-3 border-l-4 border-amber-500 pl-3">ข้อมูลดิบเชิงลึกและการวิเคราะห์ความแปรปรวน (Variance Analysis)</h2>
+                <p class="text-slate-600 text-base leading-relaxed bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    ตารางด้านล่างแสดงรายการสินค้าน็อต พุก และเครื่องมือช่างที่ตรวจนับ จะสังเกตเห็นว่ากลุ่ม <strong>"น็อตและสกรู" (เช่น น็อตหัว P+W, สกรูปลายสว่าน)</strong> มีผลต่างหลักพันถึงหลักสองพันตัว ในขณะที่ <strong>"เครื่องมือช่าง" (เช่น ดอกสว่าน, ใบเลื่อย)</strong> มีผลต่างเพียง 1-5 ชิ้นเท่านั้น
+                </p>
+            </div>
+
+            <!-- Interactive Table Section -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-5 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><span>🔍</span> ตารางข้อมูลรายการสินค้า</h3>
+                    
+                    <!-- Filters -->
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <label for="statusFilter" class="text-sm font-medium text-slate-600 whitespace-nowrap">กรองตามสถานะ:</label>
+                        <select id="statusFilter" class="bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-amber-500 focus:border-amber-500 block w-full p-2 outline-none">
+                            <option value="all">แสดงทั้งหมด</option>
+                            <option value="ขาด">เฉพาะสต๊อกขาด (Shortage)</option>
+                            <option value="เกิน">เฉพาะสต๊อกเกิน (Overage)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse whitespace-nowrap">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-sm border-b border-slate-200">
+                                <th class="p-4 font-semibold">รหัสสินค้า</th>
+                                <th class="p-4 font-semibold">ชื่อสินค้า</th>
+                                <th class="p-4 font-semibold text-center">หน่วยนับ</th>
+                                <th class="p-4 font-semibold text-right">ยอดในระบบ</th>
+                                <th class="p-4 font-semibold text-right">นับได้จริง</th>
+                                <th class="p-4 font-semibold text-right">ผลต่าง (ชิ้น)</th>
+                                <th class="p-4 font-semibold text-center">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody" class="text-sm">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-3 bg-slate-50 text-center text-xs text-slate-500 border-t border-slate-200" id="tableRecordCount">
+                    แสดงข้อมูลตัวอย่าง
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: ACTION PLAN ================= -->
+        <section id="actionplan" class="tab-content">
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-slate-800 mb-3 border-l-4 border-amber-500 pl-3">สาเหตุปัญหาและแผนปฏิบัติการเฉพาะกิจ</h2>
+                <p class="text-slate-600 text-base leading-relaxed bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    สำหรับสินค้าหมวดหมู่น็อต สกรู และชิ้นส่วนขนาดเล็กที่มีการขายแบบปริมาณมาก การพยายามให้นับตรง 100% ด้วยคนเป็นเรื่องที่เป็นไปไม่ได้ ปัญหาหลักเกิดจากวิธีการรับเข้าและจ่ายออกที่ไม่ได้ใช้มาตรฐานเดียวกัน นี่คือแผนแก้ปัญหาเฉพาะสำหรับสินค้ากลุ่มนี้
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Root Causes -->
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>🔎</span> สาเหตุของปัญหา (Root Causes)
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-white border-l-4 border-rose-400 p-4 rounded-r-xl shadow-sm">
+                            <h4 class="font-bold text-slate-800 text-base mb-1">1. ปัญหาหน่วยนับ (UOM Mismatch)</h4>
+                            <p class="text-sm text-slate-600">รับสินค้าเข้าเป็น "กล่อง" (เช่น กล่องละ 1,000 ตัว) แต่หน้าร้านแกะขายปลีกเป็น "ตัว" เมื่อระบบ POS ตัดสต๊อกและคำนวณกลับไปกลับมา เกิดเศษทศนิยมหรือการตัดสต๊อกผิดพลาดมหาศาล</p>
+                        </div>
+                        <div class="bg-white border-l-4 border-orange-400 p-4 rounded-r-xl shadow-sm">
+                            <h4 class="font-bold text-slate-800 text-base mb-1">2. การชั่งน้ำหนักแทนการนับ (Weighing vs Counting)</h4>
+                            <p class="text-sm text-slate-600">เมื่อลูกค้าซื้อน็อต 500 ตัว พนักงานมักใช้ตาชั่งกิโลแบบเข็มในการกะปริมาณ แทนที่จะนับทีละตัว (ซึ่งถูกแล้วที่กะเอา) แต่ความคลาดเคลื่อนของตาชั่งทำให้จ่ายของเกินไป 20-30 ตัวต่อครั้ง สะสมทั้งเดือนจึงหายเป็นพันตัว</p>
+                        </div>
+                        <div class="bg-white border-l-4 border-amber-400 p-4 rounded-r-xl shadow-sm">
+                            <h4 class="font-bold text-slate-800 text-base mb-1">3. พฤติกรรม "แถมเผื่อขาด" (Freebies/Over-packing)</h4>
+                            <p class="text-sm text-slate-600">พฤติกรรมปกติของร้านฮาร์ดแวร์คือมักจะหยิบน็อตใส่ถุงเผื่อให้ลูกค้า 2-3 ตัวเสมอเพื่อความพึงพอใจ โดยไม่มีการนำจำนวนที่แถมไปตัดออกจากระบบ POS</p>
+                        </div>
+                        <div class="bg-white border-l-4 border-yellow-400 p-4 rounded-r-xl shadow-sm">
+                            <h4 class="font-bold text-slate-800 text-base mb-1">4. สินค้าปะปนในกระบะ (Mixed Bins)</h4>
+                            <p class="text-sm text-slate-600">ลูกค้าหยิบเลือกน็อตแล้วใส่คืนผิดกล่องผิดไซส์ ทำให้เวลานับสต๊อกหรือพนักงานหยิบขาย ได้น็อตผิดเบอร์ไป สต๊อกเบอร์นึงจึงขาด อีกเบอร์จึงเกิน</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                        <span>🎯</span> แผนปฏิบัติการ (Action Plan)
+                    </h3>
+                    
+                    <div class="bg-indigo-50 border border-indigo-100 p-5 rounded-xl mb-6 shadow-sm">
+                        <h4 class="font-bold text-indigo-800 mb-3 border-b border-indigo-200 pb-2">ระยะสั้น (ทำได้ทันที)</h4>
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li class="flex items-start gap-3">
+                                <span class="text-indigo-500 mt-0.5">✅</span> 
+                                <span><strong>จัดทำแพ็กเกจย่อย (Pre-packing):</strong> จ้างพนักงานพาร์ทไทม์ในช่วงที่ร้านว่าง นำน็อต/สกรูมาบรรจุใส่ถุงซิปเล็กๆ ถุงละ 20, 50 หรือ 100 ตัว และติดบาร์โค้ดใหม่ เลิกขายแบบหยิบสดนับสดที่หน้าเคาน์เตอร์</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-indigo-500 mt-0.5">✅</span> 
+                                <span><strong>ตั้งรหัส "สินค้าแถม/ของเสีย":</strong> ใน POS เพื่อให้พนักงานกดตัดสต๊อกเวลากำน็อตแถมให้ลูกค้า หรือเวลากวาดเศษน็อตตกพื้นทิ้ง</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-emerald-50 border border-emerald-100 p-5 rounded-xl shadow-sm">
+                        <h4 class="font-bold text-emerald-800 mb-3 border-b border-emerald-200 pb-2">ระยะกลาง-ยาว (System Upgrade)</h4>
+                        <ul class="space-y-3 text-sm text-slate-700">
+                            <li class="flex items-start gap-3">
+                                <span class="text-emerald-500 mt-0.5">⚙️</span> 
+                                <span><strong>ซื้อเครื่องชั่งดิจิทัลแบบนับชิ้น (Counting Scale):</strong> เปลี่ยนตาชั่งแบบเข็มเป็น Digital Counting Scale ที่มีความละเอียด 0.1 กรัม สามารถคำนวณน้ำหนักน็อต 1 ตัว และแปลงเป็นจำนวนชิ้นได้แม่นยำ 99.9%</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-emerald-500 mt-0.5">⚙️</span> 
+                                <span><strong>เปลี่ยนนโยบายการขาย:</strong> หากเป็นน็อตราคาถูกมากๆ ให้เลิกขายเป็น "ตัว" แต่เปลี่ยนหน่วยในระบบเป็นขายเป็น "ขีด/กิโลกรัม" แทน จะช่วยแก้ปัญหาเรื่องตัวเลขคลาดเคลื่อนได้ 100%</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-emerald-500 mt-0.5">⚙️</span> 
+                                <span><strong>อนุโลมค่าความคลาดเคลื่อน (Tolerance):</strong> ยอมรับให้กลุ่มสินค้าน็อตราคาถูก มีค่าความคลาดเคลื่อน (Shrinkage Allowance) ได้ 2-3% ของยอดขาย โดยไม่ต้องลงโทษพนักงาน เพราะต้นทุนบริหารจัดการแพงกว่ามูลค่าน็อตที่หายไป</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- 1. STATE & DATA ---
+        // Extracted highly relevant subset from the massive fasteners image
+        const inventoryData = [
+            // Extreme Shortage (Fasteners)
+            { id: "R2-4002", name: "น็อตหัว P+W สีขาว #8x3/4(500ตัว)", unit: "ตัว", sys: 2799, count: 400, diff: -2399, status: "ขาด" },
+            { id: "R2-4003", name: "น็อตหัว P+W สีขาว #8x1\"(1000ตัว)", unit: "ตัว", sys: 3400, count: 2200, diff: -1200, status: "ขาด" },
+            { id: "R2-08103", name: "น็อตเกลียวปล่อยหัวแฉก #7x1 1/4\"", unit: "ตัว", sys: 2400, count: 1500, diff: -900, status: "ขาด" },
+            { id: "R2-4009", name: "น็อตหัว P+W ปลายแหลม #8x1/2\"", unit: "ตัว", sys: 2600, count: 1700, diff: -900, status: "ขาด" },
+            { id: "R2-5008", name: "น็อตหัวF สีรุ้ง #8x1\" (500 ตัว)", unit: "ตัว", sys: 1500, count: 600, diff: -900, status: "ขาด" },
+            { id: "R2-8007", name: "น็อตมีปีก หัวSARAD #8x1 1/4\"", unit: "ตัว", sys: 1700, count: 800, diff: -900, status: "ขาด" },
+            // Extreme Overage (Fasteners)
+            { id: "R2-8005", name: "น็อตมีปีก หัวSARAD #8x3/4\"", unit: "ตัว", sys: 3100, count: 6000, diff: 2900, status: "เกิน" },
+            { id: "R2-8002", name: "น็อตมีปีก หัวSARAD #7x1\"", unit: "ตัว", sys: 400, count: 1600, diff: 1200, status: "เกิน" },
+            { id: "R2-3003", name: "น็อตไม้ สีรุ้ง #10x1 1/2\"", unit: "ตัว", sys: 400, count: 1000, diff: 600, status: "เกิน" },
+            { id: "R2-5003", name: "น็อตหัวF สีรุ้ง #6x1\"", unit: "ตัว", sys: 400, count: 900, diff: 500, status: "เกิน" },
+            // Minor Variance (Hand Tools / Drill Bits)
+            { id: "C1-0813", name: "ดอกสว่านเจาะเหล็ก 7.0 มม", unit: "ดอก", sys: 9, count: 4, diff: -5, status: "ขาด" },
+            { id: "C1-0808", name: "ดอกสว่านเจาะเหล็ก 4.5 มม", unit: "ดอก", sys: 92, count: 90, diff: -2, status: "ขาด" },
+            { id: "C1-0817", name: "ดอกสว่านเจาะเหล็ก 9 มม", unit: "ดอก", sys: 5, count: 6, diff: 1, status: "เกิน" },
+            { id: "C0-0004", name: "ใบเลื่อยวงเดือน MAKATO ตัดไม้ 4\"", unit: "ใบ", sys: 15, count: 19, diff: 4, status: "เกิน" },
+            // Box Units with low count
+            { id: "R2-9029", name: "พุก #6", unit: "กล่อง", sys: 23, count: 24, diff: 1, status: "เกิน" },
+            { id: "R2-9030", name: "พุก #7", unit: "กล่อง", sys: 25, count: 13, diff: -12, status: "ขาด" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 2. TAB NAVIGATION LOGIC ---
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-tab');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+
+            // --- 3. TABLE FILTERING LOGIC ---
+            const tableBody = document.getElementById('inventoryTableBody');
+            const recordCount = document.getElementById('tableRecordCount');
+            const filterSelect = document.getElementById('statusFilter');
+
+            const renderTable = (filter) => {
+                tableBody.innerHTML = ''; 
+                let filteredData = inventoryData;
+
+                if (filter !== 'all') {
+                    filteredData = inventoryData.filter(item => item.status === filter);
+                }
+
+                if (filteredData.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-500">ไม่พบข้อมูล</td></tr>`;
+                    recordCount.innerText = `พบ 0 รายการ`;
+                    return;
+                }
+
+                // Sort data by absolute difference to show biggest issues first
+                filteredData.sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff));
+
+                filteredData.forEach(item => {
+                    const diffColor = item.diff < 0 ? 'text-rose-600' : 'text-blue-600';
+                    const diffSign = item.diff > 0 ? '+' : '';
+                    const statusBadge = item.status === 'ขาด' 
+                        ? '<span class="bg-rose-100 text-rose-700 px-2 py-1 rounded border border-rose-200 text-xs">📉 ขาด</span>'
+                        : '<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded border border-blue-200 text-xs">📈 เกิน</span>';
+                    
+                    const isHighVolume = Math.abs(item.diff) >= 500;
+                    const highlightClass = isHighVolume ? 'bg-amber-50/50' : '';
+                    const warningIcon = isHighVolume ? ' <span title="คลาดเคลื่อนปริมาณสูง" class="text-amber-500">⚠️</span>' : '';
+
+                    const row = `
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors ${highlightClass}">
+                            <td class="p-4 font-mono text-slate-500">${item.id}</td>
+                            <td class="p-4 text-slate-800 font-medium">${item.name}</td>
+                            <td class="p-4 text-center text-slate-600">${item.unit}</td>
+                            <td class="p-4 text-right text-slate-600">${item.sys.toLocaleString()}</td>
+                            <td class="p-4 text-right text-slate-600">${item.count.toLocaleString()}</td>
+                            <td class="p-4 text-right font-bold ${diffColor}">${diffSign}${item.diff.toLocaleString()}${warningIcon}</td>
+                            <td class="p-4 text-center">${statusBadge}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+                
+                recordCount.innerText = `แสดงข้อมูลไฮไลท์ ${filteredData.length} รายการ (จัดเรียงตามผลต่างมากไปน้อย)`;
+            };
+
+            renderTable('all');
+            filterSelect.addEventListener('change', (e) => {
+                renderTable(e.target.value);
+            });
+
+            // --- 4. CHART.JS INITIALIZATION ---
+            Chart.defaults.font.family = "'Sarabun', sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            // Chart 1: SKU Accuracy Doughnut
+            const ctxAccuracy = document.getElementById('accuracyChart').getContext('2d');
+            new Chart(ctxAccuracy, {
+                type: 'doughnut',
+                data: {
+                    labels: ['ตรง (Matched)', 'ขาด (Shortage)', 'เกิน (Overage)'],
+                    datasets: [{
+                        data: [168, 53, 28], // From report
+                        backgroundColor: ['#10b981', '#f43f5e', '#3b82f6'],
+                        borderWidth: 0,
+                        hoverOffset: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const percentage = Math.round((value / 249) * 100);
+                                    return ` ${context.label}: ${value} SKU (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Quantity vs Value Bar Chart
+            const ctxImpact = document.getElementById('impactChart').getContext('2d');
+            new Chart(ctxImpact, {
+                type: 'bar',
+                data: {
+                    labels: ['สต๊อกขาด (Shortage)', 'สต๊อกเกิน (Overage)'],
+                    datasets: [
+                        {
+                            label: 'จำนวนชิ้น (Qty)',
+                            data: [14948, 6380],
+                            backgroundColor: '#f59e0b', // Amber for huge quantity
+                            yAxisID: 'yQty'
+                        },
+                        {
+                            label: 'มูลค่า (THB)',
+                            data: [7180, 3893],
+                            backgroundColor: '#0f172a', // Dark slate for value
+                            yAxisID: 'yVal'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { display: false } },
+                        yQty: { 
+                            type: 'linear', 
+                            display: true, 
+                            position: 'left',
+                            title: { display: true, text: 'จำนวนชิ้น' },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        yVal: { 
+                            type: 'linear', 
+                            display: true, 
+                            position: 'right',
+                            title: { display: true, text: 'มูลค่า (บาท)' },
+                            grid: { drawOnChartArea: false } // Prevent grid lines overlapping
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.datasetIndex === 0) return ` จำนวน: ${context.raw.toLocaleString()} ชิ้น`;
+                                    if(context.datasetIndex === 1) return ` มูลค่า: ฿${context.raw.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+    </script>
+<a href="stockwarehouse.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (stock warehouse) ➜
+</body>
+</html>

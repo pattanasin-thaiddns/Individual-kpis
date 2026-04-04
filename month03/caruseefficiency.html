@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard ประสิทธิภาพการใช้รถบรรทุก - พัฒนาสิน ไทยเทรดดิ้ง</title>
+    
+    <!-- นำเข้า Tailwind CSS สำหรับการจัดการ Layout และ สีสัน -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- นำเข้า Chart.js สำหรับทำกราฟ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- นำเข้า Google Fonts 'Kanit' ให้ดูทันสมัยและอ่านง่าย -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f3f4f6; /* สีพื้นหลังเทาอ่อน */
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #047857 0%, #10b981 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header Section -->
+        <header class="gradient-bg text-white rounded-2xl p-6 md:p-8 card-shadow relative overflow-hidden">
+            <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold mb-2">รายงานประสิทธิภาพการใช้รถบรรทุก</h1>
+                    <p class="text-lg md:text-xl text-emerald-100">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | ประจำเดือน: มีนาคม 2026</p>
+                </div>
+                <div class="mt-4 md:mt-0 text-right bg-white/20 p-4 rounded-xl backdrop-blur-sm border border-white/30">
+                    <p class="text-sm text-emerald-100 mb-1">เป้าหมายประสิทธิภาพ</p>
+                    <div class="flex items-center gap-2">
+                        <span class="text-3xl font-bold">> 85%</span>
+                        <span class="bg-emerald-500 text-white text-xs px-2 py-1 rounded-full border border-white">Target</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Decorative circles -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-10 right-20 w-32 h-32 bg-white opacity-10 rounded-full blur-xl"></div>
+        </header>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- KPI 1 -->
+            <div class="bg-white rounded-2xl p-6 card-shadow border-l-8 border-emerald-500">
+                <p class="text-gray-500 text-sm font-medium mb-1">ประสิทธิภาพรวม (มีนาคม)</p>
+                <div class="flex items-end gap-3">
+                    <h2 class="text-4xl font-bold text-gray-800">90.71%</h2>
+                    <span class="text-emerald-500 font-medium flex items-center mb-1">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                        ผ่านเป้าหมาย
+                    </span>
+                </div>
+            </div>
+            <!-- KPI 2 -->
+            <div class="bg-white rounded-2xl p-6 card-shadow border-l-8 border-blue-500">
+                <p class="text-gray-500 text-sm font-medium mb-1">จำนวนเที่ยววิ่งทั้งหมด</p>
+                <div class="flex items-end gap-3">
+                    <h2 class="text-4xl font-bold text-gray-800">85</h2>
+                    <span class="text-gray-500 mb-1">เที่ยว</span>
+                </div>
+                <p class="text-xs text-gray-400 mt-2">เพิ่มขึ้นจากเดือน ก.พ. (75 เที่ยว)</p>
+            </div>
+            <!-- KPI 3 -->
+            <div class="bg-white rounded-2xl p-6 card-shadow border-l-8 border-purple-500">
+                <p class="text-gray-500 text-sm font-medium mb-1">ปริมาณขนส่งสินค้ารวม</p>
+                <div class="flex items-end gap-3">
+                    <h2 class="text-4xl font-bold text-gray-800">664.39</h2>
+                    <span class="text-gray-500 mb-1">ตัน</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Chart 1: Trend -->
+            <div class="bg-white rounded-2xl p-6 card-shadow">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">แนวโน้มประสิทธิภาพ (ม.ค. - มี.ค. 2026)</h3>
+                <div class="relative h-64">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 2: Efficiency by Truck -->
+            <div class="bg-white rounded-2xl p-6 card-shadow">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">ประสิทธิภาพการบรรทุกแยกตามรถ (% เทียบเป้า 85%)</h3>
+                <div class="relative h-64">
+                    <canvas id="truckChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 3: Load Type -->
+            <div class="bg-white rounded-2xl p-6 card-shadow">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">สัดส่วนการบรรทุก (เต็มคัน vs ไม่เต็มคัน)</h3>
+                <div class="relative h-64 flex justify-center">
+                    <canvas id="loadTypeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Data Table: Workload Distribution -->
+            <div class="bg-white rounded-2xl p-6 card-shadow flex flex-col justify-between">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">ภาระงานแยกตามรถ (ตัน/เที่ยว)</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm text-left text-gray-600">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-100 rounded-t-lg">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 rounded-tl-lg">ประเภทรถ</th>
+                                <th scope="col" class="px-4 py-3 text-center">จำนวนเที่ยว</th>
+                                <th scope="col" class="px-4 py-3 text-right">น้ำหนักรวม (ตัน)</th>
+                                <th scope="col" class="px-4 py-3 text-center rounded-tr-lg">วิ่งระหว่างวัน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-4 py-2 font-medium text-gray-900">6 ล้อ (นำโชค)</td><td class="px-4 py-2 text-center">22</td><td class="px-4 py-2 text-right">162.83</td><td class="px-4 py-2 text-center">2</td>
+                            </tr>
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-4 py-2 font-medium text-gray-900">6 ล้อ (พี่หมาน)</td><td class="px-4 py-2 text-center text-blue-600 font-bold">23</td><td class="px-4 py-2 text-right">190.08</td><td class="px-4 py-2 text-center">2</td>
+                            </tr>
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-4 py-2 font-medium text-gray-900">6 ล้อ (ทำเงิน)</td><td class="px-4 py-2 text-center">17</td><td class="px-4 py-2 text-right text-purple-600 font-bold">191.13</td><td class="px-4 py-2 text-center">1</td>
+                            </tr>
+                            <tr class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-4 py-2 font-medium text-gray-900">6 ล้อ (บุญหนัก)</td><td class="px-4 py-2 text-center text-red-500">3</td><td class="px-4 py-2 text-right text-red-500">37.91</td><td class="px-4 py-2 text-center">-</td>
+                            </tr>
+                            <tr class="bg-white hover:bg-gray-50">
+                                <td class="px-4 py-2 font-medium text-gray-900">กระบะ (ออมสิน)</td><td class="px-4 py-2 text-center">20</td><td class="px-4 py-2 text-right">82.44</td><td class="px-4 py-2 text-center">3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Executive Analysis Section -->
+        <div class="bg-white rounded-2xl p-6 md:p-8 card-shadow border-t-8 border-gray-800">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="p-3 bg-gray-100 rounded-lg">
+                    <svg class="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">บทวิเคราะห์และข้อเสนอแนะผู้บริหาร (Executive Summary)</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+                <!-- Insights -->
+                <div>
+                    <h3 class="text-lg font-bold text-emerald-600 mb-3 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        ภาพรวมและจุดเด่น (Insights)
+                    </h3>
+                    <ul class="space-y-3 text-gray-600 list-disc pl-5">
+                        <li><strong class="text-gray-800">บรรลุเป้าหมายองค์กร:</strong> เดือนมีนาคมทำผลงานได้ดีเยี่ยม ประสิทธิภาพรวมอยู่ที่ <strong class="text-emerald-600">90.71%</strong> ซึ่งสูงกว่าเป้าหมายที่ตั้งไว้ (85%) และเป็นการฟื้นตัวอย่างชัดเจนจากเดือนกุมภาพันธ์ (81.84%)</li>
+                        <li><strong class="text-gray-800">รถประสิทธิภาพสูงสุด:</strong> รถ 6 ล้อ <b>"นำโชค" (102.73%)</b> และ <b>"พี่หมาน" (98.70%)</b> เป็นกำลังหลักในการขนส่ง มีการใช้พื้นที่บรรทุกได้อย่างคุ้มค่าที่สุด</li>
+                        <li><strong class="text-gray-800">รถที่รับน้ำหนักงานหนักสุด:</strong> แม้ "พี่หมาน" จะวิ่งเยอะสุด (23 เที่ยว) แต่รถ <b>"ทำเงิน"</b> แบกรับน้ำหนักรวมสูงสุดถึง <b>191.13 ตัน</b> จากการวิ่งเพียง 17 เที่ยว</li>
+                        <li><strong class="text-gray-800">สัดส่วนการบรรทุก:</strong> การขนส่งแบบ <b>"เต็มคัน" (รวมทั้งวันและระหว่างวัน) มีสัดส่วนถึง 68.24%</b> (58 จาก 85 เที่ยว) แสดงถึงการวางแผนคิวงานที่ดี</li>
+                    </ul>
+                </div>
+
+                <!-- Recommendations -->
+                <div>
+                    <h3 class="text-lg font-bold text-amber-600 mb-3 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        จุดที่ต้องเฝ้าระวังและข้อเสนอแนะ
+                    </h3>
+                    <ul class="space-y-3 text-gray-600 list-disc pl-5">
+                        <li><strong class="text-gray-800">ระวังการบรรทุกเกินพิกัด:</strong> รถ <b>"นำโชค"</b> มีค่าเฉลี่ย 102.73% ซึ่งเกิน 100% ควรตรวจสอบว่ามีการบรรทุก Overload หรือไม่ เพื่อป้องกันรถเสื่อมสภาพเร็วและผิดกฎหมายจราจร</li>
+                        <li><strong class="text-gray-800">ปรับปรุงเส้นทาง "ทำเงิน":</strong> รถ 6 ล้อ "ทำเงิน" มีประสิทธิภาพบรรทุกเพียง <b>70.59%</b> (ต่ำกว่าเป้า 85%) แต่กลับแบกน้ำหนักรวมเยอะที่สุด ควรทบทวนการจัดของหรือรวมรูท (Route Consolidation) เพื่อเพิ่ม % การบรรทุกต่อเที่ยว</li>
+                        <li><strong class="text-gray-800">ตรวจเช็คสภาพ "บุญหนัก":</strong> ในเดือนนี้มีการใช้งานเพียงแค่ <b>3 เที่ยว</b> (น้ำหนัก 37.91 ตัน) หากไม่ได้อยู่ระหว่างซ่อมบำรุง ควรพิจารณากระจายงานจากรถคันอื่นมาให้เพื่อลดภาระของคันที่วิ่งหนัก</li>
+                        <li><strong class="text-gray-800">ลดเที่ยววิ่ง "ไม่เต็มคัน ทั้งวัน":</strong> ปัจจุบันมีตัวเลขอยู่ที่ 25.88% (22 เที่ยว) หากฝ่ายโลจิสติกส์สามารถจัดการนำของมารวมเที่ยวกันได้ จะช่วยลดต้นทุนค่าน้ำมันได้อย่างมหาศาล</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="text-center text-sm text-gray-400 pb-8 mt-8">
+            Created for Pattanasin Thai Trading Co., Ltd. | Data as of March 2026
+        </footer>
+
+    </div>
+
+    <!-- JavaScript สำหรับการเรนเดอร์กราฟ -->
+    <script>
+        Chart.defaults.font.family = "'Kanit', sans-serif";
+        Chart.defaults.color = '#6b7280';
+
+        // 1. กราฟแนวโน้ม (Trend Chart)
+        const ctxTrend = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctxTrend, {
+            type: 'bar',
+            data: {
+                labels: ['ม.ค. 26', 'ก.พ. 26', 'มี.ค. 26'],
+                datasets: [
+                    {
+                        label: 'ประสิทธิภาพ (%)',
+                        data: [87.95, 81.84, 90.71],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.7)', // Green (Pass)
+                            'rgba(239, 68, 68, 0.7)',  // Red (Fail)
+                            'rgba(16, 185, 129, 0.9)'  // Darker Green (Pass/Current)
+                        ],
+                        borderColor: [
+                            'rgb(16, 185, 129)',
+                            'rgb(239, 68, 68)',
+                            'rgb(4, 120, 87)'
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        order: 2
+                    },
+                    {
+                        label: 'เป้าหมาย 85%',
+                        data: [85, 85, 85],
+                        type: 'line',
+                        borderColor: 'rgb(245, 158, 11)', // Amber
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        fill: false,
+                        order: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 70,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // 2. กราฟประสิทธิภาพรายคัน (Truck Chart)
+        const ctxTruck = document.getElementById('truckChart').getContext('2d');
+        const truckData = [102.73, 98.70, 70.59, 96.67, 84.50];
+        
+        // กำหนดสี ถ้า > 85 เขียว, ถ้าน้อยกว่า แดง/ส้ม
+        const truckColors = truckData.map(val => val >= 85 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(249, 115, 22, 0.7)');
+        const truckBorders = truckData.map(val => val >= 85 ? 'rgb(16, 185, 129)' : 'rgb(234, 88, 12)');
+
+        new Chart(ctxTruck, {
+            type: 'bar',
+            data: {
+                labels: ['นำโชค (6ล้อ)', 'พี่หมาน (6ล้อ)', 'ทำเงิน (6ล้อ)', 'บุญหนัก (6ล้อ)', 'ออมสิน (กระบะ)'],
+                datasets: [
+                    {
+                        label: '% การบรรทุกเฉลี่ย',
+                        data: truckData,
+                        backgroundColor: truckColors,
+                        borderColor: truckBorders,
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        order: 2
+                    },
+                    {
+                        label: 'เป้าหมาย 85%',
+                        data: [85, 85, 85, 85, 85],
+                        type: 'line',
+                        borderColor: 'rgb(245, 158, 11)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        fill: false,
+                        order: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 110
+                    }
+                }
+            }
+        });
+
+        // 3. กราฟสัดส่วนการบรรทุก (Load Type Chart)
+        const ctxLoad = document.getElementById('loadTypeChart').getContext('2d');
+        new Chart(ctxLoad, {
+            type: 'doughnut',
+            data: {
+                labels: ['เต็มคัน (ทั้งวัน)', 'ไม่เต็มคัน (ทั้งวัน)', 'เต็มคัน (ระหว่างวัน)', 'ไม่เต็มคัน (ระหว่างวัน)'],
+                datasets: [{
+                    data: [55, 22, 3, 5],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.8)', // เขียวเต็มคัน
+                        'rgba(239, 68, 68, 0.8)',  // แดงไม่เต็ม
+                        'rgba(52, 211, 153, 0.8)', // เขียวอ่อน เต็มคันระหว่างวัน
+                        'rgba(248, 113, 113, 0.8)' // แดงอ่อน ไม่เต็มระหว่างวัน
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    legend: { 
+                        position: 'right',
+                        labels: {
+                            boxWidth: 12
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+<a href="communication.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (communication) ➜
+</body>
+</html>

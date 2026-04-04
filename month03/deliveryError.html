@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปผลข้อผิดพลาดจากการจัดส่ง - มีนาคม</title>
+    <!-- Tailwind CSS สำหรับการจัดเลย์เอาต์และสไตล์ -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js สำหรับวาดกราฟ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts (Prompt) สำหรับภาษาไทย -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            /* พื้นหลังไล่สีสว่างเพื่อขับเน้นเอฟเฟกต์ Glassmorphism */
+            background: linear-gradient(135deg, #e0f2fe 0%, #f3e8ff 50%, #dcfce7 100%);
+            background-attachment: fixed;
+        }
+        
+        /* คลาสหลักสำหรับเอฟเฟกต์ Glassmorphism แบบสว่าง */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+            border-radius: 1.25rem;
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+        }
+
+        /* ปรับแต่ง Scrollbar ให้ดูสะอาดตา */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(107, 114, 128, 0.8); 
+        }
+    </style>
+</head>
+<body class="text-gray-800 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="glass-header sticky top-0 z-50 px-6 py-4 mb-6 shadow-sm">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-indigo-900 drop-shadow-sm">Dashboard สรุปผลข้อผิดพลาดจากการจัดส่ง</h1>
+                <p class="text-gray-600 mt-1 font-medium">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</p>
+            </div>
+            <div class="glass-panel px-6 py-2 rounded-full font-semibold text-indigo-700 border-indigo-100 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd" />
+                </svg>
+                ประจำเดือน: มีนาคม 2026
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 pb-12 space-y-6">
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="glass-panel p-6 flex items-center gap-4 transition-transform hover:scale-105 duration-300">
+                <div class="p-4 bg-red-100 rounded-full text-red-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">จำนวนเหตุการณ์ผิดพลาด (มี.ค.)</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-1">2 <span class="text-base font-normal text-gray-600">ครั้ง</span></p>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 flex items-center gap-4 transition-transform hover:scale-105 duration-300">
+                <div class="p-4 bg-orange-100 rounded-full text-orange-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">พนักงานที่เกี่ยวข้อง (มี.ค.)</p>
+                    <p class="text-3xl font-bold text-gray-800 mt-1">4 <span class="text-base font-normal text-gray-600">คน</span></p>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 flex items-center gap-4 transition-transform hover:scale-105 duration-300">
+                <div class="p-4 bg-green-100 rounded-full text-green-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">สถานะตามเป้าหมาย (≤ 2 ครั้ง/คน)</p>
+                    <p class="text-2xl font-bold text-green-600 mt-1">ผ่านเกณฑ์ทุกคน</p>
+                    <p class="text-xs text-gray-500 mt-1">(สูงสุดในเดือนมี.ค. คือ 1 ครั้ง/คน)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Bar Chart: Monthly Comparison -->
+            <div class="glass-panel p-6 lg:col-span-2">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                    </svg>
+                    สถิติข้อผิดพลาดรายบุคคล (ม.ค. - มี.ค.)
+                </h2>
+                <div class="relative h-72 w-full">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Doughnut Chart: Error Types -->
+            <div class="glass-panel p-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                    </svg>
+                    ประเภทข้อผิดพลาด (มี.ค.)
+                </h2>
+                <div class="relative h-64 w-full flex justify-center">
+                    <canvas id="typeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Table -->
+        <div class="glass-panel overflow-hidden">
+            <div class="p-6 border-b border-white/40 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    รายละเอียดเหตุการณ์ข้อผิดพลาดประจำเดือน มีนาคม 2026
+                </h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-indigo-50/50 text-indigo-900 text-sm">
+                            <th class="p-4 font-semibold border-b border-indigo-100">วันที่</th>
+                            <th class="p-4 font-semibold border-b border-indigo-100">ลูกค้า/ผู้ติดต่อ</th>
+                            <th class="p-4 font-semibold border-b border-indigo-100">รายละเอียดปัญหา</th>
+                            <th class="p-4 font-semibold border-b border-indigo-100 text-center">จำนวน (รายการ)</th>
+                            <th class="p-4 font-semibold border-b border-indigo-100">ผู้รับผิดชอบ</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm text-gray-700">
+                        <tr class="border-b border-white/40 hover:bg-white/40 transition-colors">
+                            <td class="p-4 whitespace-nowrap">25-Mar-2026</td>
+                            <td class="p-4">พี่หมาน / สกุลทรัพย์</td>
+                            <td class="p-4 text-red-600">คืนท่อ 1 1/4"x8.5 เพชร 1มัด, ท่อ 1 1/2"x5 เพชร 2 มัด <br><span class="font-semibold text-gray-700">สาเหตุ:</span> เนื่องจากท่อบุบเป็นรอย</td>
+                            <td class="p-4 text-center font-medium">2</td>
+                            <td class="p-4">
+                                <span class="bg-blue-100 text-blue-800 py-1 px-2 rounded-md text-xs font-medium mr-1">ใย</span>
+                                <span class="bg-blue-100 text-blue-800 py-1 px-2 rounded-md text-xs font-medium mr-1">นัย</span>
+                                <span class="bg-blue-100 text-blue-800 py-1 px-2 rounded-md text-xs font-medium">ปอนด์</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-white/40 transition-colors">
+                            <td class="p-4 whitespace-nowrap">30-Mar-2026</td>
+                            <td class="p-4">นำโชค / หมูพันธ์ไม้</td>
+                            <td class="p-4 text-orange-600">ขึ้นท่อผิด ท่อ 2 1/2" x8.5 เพชร 5 เส้น</td>
+                            <td class="p-4 text-center font-medium">3</td>
+                            <td class="p-4">
+                                <span class="bg-blue-100 text-blue-800 py-1 px-2 rounded-md text-xs font-medium">โต้</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analysis & Recommendations -->
+        <div class="glass-panel p-6 lg:p-8 bg-gradient-to-r from-white/60 to-indigo-50/60">
+            <h2 class="text-xl font-bold text-indigo-900 mb-4 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                วิเคราะห์สาเหตุและข้อเสนอแนะประจำเดือน
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-6 mt-4">
+                <div class="bg-white/50 p-5 rounded-xl border border-white">
+                    <h3 class="font-bold text-red-700 flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 rounded-full bg-red-500"></span> 1. ปัญหาสินค้าชำรุด (ท่อบุบเป็นรอย)
+                    </h3>
+                    <p class="text-sm text-gray-700 mb-3"><strong>เหตุการณ์:</strong> วันที่ 25 มี.ค. มีการตีคืนสินค้าเนื่องจากท่อมีรอยบุบ (ทีมรับผิดชอบ: ใย, นัย, ปอนด์)</p>
+                    <p class="text-sm text-gray-700"><strong>การวิเคราะห์:</strong> ความเสียหายนี้มักเกิดในขั้นตอนการเคลื่อนย้าย จัดเรียง หรือการรัดสินค้าบนรถขนส่งที่อาจแน่นเกินไปหรือกระแทกกับวัสดุอื่น</p>
+                    <div class="mt-3 p-3 bg-red-50/50 rounded-lg text-sm text-red-800 border border-red-100">
+                        <strong>แนวทางแก้ไข:</strong> เพิ่มความระมัดระวังในขั้นตอนการยก/วางท่อเหล็ก ควรมีการตรวจสอบสภาพสินค้าด้วยสายตา (Visual Check) ก่อนแพ็คและก่อนขึ้นรถบรรทุก หากพบรอยบุบควรคัดแยกออกทันที
+                    </div>
+                </div>
+
+                <div class="bg-white/50 p-5 rounded-xl border border-white">
+                    <h3 class="font-bold text-orange-700 flex items-center gap-2 mb-2">
+                        <span class="w-2 h-2 rounded-full bg-orange-500"></span> 2. ปัญหาจัดเตรียมสินค้าผิด (ขึ้นท่อผิดขนาด)
+                    </h3>
+                    <p class="text-sm text-gray-700 mb-3"><strong>เหตุการณ์:</strong> วันที่ 30 มี.ค. มีการขึ้นท่อผิดขนาด (รับผิดชอบ: โต้)</p>
+                    <p class="text-sm text-gray-700"><strong>การวิเคราะห์:</strong> สาเหตุหลักเกิดจาก Human Error ในการอ่านเอกสารจัดส่ง หรือการหยิบสินค้าผิดกองเนื่องจากขนาดท่อใกล้เคียงกัน</p>
+                    <div class="mt-3 p-3 bg-orange-50/50 rounded-lg text-sm text-orange-800 border border-orange-100">
+                        <strong>แนวทางแก้ไข:</strong> นำระบบ Double-check มาใช้ ผู้จัดเตรียมสินค้าต้องขานชื่อ/ขนาดสินค้ากับใบสั่งงาน (ใบจัดของ) ทุกครั้งก่อนนำขึ้นรถ และจัดระเบียบกองสินค้าให้มีป้ายบอกขนาดชัดเจน
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-indigo-100/50 rounded-xl border border-indigo-200/50">
+                <p class="text-sm text-indigo-900">
+                    <strong class="font-bold">สรุปภาพรวม:</strong> แม้จะเกิดข้อผิดพลาดขึ้นในเดือนมีนาคม แต่เมื่อพิจารณาจากเป้าหมาย <strong>"ไม่เกิน 2 ครั้ง/คน"</strong> พบว่าพนักงานทุกคนยังอยู่ในเกณฑ์ที่ยอมรับได้ (เกิดข้อผิดพลาดสูงสุดคนละ 1 ครั้งในเดือนนี้) อย่างไรก็ตาม ควรนำแนวทางแก้ไขข้างต้นไปกำชับพนักงานเพื่อมุ่งสู่เป้าหมาย Zero Defect ในเดือนถัดไป
+                </p>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center pb-6 text-gray-400 text-sm">
+        &copy; 2026 บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | Dashboard สรุปผลการดำเนินงาน
+    </footer>
+
+    <!-- Chart Configuration Script -->
+    <script>
+        // กำหนดฟอนต์เริ่มต้นสำหรับ Chart.js
+        Chart.defaults.font.family = "'Prompt', sans-serif";
+        Chart.defaults.color = '#4b5563';
+
+        // 1. Bar Chart: สถิติรายบุคคล (ม.ค. - มี.ค.)
+        const ctxMonthly = document.getElementById('monthlyChart').getContext('2d');
+        new Chart(ctxMonthly, {
+            type: 'bar',
+            data: {
+                labels: ['ปอนด์', 'ทราย', 'หนุ่ย', 'นัย', 'เจ', 'โจ', 'แร่', 'ใย', 'โต้'],
+                datasets: [
+                    {
+                        label: 'ม.ค.',
+                        data: [0, 0, 1, 0, 1, 1, 0, 0, 0],
+                        backgroundColor: 'rgba(209, 213, 219, 0.6)', // Light Gray
+                        borderColor: 'rgba(156, 163, 175, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'ก.พ.',
+                        data: [1, 0, 0, 0, 2, 2, 0, 0, 0],
+                        backgroundColor: 'rgba(167, 139, 250, 0.6)', // Light Purple
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'มี.ค.',
+                        data: [1, 0, 0, 1, 0, 0, 0, 1, 1],
+                        backgroundColor: 'rgba(59, 130, 246, 0.8)', // Primary Blue
+                        borderColor: 'rgba(37, 99, 235, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { usePointStyle: true, boxWidth: 8 }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(255,255,255,0.9)',
+                        titleColor: '#1f2937',
+                        bodyColor: '#4b5563',
+                        borderColor: '#e5e7eb',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 },
+                        grid: { color: 'rgba(0,0,0,0.05)', borderDash: [5, 5] },
+                        title: { display: true, text: 'จำนวนครั้ง' }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // 2. Doughnut Chart: ประเภทข้อผิดพลาดประจำเดือน มี.ค.
+        // อ้างอิงจากเหตุการณ์: ท่อบุบ 1 เหตุการณ์, ขึ้นท่อผิด 1 เหตุการณ์
+        const ctxType = document.getElementById('typeChart').getContext('2d');
+        new Chart(ctxType, {
+            type: 'doughnut',
+            data: {
+                labels: ['สินค้าชำรุด (ท่อบุบ)', 'จัดสินค้าผิด (ขึ้นท่อผิด)'],
+                datasets: [{
+                    data: [1, 1], // อ้างอิงจากจำนวนเหตุการณ์ 2 รายการ
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.8)',   // Red
+                        'rgba(249, 115, 22, 0.8)'   // Orange
+                    ],
+                    borderColor: [
+                        'rgba(255, 255, 255, 1)',
+                        'rgba(255, 255, 255, 1)'
+                    ],
+                    borderWidth: 3,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { usePointStyle: true, padding: 20 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ' ' + context.label + ': ' + context.raw + ' เหตุการณ์';
+                            }
+                        },
+                        backgroundColor: 'rgba(255,255,255,0.9)',
+                        titleColor: '#1f2937',
+                        bodyColor: '#4b5563',
+                        borderColor: '#e5e7eb',
+                        borderWidth: 1
+                    }
+                }
+            }
+        });
+    </script>
+<a href="fuelefficiency.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;     หน้าถัดไป (fuel efficiency) ➜
+</body>
+</html>

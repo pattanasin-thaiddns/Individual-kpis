@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communication Error Dashboard</title>
+    
+    <!-- นำเข้าฟอนต์ Prompt เพื่อให้ดูสวยงามอ่านง่ายแบบไทย -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- นำเข้า Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- ตั้งค่าฟอนต์เริ่มต้น -->
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #050505; /* สีพื้นหลังดำสนิทคล้ายภาพ */
+            color: #ffffff;
+        }
+        /* Custom scrollbar แบบบางๆ สำหรับตารางถ้ามีเนื้อหาเยอะ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 lg:p-12 antialiased selection:bg-blue-500/30">
+
+    <!-- Container หลัก จัดเป็น 2 คอลัมน์บนจอใหญ่ -->
+    <div class="max-w-7xl mx-auto relative">
+        
+        <!-- เส้นคั่นตรงกลางแบบจางๆ (แสดงเฉพาะบนจอใหญ่) -->
+        <div class="hidden lg:block absolute left-1/2 top-4 bottom-4 w-px bg-gradient-to-b from-transparent via-orange-500/20 to-transparent -translate-x-1/2"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
+            
+            <!-- ================= ส่วนที่ 1 (ด้านซ้าย) ================= -->
+            <div class="flex flex-col space-y-8">
+                
+                <!-- หัวข้อหลัก -->
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold tracking-wide">
+                        <span class="text-[#4DA8DA]">ส่วนที่ 1</span> ข้อผิดพลาดจากการสื่อสาร
+                    </h1>
+                </div>
+
+                <!-- ทีมงาน -->
+                <div class="flex flex-wrap items-center gap-4 text-gray-300">
+                    <span class="font-medium text-lg">ทีมงานที่รับผิดชอบ</span>
+                    <div class="bg-[#3A4556] text-gray-100 px-4 py-1.5 rounded-full text-sm font-medium">
+                        ตั๊กกี้ (หน. แผนกขาย)
+                    </div>
+                    <div class="bg-[#3A4556] text-gray-100 px-4 py-1.5 rounded-full text-sm font-medium">
+                        แอน (ขายส่ง)
+                    </div>
+                </div>
+
+                <!-- สรุปผล -->
+                <div>
+                    <h2 class="text-2xl font-bold mb-6">สรุปผลการดำเนินงาน: การสื่อสาร</h2>
+                    
+                    <!-- กล่องตัวเลข 2 กล่อง -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- เป้าหมาย -->
+                        <div class="bg-[#242936] rounded-xl p-6 flex flex-col items-center justify-center border border-gray-700/50 relative overflow-hidden">
+                            <h3 class="text-gray-400 font-medium mb-2">เป้าหมาย (Target)</h3>
+                            <div class="text-[#20C997] text-6xl md:text-7xl font-bold leading-none mb-2">
+                                &le; 2
+                            </div>
+                            <span class="text-gray-500 text-sm">ครั้ง / เดือน</span>
+                        </div>
+                        
+                        <!-- เกิดขึ้นจริง -->
+                        <div class="bg-[#2a1d24] rounded-xl p-6 flex flex-col items-center justify-center border border-red-900/30 relative overflow-hidden">
+                            <h3 class="text-gray-300 font-medium mb-2">เกิดขึ้นจริง (Actual)</h3>
+                            <div class="text-[#FF6B6B] text-6xl md:text-7xl font-bold leading-none mb-2 drop-shadow-[0_0_15px_rgba(255,107,107,0.3)]">
+                                4
+                            </div>
+                            <span class="text-red-400 text-sm font-medium">เกินเป้าหมาย 2 ครั้ง</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ข้อความเตือน -->
+                <div class="flex items-start gap-2 mt-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#FF6B6B] mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    <p class="text-gray-400 text-sm">มีข้อผิดพลาดสูงกว่าเกณฑ์ที่กำหนด จำเป็นต้องมีการทบทวนกระบวนการ</p>
+                </div>
+
+                <!-- กล่องสรุปด้านล่าง (สีเทา) -->
+                <div class="bg-[#A0A0A0] text-[#1A1A1A] rounded-2xl p-6 shadow-inner mt-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-gray-400/50">
+                        <div class="flex flex-col justify-center pb-4 md:pb-0">
+                            <span class="font-bold mb-1">อัตราความผิดพลาด</span>
+                            <span class="text-[#D32F2F] text-2xl font-black my-1">200%</span>
+                            <span class="font-bold text-sm">ของเป้าหมายที่ตั้งไว้</span>
+                        </div>
+                        <div class="flex flex-col justify-center pt-4 md:pt-0">
+                            <span class="font-bold mb-1">มูลค่าความเสียหาย</span>
+                            <span class="font-bold text-sm">ส่งคืน/เสียโอกาส</span>
+                            <span class="font-bold text-sm mt-1">ทั้ง 4 เคสมีการส่งคืนสินค้า</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ================= ส่วนที่ 2 (ด้านขวา) ================= -->
+            <div class="flex flex-col space-y-8 relative pt-4 lg:pt-0">
+                
+                <!-- Logo Placeholder มุมขวาบน -->
+                <div class="absolute top-0 right-0 hidden md:flex items-center gap-2 text-[#4DA8DA]">
+                    <div class="flex flex-col items-end text-xs font-medium tracking-wider">
+                        <span>พัฒนาสิน</span>
+                        <span class="text-[0.6rem] text-gray-500">M R. M H E N</span>
+                    </div>
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h-2v4H7v2h2v4h2v-4h2v-2h-2V7z"/>
+                    </svg>
+                </div>
+
+                <!-- หัวข้อตาราง -->
+                <h2 class="text-2xl font-bold">รายการข้อผิดพลาด (การสื่อสาร 4 ครั้ง)</h2>
+
+                <!-- ตารางข้อมูล -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="text-gray-400 border-b border-gray-700">
+                                <th class="pb-3 px-4 font-medium w-1/4">ลูกค้า</th>
+                                <th class="pb-3 px-4 font-medium w-2/4">ปัญหา / สาเหตุ</th>
+                                <th class="pb-3 px-4 font-medium w-1/4 text-center">ผู้รับผิดชอบ</th>
+                            </tr>
+                        </thead>
+                        <tbody class="space-y-2">
+                            <!-- แถวที่ 1 -->
+                            <tr class="bg-[#1C2331] border-b-[4px] border-black hover:bg-[#252D3F] transition-colors">
+                                <td class="py-4 px-4 text-gray-200">ร้านจรูญพาณิชย์</td>
+                                <td class="py-4 px-4">
+                                    <div class="text-gray-200">ลืมท่อ 3"x5 ตราเพชร ต้องการชั้น 8.5</div>
+                                    <div class="text-gray-400 text-xs mt-1">(เขียนออเดอร์ผิด สเปคผิด)</div>
+                                </td>
+                                <td class="py-4 px-4 text-center text-gray-200">ตั๊กกี้</td>
+                            </tr>
+                            <!-- แถวที่ 2 -->
+                            <tr class="bg-[#242A38] border-b-[4px] border-black hover:bg-[#2D3547] transition-colors">
+                                <td class="py-4 px-4 text-gray-200">ร้านโนนชัยศิลป์</td>
+                                <td class="py-4 px-4">
+                                    <div class="text-gray-200">ลืมท่อ 1/2"x 13.5 คิวไพพ์</div>
+                                    <div class="text-gray-400 text-xs mt-1">(ลูกค้าอยากได้ตราเพชร)</div>
+                                </td>
+                                <td class="py-4 px-4 text-center text-gray-200">ตั๊กกี้</td>
+                            </tr>
+                            <!-- แถวที่ 3 -->
+                            <tr class="bg-[#1C2331] border-b-[4px] border-black hover:bg-[#252D3F] transition-colors">
+                                <td class="py-4 px-4 text-gray-200">ชมพูพาณิชย์</td>
+                                <td class="py-4 px-4">
+                                    <div class="text-gray-200">คืน ต่อ 2 1/2" ต้องการต่อลด 2 1/2" x1" </div>
+                                    <div class="text-gray-400 text-xs mt-1">(เขียนออเดอร์ผิด)</div>
+                                </td>
+                                <td class="py-4 px-4 text-center text-gray-200">ตั๊กกี้</td>
+                            </tr>
+                            <!-- แถวที่ 4 -->
+                            <tr class="bg-[#242A38] hover:bg-[#2D3547] transition-colors">
+                                <td class="py-4 px-4 text-gray-200">ฤทธิสตีล</td>
+                                <td class="py-4 px-4">
+                                    <div class="text-gray-200">เขียนจำนวนออเดอร์ผิด</div>
+                                    <div class="text-gray-400 text-xs mt-1">(สั่งท่อ 2 1/2" X5 ตราเพชร 20 เส้น ได้ 10 เส้น)</div>
+                                </td>
+                                <td class="py-4 px-4 text-center text-gray-200">ตั๊กกี้</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- หัวข้อแนวทางแก้ไข -->
+                <div class="pt-4">
+                    <h2 class="text-2xl font-bold mb-6">แนวทางแก้ไขและป้องกัน</h2>
+
+                    <div class="space-y-4">
+                        <!-- กล่องมาตรการระยะสั้น (สีเขียว) -->
+                        <div class="bg-white text-gray-800 p-5 rounded-md border-t-4 border-t-[#80C241] shadow-lg relative">
+                            <!-- เส้นกรอบบางๆ รอบๆ สีเขียวอ่อน -->
+                            <div class="absolute inset-0 border border-[#80C241]/30 rounded-md pointer-events-none"></div>
+                            
+                            <h3 class="text-[#6BAA2C] font-bold text-lg mb-3 flex items-center gap-2">
+                                มาตรการระยะสั้น (ทันที)
+                            </h3>
+                            <ul class="space-y-2 text-sm pl-2">
+                                <li class="flex items-start">
+                                    <span class="text-[#80C241] mr-2 text-lg leading-none">&bull;</span>
+                                    <span>ใช้เทคนิค <strong>"ทวนคำสั่งซื้อ"</strong> (Read-back) ทุกครั้งกับลูกค้า ทั้ง สเปค, ยี่ห้อ, และจำนวน</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-[#80C241] mr-2 text-lg leading-none">&bull;</span>
+                                    <span>เน้นย้ำเรื่อง <strong>Product Knowledge</strong> (เช่น ท่อแต่ละชั้น, ยี่ห้อที่คล้ายกัน)</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- กล่องมาตรการเชิงระบบ (สีน้ำเงิน) -->
+                        <div class="bg-white text-gray-800 p-5 rounded-md border-t-4 border-t-[#4A90E2] shadow-lg relative">
+                            <!-- เส้นกรอบบางๆ รอบๆ สีน้ำเงินอ่อน -->
+                            <div class="absolute inset-0 border border-[#4A90E2]/30 rounded-md pointer-events-none"></div>
+
+                            <h3 class="text-[#3A7AC7] font-bold text-lg mb-3 flex items-center gap-2">
+                                มาตรการเชิงระบบ
+                            </h3>
+                            <ul class="space-y-2 text-sm pl-2">
+                                <li class="flex items-start">
+                                    <span class="text-[#4A90E2] mr-2 text-lg leading-none">&bull;</span>
+                                    <span><strong>Double Check System:</strong> หากออเดอร์มีมูลค่าสูง หรือ รายละเอียดเยอะ ให้มีผู้ตรวจสอบคนที่ 2 ก่อนส่งใบสั่งขาย</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-[#4A90E2] mr-2 text-lg leading-none">&bull;</span>
+                                    <span><strong>ลดภาระงาน (Workload Balancing):</strong> ตรวจสอบว่าหัวหน้าแผนกมีภาระงานล้นมือจนทำให้ขาดสมาธิหรือไม่ ? ควรกระจายงานให้พนักงานขายช่วยตรวจสอบหรือไม่ ?</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+<a href="deliveryError.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (delivery Error) ➜
+</body>
+</html>

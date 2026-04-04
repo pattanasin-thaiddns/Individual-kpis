@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard ติดตามการชำระหนี้ - พัฒนาสิน ไทยเทรดดิ้ง</title>
+    
+    <!-- Google Fonts: Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        glass: {
+                            bg: 'rgba(255, 255, 255, 0.6)',
+                            border: 'rgba(255, 255, 255, 0.8)',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            /* Light gradient background for glassmorphism */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #334155;
+            background-attachment: fixed;
+        }
+
+        /* Glassmorphism base class */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            border-radius: 1.5rem;
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 font-sans">
+
+    <!-- Header Section -->
+    <header class="glass-header rounded-2xl p-6 mb-8 flex flex-col md:flex-row justify-between items-center shadow-sm">
+        <div class="flex items-center gap-4 mb-4 md:mb-0">
+            <div class="p-3 bg-blue-100 rounded-xl text-blue-600">
+                <i data-lucide="building-2" class="w-8 h-8"></i>
+            </div>
+            <div>
+                <h1 class="text-xl md:text-2xl font-bold text-gray-800">สรุปผลติดตามการชำระหนี้ลูกค้า <span class="text-blue-600">มีนาคม 2026</span></h1>
+                <p class="text-gray-500 text-sm md:text-base mt-1">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</p>
+            </div>
+        </div>
+        <div class="text-right flex items-center gap-6">
+            <div class="text-center">
+                <p class="text-sm text-gray-500 mb-1">เป้าหมาย</p>
+                <p class="text-2xl font-bold text-gray-400">80.00%</p>
+            </div>
+            <div class="h-12 w-px bg-gray-300"></div>
+            <div class="text-center">
+                <p class="text-sm text-gray-500 mb-1">ทำได้จริง</p>
+                <div class="flex items-center gap-2">
+                    <p class="text-4xl font-bold text-emerald-500 drop-shadow-sm">84.73%</p>
+                    <i data-lucide="trending-up" class="w-6 h-6 text-emerald-500"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- KPI Cards & Chart Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        
+        <!-- Stats Summary -->
+        <div class="lg:col-span-1 grid grid-cols-2 gap-4">
+            <div class="glass-card p-5 flex flex-col justify-center items-center text-center">
+                <div class="bg-blue-50 text-blue-500 p-2 rounded-full mb-3">
+                    <i data-lucide="receipt" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-sm text-gray-500">บิลขายทั้งหมด</h3>
+                <p class="text-2xl font-bold text-gray-800 mt-1">773 <span class="text-sm font-normal text-gray-500">บิล</span></p>
+            </div>
+            <div class="glass-card p-5 flex flex-col justify-center items-center text-center">
+                <div class="bg-indigo-50 text-indigo-500 p-2 rounded-full mb-3">
+                    <i data-lucide="wallet" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-sm text-gray-500">บิลรับชำระทั้งหมด</h3>
+                <p class="text-2xl font-bold text-gray-800 mt-1">743 <span class="text-sm font-normal text-gray-500">บิล</span></p>
+            </div>
+            <div class="glass-card p-5 flex flex-col justify-center items-center text-center">
+                <div class="bg-emerald-50 text-emerald-500 p-2 rounded-full mb-3">
+                    <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-sm text-gray-500">บิลที่ชำระทันกำหนด</h3>
+                <p class="text-2xl font-bold text-emerald-600 mt-1">655 <span class="text-sm font-normal text-gray-500">บิล</span></p>
+            </div>
+            <div class="glass-card p-5 flex flex-col justify-center items-center text-center relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-16 h-16 bg-rose-100 rounded-bl-full -z-10 opacity-50"></div>
+                <div class="bg-rose-50 text-rose-500 p-2 rounded-full mb-3">
+                    <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-sm text-gray-500">บิลที่ชำระไม่ทันกำหนด</h3>
+                <p class="text-2xl font-bold text-rose-600 mt-1">88 <span class="text-sm font-normal text-gray-500">บิล</span></p>
+            </div>
+        </div>
+
+        <!-- Trend Chart -->
+        <div class="glass-card p-6 lg:col-span-2">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i data-lucide="bar-chart-3" class="w-5 h-5 text-blue-500"></i>
+                แนวโน้มความสำเร็จในการเก็บหนี้ (Q1/2026)
+            </h3>
+            <div class="h-64 w-full relative">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Analysis Section -->
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
+        
+        <!-- Section 1: Overdue by Days -->
+        <div class="glass-card p-6 flex flex-col">
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200/50">
+                <div class="p-2 bg-orange-100 rounded-lg text-orange-600">
+                    <i data-lucide="calendar-clock" class="w-6 h-6"></i>
+                </div>
+                <h2 class="text-xl font-semibold text-gray-800">1. ลูกค้าที่ค้างชำระนานเกินกำหนดเรียงตามวัน</h2>
+            </div>
+
+            <!-- List -->
+            <div class="space-y-4 mb-6 flex-grow">
+                <div class="bg-white/40 p-4 rounded-xl border border-white/50 shadow-sm hover:bg-white/60 transition duration-200">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-semibold text-gray-800">1. คุณกันระญา ดีจันทร์</h4>
+                        <span class="px-2.5 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">เกิน 308 วัน</span>
+                    </div>
+                    <p class="text-sm text-gray-600 flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-blue-400"></i> ปิดบัญชีไม่มีค้างชำระแล้ว</p>
+                </div>
+
+                <div class="bg-white/40 p-4 rounded-xl border border-white/50 shadow-sm hover:bg-white/60 transition duration-200">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-semibold text-gray-800">2. ร้านวรรณเจริญโลหะ</h4>
+                        <span class="px-2.5 py-1 bg-orange-100 text-orange-700 text-xs font-medium rounded-full">เกิน 23 วัน</span>
+                    </div>
+                    <p class="text-sm text-gray-600 flex items-start gap-2"><i data-lucide="phone-call" class="w-4 h-4 text-gray-400 mt-0.5 min-w-[16px]"></i> ติดตามไปลูกค้ารับทราบ แต่ไม่โอนชำระ</p>
+                </div>
+
+                <div class="bg-white/40 p-4 rounded-xl border border-white/50 shadow-sm hover:bg-white/60 transition duration-200">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-semibold text-gray-800">3. หจก. อุดร ไทยพิพัฒน์</h4>
+                        <span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded-full">เกิน 17 วัน</span>
+                    </div>
+                    <p class="text-sm text-gray-600 flex items-start gap-2"><i data-lucide="clock" class="w-4 h-4 text-gray-400 mt-0.5 min-w-[16px]"></i> รอเช็คออกและรอรอบไปรับเช็ค เริ่มเดือน เม.ย. ลูกค้าแจ้งว่าจะเปลี่ยนเป็นโอนชำระ</p>
+                </div>
+
+                <div class="bg-white/40 p-4 rounded-xl border border-white/50 shadow-sm hover:bg-white/60 transition duration-200">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-semibold text-gray-800">4. บริษัท พี เอส อาร์ เค จำกัด</h4>
+                        <span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 text-xs font-medium rounded-full">เกิน 16 วัน</span>
+                    </div>
+                    <p class="text-sm text-gray-600 flex items-start gap-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-gray-400 mt-0.5 min-w-[16px]"></i> แจ้งเข้ารับเช็คที่ร้านแต่ลูกค้าไม่ได้เขียนไว้ จึงโอนชำระตามหลัง</p>
+                </div>
+            </div>
+
+            <!-- Analysis Box -->
+            <div class="bg-blue-50/70 p-5 rounded-xl border border-blue-100 mt-auto">
+                <h3 class="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                    <i data-lucide="lightbulb" class="w-5 h-5"></i> วิเคราะห์ & แนวทางปรับปรุง
+                </h3>
+                <ul class="text-sm text-gray-700 space-y-2 list-disc list-inside">
+                    <li><span class="font-medium">วิเคราะห์:</span> ปัญหาหลักในช่วงนี้เกิดจาก "กระบวนการรับเช็ค" ที่ไม่สอดคล้องกับเวลาของลูกค้า (เขียนไม่ทัน, รอรอบ) และมีเคสที่รับปากแต่ไม่โอนจริง</li>
+                    <li><span class="font-medium">การปรับปรุง (เช็ค):</span> ส่งเสริมให้ลูกค้าเปลี่ยนมาโอนเงินแทน (เหมือนเคส อุดร ไทยพิพัฒน์) และควร <b>โทรคอนเฟิร์มความพร้อมของเช็คก่อน</b> ส่งพนักงานไปรับเพื่อลดต้นทุนเวลา</li>
+                    <li><span class="font-medium">การปรับปรุง (ค้างจ่าย):</span> สำหรับร้านวรรณเจริญโลหะ (รับทราบแต่ไม่โอน) ควรยกระดับการติดตาม เช่น ส่งจดหมายทวงถามทางการ หรือพิจารณาระงับการขายเครดิตชั่วคราว</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 2: Overdue by Amount -->
+        <div class="glass-card p-6 flex flex-col">
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200/50">
+                <div class="p-2 bg-rose-100 rounded-lg text-rose-600">
+                    <i data-lucide="coins" class="w-6 h-6"></i>
+                </div>
+                <h2 class="text-xl font-semibold text-gray-800">2. ลูกค้าที่ค้างชำระนานเกินกำหนดเรียงตามยอด</h2>
+            </div>
+
+            <!-- List -->
+            <div class="space-y-4 mb-6 flex-grow">
+                <div class="bg-white/40 p-4 rounded-xl border border-white/50 shadow-sm hover:bg-white/60 transition duration-200">
+                    <div class="flex justify-between items-center mb-1">
+                        <h4 class="font-semibold text-gray-800 text-lg">1. ร้านเทพศิริวัสดุก่อสร้าง</h4>
+                        <span class="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">เกินกำหนด 1 วัน</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-2">
+                        <i data-lucide="banknote" class="w-5 h-5 text-rose-500"></i>
+                        <p class="text-2xl font-bold text-rose-600">233,100.45 <span class="text-sm font-normal text-gray-500">บาท</span></p>
+                    </div>
+                </div>
+
+                <div class="bg-white/40 p-4 rounded-xl border border-white/50 shadow-sm hover:bg-white/60 transition duration-200">
+                    <div class="flex justify-between items-center mb-1">
+                        <h4 class="font-semibold text-gray-800">2. ร้านช่างเนตรก่อสร้าง</h4>
+                        <span class="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">เกินกำหนด 2 วัน</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-1">
+                        <i data-lucide="banknote" class="w-4 h-4 text-orange-400"></i>
+                        <p class="text-lg font-bold text-orange-600">53,650.02 <span class="text-sm font-normal text-gray-500">บาท</span></p>
+                    </div>
+                </div>
+
+                <div class="bg-white/40 p-4 rounded-xl border border-white/50 shadow-sm hover:bg-white/60 transition duration-200">
+                    <div class="flex justify-between items-center mb-1">
+                        <h4 class="font-semibold text-gray-800">3. หจก. ศิริธรรมโฮมชอปเซ็นเตอร์</h4>
+                        <span class="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">เกินกำหนด 1 วัน</span>
+                    </div>
+                    <div class="flex items-center gap-2 mt-1">
+                        <i data-lucide="banknote" class="w-4 h-4 text-orange-400"></i>
+                        <p class="text-lg font-bold text-orange-600">51,100.08 <span class="text-sm font-normal text-gray-500">บาท</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis Box -->
+            <div class="bg-emerald-50/70 p-5 rounded-xl border border-emerald-100 mt-auto">
+                <h3 class="font-semibold text-emerald-800 mb-2 flex items-center gap-2">
+                    <i data-lucide="activity" class="w-5 h-5"></i> วิเคราะห์ & แนวทางปรับปรุง
+                </h3>
+                <ul class="text-sm text-gray-700 space-y-2 list-disc list-inside">
+                    <li><span class="font-medium">วิเคราะห์:</span> ยอดค้างชำระมูลค่าสูง (Top 3) มีระยะเวลาค้างชำระเพียงแค่ 1-2 วันเท่านั้น แสดงว่าลูกค้ากลุ่มนี้ไม่ได้ตั้งใจเบี้ยวหนี้ แต่อาจจะลืม หรือติดวันหยุด/รอบบัญชี</li>
+                    <li><span class="font-medium">การจัดการเร่งด่วน:</span> สำหรับยอด 2.3 แสนบาท ของร้านเทพศิริฯ ควรให้พนักงานขายหรือฝ่ายบัญชี <b>รีบโทรติดต่อทันที</b> อย่างสุภาพ เพื่อเตือนความจำ เนื่องจากยอดมีนัยสำคัญต่อกระแสเงินสดบริษัท</li>
+                    <li><span class="font-medium">การปรับปรุงระยะยาว:</span> สร้างระบบ <b>Proactive Reminder (การเตือนล่วงหน้า)</b> สำหรับบิลที่มีมูลค่าสูง (เช่น เกิน 50,000 บาทขึ้นไป) โดยการโทรหรือส่งไลน์แจ้งเตือนลูกค้าล่วงหน้า 2-3 วัน ก่อนถึงวันครบกำหนดชำระ</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center text-gray-400 text-sm mb-4">
+        จัดทำโดย ระบบวิเคราะห์ข้อมูล | รูปแบบ Dashboard สว่าง (Clean Glassmorphism)
+    </div>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Initialize Chart.js
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            
+            // Gradient for line chart
+            let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(16, 185, 129, 0.4)'); // Emerald light
+            gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+            const trendChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['ม.ค. 2026', 'ก.พ. 2026', 'มี.ค. 2026'],
+                    datasets: [
+                        {
+                            label: 'เป้าหมายที่ตั้งไว้',
+                            data: [80, 80, 80],
+                            borderColor: '#94a3b8',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            fill: false,
+                            pointRadius: 0,
+                            tension: 0.1
+                        },
+                        {
+                            label: 'ผลงานที่ทำได้ (%)',
+                            data: [77.05, 79.97, 84.73],
+                            borderColor: '#10b981', // Emerald 500
+                            backgroundColor: gradient,
+                            borderWidth: 3,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#10b981',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            fill: true,
+                            tension: 0.3 // Smooth curves
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: "'Prompt', sans-serif"
+                                },
+                                usePointStyle: true,
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#1f2937',
+                            bodyColor: '#4b5563',
+                            borderColor: '#e5e7eb',
+                            borderWidth: 1,
+                            titleFont: { family: "'Prompt', sans-serif" },
+                            bodyFont: { family: "'Prompt', sans-serif" },
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 70,
+                            max: 90,
+                            ticks: {
+                                font: { family: "'Prompt', sans-serif" },
+                                callback: function(value) { return value + "%" }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)',
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { family: "'Prompt', sans-serif" }
+                            },
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                }
+            });
+        });
+    </script>
+<a href="retailsales.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (retail sales) ➜
+</body>
+</html>

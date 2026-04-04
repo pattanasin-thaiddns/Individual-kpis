@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard วิเคราะห์สต๊อกโกดัง - มีนาคม 2026</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Chosen Palette: Professional Warehouse (Slate-50 background, Cyan-600 for PVC pipes, Amber-500 for Fasteners/Screws, Rose-500 for shortages, Emerald-500 for matches). -->
+    <!-- Application Structure Plan: A 3-Tab Interactive Dashboard designed for multi-category warehouse management.
+         - Tab 1: "Overview" Provides combined KPIs (71% total accuracy) and side-by-side category comparisons. Uses charts to contrast the "High Value/Low Qty" of PVC vs "Low Value/High Qty" of Fasteners.
+         - Tab 2: "Deep Dive" A unified, filterable data table allowing warehouse managers to inspect specific SKU anomalies, sorted by impact.
+         - Tab 3: "Action Plan" Dedicated operational strategies for Warehouse processes (Receiving, Put-away, Picking) divided by category challenges (Slotting for PVC, Bulk Weighing for Fasteners). -->
+    <!-- Visualization & Content Choices: 
+         - Goal: Compare Categories -> Stacked Bar Chart (SKU Accuracy comparison) and Dual-Axis Bar/Line Chart (Qty vs Value contrast between categories).
+         - Goal: Organize & Interact -> Filterable HTML Table (JS logic) combining both datasets for seamless exploration.
+         - Goal: Present Text -> Grid-based cards with Unicode icons for Warehouse Root Causes and Targeted Solutions.
+         - Confirming NO SVG or Mermaid JS used. Native Canvas for charts and HTML/Unicode for icons. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Sarabun', sans-serif; background-color: #f8fafc; color: #334155; }
+        
+        /* Strict Chart Container Styling */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container { height: 280px; max-height: 300px; }
+        }
+
+        /* Tab Transitions */
+        .tab-content { display: none; animation: fadeIn 0.4s ease-out forwards; opacity: 0; }
+        .tab-content.active { display: block; }
+        
+        .tab-btn { transition: all 0.2s ease; border-bottom: 3px solid transparent; }
+        .tab-btn.active { 
+            border-bottom-color: #4f46e5; 
+            color: #4f46e5; 
+            font-weight: 700; 
+            background-color: #eef2ff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Header Section -->
+    <header class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-slate-800">🏭 สรุปผลตรวจนับคลังสินค้า (โกดัง)</h1>
+                    <p class="text-sm md:text-base text-slate-500 mt-1">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | 📅 ประจำเดือน: มีนาคม 2026</p>
+                    <div class="mt-2 flex gap-2">
+                        <span class="bg-cyan-50 text-cyan-700 text-xs px-3 py-1 rounded-md font-medium border border-cyan-200">หมวดท่อพีวีซี</span>
+                        <span class="bg-amber-50 text-amber-700 text-xs px-3 py-1 rounded-md font-medium border border-amber-200">หมวดน็อต/สกรู</span>
+                    </div>
+                </div>
+                <div class="bg-indigo-50 border border-indigo-200 px-6 py-3 rounded-xl text-center shadow-sm w-full md:w-auto">
+                    <p class="text-xs text-indigo-700 font-bold uppercase tracking-wider mb-1">ความแม่นยำรวมโกดัง (Overall)</p>
+                    <div class="flex items-baseline justify-center gap-2">
+                        <p class="text-4xl font-extrabold text-indigo-600">71%</p>
+                        <p class="text-sm text-indigo-700 font-medium">/ 261 SKUs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto custom-scrollbar border-t border-slate-100 mt-2">
+            <button class="tab-btn active px-6 py-3 text-slate-600 hover:text-indigo-700 focus:outline-none whitespace-nowrap text-sm md:text-base" data-tab="overview">
+                📊 1. ภาพรวมและเปรียบเทียบ
+            </button>
+            <button class="tab-btn px-6 py-3 text-slate-600 hover:text-indigo-700 focus:outline-none whitespace-nowrap text-sm md:text-base" data-tab="deepdive">
+                🔍 2. ฐานข้อมูลความคลาดเคลื่อน
+            </button>
+            <button class="tab-btn px-6 py-3 text-slate-600 hover:text-indigo-700 focus:outline-none whitespace-nowrap text-sm md:text-base" data-tab="actionplan">
+                💡 3. แผนยกระดับคลังสินค้า
+            </button>
+        </nav>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- ================= TAB 1: OVERVIEW ================= -->
+        <section id="overview" class="tab-content active">
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-slate-800 mb-3 border-l-4 border-indigo-500 pl-3">การเปรียบเทียบประสิทธิภาพรายหมวดหมู่ (Category Performance)</h2>
+                <p class="text-slate-600 text-base leading-relaxed bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    ภาพรวมความแม่นยำของโกดังอยู่ที่ 71% แต่เมื่อแยกตามหมวดหมู่จะพบปัญหาที่ต่างกันอย่างชัดเจน: <strong>หมวดท่อพีวีซี (แม่นยำ 78%)</strong> มีปัญหาด้านมูลค่าที่คลาดเคลื่อนสูงจากสินค้าชิ้นใหญ่ ในขณะที่ <strong>หมวดน็อตและสกรู (แม่นยำ 63%)</strong> ประสบปัญหาจำนวนชิ้นที่หายไปนับหมื่นชิ้นจากการจัดการสินค้าแบบเทกอง (Bulk)
+                </p>
+            </div>
+
+            <!-- Category Comparison Cards -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                
+                <!-- PVC Card -->
+                <div class="bg-white rounded-xl border border-cyan-200 shadow-sm overflow-hidden relative">
+                    <div class="bg-cyan-50 px-5 py-4 border-b border-cyan-100 flex justify-between items-center">
+                        <h3 class="font-bold text-cyan-800 flex items-center gap-2 text-lg"><span>🚰</span> หมวดหมู่ ท่อพีวีซี</h3>
+                        <span class="bg-cyan-200 text-cyan-900 text-sm px-3 py-1 rounded-full font-bold">ความแม่นยำ 78%</span>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-end mb-4">
+                            <div>
+                                <p class="text-sm text-slate-500 font-medium">รายการตรวจนับ</p>
+                                <p class="text-2xl font-bold text-slate-800">139 <span class="text-sm font-normal">SKUs</span></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-slate-500 font-medium">มูลค่าความต่างสุทธิ</p>
+                                <p class="text-2xl font-bold text-rose-600">฿11,077</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 border-t border-slate-100 pt-4">
+                            <div class="bg-rose-50 p-3 rounded-lg border border-rose-100">
+                                <p class="text-xs text-rose-700 font-bold mb-1">📉 ขาด 16 รายการ</p>
+                                <p class="text-sm text-rose-600">109 ชิ้น (฿6,830)</p>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                <p class="text-xs text-blue-700 font-bold mb-1">📈 เกิน 14 รายการ</p>
+                                <p class="text-sm text-blue-600">86 ชิ้น (฿4,247)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fasteners Card -->
+                <div class="bg-white rounded-xl border border-amber-200 shadow-sm overflow-hidden relative">
+                    <div class="bg-amber-50 px-5 py-4 border-b border-amber-100 flex justify-between items-center">
+                        <h3 class="font-bold text-amber-800 flex items-center gap-2 text-lg"><span>🔩</span> หมวดหมู่ น็อต/สกรู</h3>
+                        <span class="bg-rose-100 text-rose-700 text-sm px-3 py-1 rounded-full font-bold border border-rose-200">ความแม่นยำ 63%</span>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-end mb-4">
+                            <div>
+                                <p class="text-sm text-slate-500 font-medium">รายการตรวจนับ</p>
+                                <p class="text-2xl font-bold text-slate-800">122 <span class="text-sm font-normal">SKUs</span></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-slate-500 font-medium">มูลค่าความต่างสุทธิ</p>
+                                <p class="text-2xl font-bold text-rose-600">฿10,286</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 border-t border-slate-100 pt-4">
+                            <div class="bg-rose-50 p-3 rounded-lg border border-rose-100">
+                                <p class="text-xs text-rose-700 font-bold mb-1">📉 ขาด 25 รายการ</p>
+                                <p class="text-sm text-rose-600">7,069 ชิ้น (฿4,545)</p>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                <p class="text-xs text-blue-700 font-bold mb-1">📈 เกิน 20 รายการ</p>
+                                <p class="text-sm text-blue-600">7,243 ชิ้น (฿5,741)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Charts Area -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Stacked Bar Chart -->
+                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-800 mb-1 text-center">สัดส่วนสถานะรายการสินค้า (SKUs)</h3>
+                    <p class="text-xs text-center text-slate-500 mb-4">เปรียบเทียบรายการที่ตรง ขาด และเกิน</p>
+                    <div class="chart-container">
+                        <canvas id="skuChart"></canvas>
+                    </div>
+                </div>
+                <!-- Dual Axis Bar Chart (Qty vs Value) -->
+                <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                    <h3 class="text-lg font-bold text-slate-800 mb-1 text-center">ความย้อนแย้ง: ปริมาณ (ชิ้น) vs มูลค่า (บาท)</h3>
+                    <p class="text-xs text-center text-slate-500 mb-4">กลุ่มน็อตจำนวนชิ้นหายมหาศาลแต่มูลค่าต่ำ (Low Value/High Volume)</p>
+                    <div class="chart-container">
+                        <canvas id="impactChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: DEEP DIVE ================= -->
+        <section id="deepdive" class="tab-content">
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-slate-800 mb-3 border-l-4 border-indigo-500 pl-3">ฐานข้อมูลและรูปแบบความคลาดเคลื่อน (Variance Patterns)</h2>
+                <p class="text-slate-600 text-base leading-relaxed bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    วิเคราะห์ข้อมูลระดับ SKU พบรูปแบบปัญหาต่างกัน: <br>
+                    1) <strong>ท่อพีวีซี:</strong> พบปัญหา "Cross-Brand Picking" หยิบสลับยี่ห้อ (เช่น ตราเพชร vs ตราดาว) แต่ขนาดเดียวกัน<br>
+                    2) <strong>น็อต/สกรู:</strong> พบปัญหา "Massive Quantity Variance" ผลต่างระดับพันชิ้นต่อรายการ จากการรับเข้าเป็นกล่องแต่แบ่งจ่ายเป็นชั่งน้ำหนัก
+                </p>
+            </div>
+
+            <!-- Interactive Table Section -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="p-5 border-b border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><span>📋</span> ตารางข้อมูลรายการสินค้า (ไฮไลท์)</h3>
+                    
+                    <!-- Interactive Filter -->
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <label for="categoryFilter" class="text-sm font-medium text-slate-600 whitespace-nowrap">หมวดหมู่:</label>
+                        <select id="categoryFilter" class="bg-white border border-slate-300 text-slate-700 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2 outline-none">
+                            <option value="all">แสดงทั้งหมด (All)</option>
+                            <option value="pvc">ท่อพีวีซี (PVC)</option>
+                            <option value="fastener">น็อต/สกรู (Fasteners)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse whitespace-nowrap">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-600 text-sm border-b border-slate-200">
+                                <th class="p-4 font-semibold">รหัสสินค้า</th>
+                                <th class="p-4 font-semibold">ชื่อสินค้า</th>
+                                <th class="p-4 font-semibold text-center">ยอดในระบบ</th>
+                                <th class="p-4 font-semibold text-center">นับได้จริง</th>
+                                <th class="p-4 font-semibold text-right">ผลต่าง (ชิ้น)</th>
+                                <th class="p-4 font-semibold text-center">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody" class="text-sm">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-3 bg-slate-50 text-center text-xs text-slate-500 border-t border-slate-200" id="tableRecordCount">
+                    กำลังโหลดข้อมูล...
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 3: ACTION PLAN ================= -->
+        <section id="actionplan" class="tab-content">
+            <div class="mb-8">
+                <h2 class="text-xl font-bold text-slate-800 mb-3 border-l-4 border-indigo-500 pl-3">แผนยกระดับกระบวนการคลังสินค้า (Warehouse Optimization)</h2>
+                <p class="text-slate-600 text-base leading-relaxed bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    เพื่อแก้ปัญหาความแม่นยำสต๊อกให้ยั่งยืน โกดังต้องปรับปรุงกระบวนการจัดเก็บ (Put-away) และการเบิกจ่าย (Picking/Issuing) โดยแยกกลยุทธ์ตามประเภทสินค้า ดังนี้
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Strategy: PVC Pipes -->
+                <div class="flex flex-col h-full">
+                    <div class="bg-cyan-700 text-white p-4 rounded-t-xl flex items-center gap-3">
+                        <span class="text-2xl">🚰</span>
+                        <div>
+                            <h3 class="font-bold text-lg">กลยุทธ์หมวดท่อพีวีซี (PVC Pipes)</h3>
+                            <p class="text-cyan-100 text-sm">ปัญหาหลัก: การจัดเก็บปะปน และหยิบสลับยี่ห้อ</p>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-t-0 border-cyan-200 p-6 rounded-b-xl shadow-sm flex-grow space-y-5">
+                        <div class="border-l-4 border-rose-400 pl-4">
+                            <h4 class="font-bold text-slate-800 mb-1">สาเหตุ (Root Cause)</h4>
+                            <p class="text-sm text-slate-600">ท่อขนาดเดียวกัน (เช่น 1/2 นิ้ว) ยี่ห้อท่อน้ำไทย, ตราเพชร, ตราดาว ถูกจัดเก็บใน Rack หรือพาเลทใกล้เคียงกัน พนักงานฝ่ายเบิกจ่ายอาศัยความเคยชินหยิบโดยไม่ดูบาร์โค้ด</p>
+                        </div>
+                        <div class="border-l-4 border-emerald-400 pl-4 mt-4">
+                            <h4 class="font-bold text-slate-800 mb-1">แผนระยะสั้น (Quick Wins)</h4>
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                                <li>สั่งตรวจนับแบบจับคู่ (Offset Recount) ทุกยี่ห้อในไซส์เดียวกัน เพื่อเคลียร์ยอด</li>
+                                <li><strong>Visual Management:</strong> ทำป้ายสีขนาดใหญ่ติดชั้นวาง (เช่น ป้ายเหลือง=ท่อน้ำไทย, ป้ายฟ้า=ตราเพชร)</li>
+                            </ul>
+                        </div>
+                        <div class="border-l-4 border-indigo-400 pl-4 mt-4">
+                            <h4 class="font-bold text-slate-800 mb-1">แผนระยะยาว (Process Update)</h4>
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                                <li>จัดทำระบบ Bin Location ใหม่ แยกร้านจัดเก็บของสินค้ายี่ห้อต่างกันให้อยู่คนละซอย (Aisle)</li>
+                                <li>บังคับใช้ Handheld Scanner ยิงบาร์โค้ดก่อนนำขึ้นรถจัดส่ง</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategy: Fasteners -->
+                <div class="flex flex-col h-full">
+                    <div class="bg-amber-600 text-white p-4 rounded-t-xl flex items-center gap-3">
+                        <span class="text-2xl">🔩</span>
+                        <div>
+                            <h3 class="font-bold text-lg">กลยุทธ์หมวดน็อต/สกรู (Fasteners)</h3>
+                            <p class="text-amber-100 text-sm">ปัญหาหลัก: หน่วยนับ (UOM) และการชั่งน้ำหนักคลาดเคลื่อน</p>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-t-0 border-amber-200 p-6 rounded-b-xl shadow-sm flex-grow space-y-5">
+                        <div class="border-l-4 border-rose-400 pl-4">
+                            <h4 class="font-bold text-slate-800 mb-1">สาเหตุ (Root Cause)</h4>
+                            <p class="text-sm text-slate-600">รับเข้าคลังเป็น "กล่อง/กระสอบ" แต่เวลาเบิกจ่ายให้หน้าร้านใช้วิธี "ชั่งกิโลรวม" ด้วยตาชั่งเข็มที่ไม่ได้มาตรฐาน รวมถึงมีเศษตกหล่น ทำให้ตัวเลขตัดสต๊อกเพี้ยนหลักพันชิ้น</p>
+                        </div>
+                        <div class="border-l-4 border-emerald-400 pl-4 mt-4">
+                            <h4 class="font-bold text-slate-800 mb-1">แผนระยะสั้น (Quick Wins)</h4>
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                                <li>หยุดการเบิกจ่ายด้วยตาชั่งเข็ม หากเป็นไปได้ให้เบิกจ่ายให้หน้าร้านเต็มกล่อง/เต็มแพ็ค (Full Case Picking)</li>
+                                <li>ตั้งรหัส "สินค้าชำรุด/สูญหายระหว่างจัดเก็บ" เพื่อกวาดเศษที่ตกพื้นตัดออกจากระบบ</li>
+                            </ul>
+                        </div>
+                        <div class="border-l-4 border-indigo-400 pl-4 mt-4">
+                            <h4 class="font-bold text-slate-800 mb-1">แผนระยะยาว (Process Update)</h4>
+                            <ul class="list-disc list-inside text-sm text-slate-600 space-y-1">
+                                <li><strong>ลงทุนอุปกรณ์:</strong> จัดซื้อตาชั่งดิจิทัลแบบนับชิ้น (Digital Counting Scale) สำหรับแผนกจ่ายของ</li>
+                                <li><strong>ปรับฐานข้อมูล:</strong> กำหนดค่าพิกัดเผื่อเหลือเผื่อขาด (Tolerance) 1-2% ใน ERP สำหรับสินค้าราคาถูก เพื่อลดเวลาทำเอกสารปรับปรุงสต๊อก</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- 1. STATE & DATA ---
+        // Extracted key data points emphasizing the Cross-brand (PVC) and Massive Qty (Fasteners) issues.
+        const inventoryData = [
+            // PVC Pipes
+            { id: "P0-0701", name: "ท่อพีวีซี 1/2\" ชั้น 8.5 (เพชร)", sys: 5184, count: 5150, diff: -34, status: "ขาด", cat: "pvc" },
+            { id: "P0-0705-01", name: "ท่อพีวีซี 1\" บานหัว (เพชร)", sys: 2724, count: 2698, diff: -26, status: "ขาด", cat: "pvc" }, // Based on image
+            { id: "P0-0904", name: "ท่อพีวีซี 3/4\" ชั้น 13.5 (Q-PIPE)", sys: 493, count: 499, diff: 6, status: "เกิน", cat: "pvc" },
+            { id: "P0-0910", name: "ท่อพีวีซี 1 1/2\" ชั้น 5 (Q-PIPE)", sys: 161, count: 170, diff: 9, status: "เกิน", cat: "pvc" },
+            { id: "P0-1314-01", name: "ท่อพีวีซี 2\" บานหัว (ตราดาว)", sys: 874, count: 880, diff: 6, status: "เกิน", cat: "pvc" },
+            { id: "P0-1322", name: "ท่อพีวีซี 4\" ชั้น 5 (ตราดาว)", sys: 348, count: 340, diff: -8, status: "ขาด", cat: "pvc" },
+            { id: "P0-3404", name: "ท่อพีวีซีสีขาว 3/4\" (ห้าดาว)", sys: 409, count: 402, diff: -7, status: "ขาด", cat: "pvc" },
+            
+            // Fasteners
+            { id: "R2-0011", name: "สกรูปลายแหลม #7x1 1/2\"", sys: 3300, count: 2000, diff: -1300, status: "ขาด", cat: "fastener" },
+            { id: "R2-4005", name: "น็อตหัว P+W สีขาว #8x1 1/2\"", sys: 1500, count: 2500, diff: 1000, status: "เกิน", cat: "fastener" },
+            { id: "R2-8003", name: "น็อตมีปีก หัวSARAD #7x1 1/4\"", sys: 1400, count: 2200, diff: 800, status: "เกิน", cat: "fastener" },
+            { id: "R2-6002", name: "น็อต CLASS 3 ปลายแหลม 10-12x1\"", sys: 2200, count: 1600, diff: -600, status: "ขาด", cat: "fastener" },
+            { id: "R2-0894", name: "น็อตเกลียวปล่อยหัวแฉก #7x1\"", sys: 5900, count: 6500, diff: 600, status: "เกิน", cat: "fastener" },
+            { id: "R2-9029", name: "พุก #6 (หน่วย: กล่อง)", sys: 49, count: 73, diff: 24, status: "เกิน", cat: "fastener" },
+            { id: "R2-9023", name: "พุกตะกั่ว 3/8\"", sys: 255, count: 240, diff: -15, status: "ขาด", cat: "fastener" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 2. TAB NAVIGATION LOGIC ---
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    btn.classList.add('active');
+                    const targetId = btn.getAttribute('data-tab');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+
+            // --- 3. TABLE FILTERING LOGIC ---
+            const tableBody = document.getElementById('inventoryTableBody');
+            const recordCount = document.getElementById('tableRecordCount');
+            const filterSelect = document.getElementById('categoryFilter');
+
+            const renderTable = (filter) => {
+                tableBody.innerHTML = ''; 
+                let filteredData = inventoryData;
+
+                if (filter !== 'all') {
+                    filteredData = inventoryData.filter(item => item.cat === filter);
+                }
+
+                // Sort by absolute difference (largest issues first)
+                filteredData.sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff));
+
+                if (filteredData.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">ไม่พบข้อมูล</td></tr>`;
+                    recordCount.innerText = `พบ 0 รายการ`;
+                    return;
+                }
+
+                filteredData.forEach(item => {
+                    const diffColor = item.diff < 0 ? 'text-rose-600' : 'text-blue-600';
+                    const diffSign = item.diff > 0 ? '+' : '';
+                    const statusBadge = item.status === 'ขาด' 
+                        ? '<span class="bg-rose-100 text-rose-700 px-2 py-1 rounded border border-rose-200 text-xs">📉 ขาด</span>'
+                        : '<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded border border-blue-200 text-xs">📈 เกิน</span>';
+                    
+                    const catDot = item.cat === 'pvc' 
+                        ? '<span title="ท่อพีวีซี" class="inline-block w-2 h-2 rounded-full bg-cyan-500 mr-2"></span>' 
+                        : '<span title="น็อต/สกรู" class="inline-block w-2 h-2 rounded-full bg-amber-500 mr-2"></span>';
+                    
+                    const warningIcon = Math.abs(item.diff) >= 500 ? ' <span title="ปริมาณคลาดเคลื่อนรุนแรง" class="text-amber-500">⚠️</span>' : '';
+
+                    const row = `
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                            <td class="p-4 font-mono text-slate-500">${catDot}${item.id}</td>
+                            <td class="p-4 text-slate-800 font-medium">${item.name}</td>
+                            <td class="p-4 text-center text-slate-600">${item.sys.toLocaleString()}</td>
+                            <td class="p-4 text-center text-slate-600">${item.count.toLocaleString()}</td>
+                            <td class="p-4 text-right font-bold ${diffColor}">${diffSign}${item.diff.toLocaleString()}${warningIcon}</td>
+                            <td class="p-4 text-center">${statusBadge}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+                
+                recordCount.innerText = `แสดงข้อมูลตัวอย่าง ${filteredData.length} รายการ (จัดเรียงตามผลต่างมากไปน้อย)`;
+            };
+
+            renderTable('all');
+            filterSelect.addEventListener('change', (e) => {
+                renderTable(e.target.value);
+            });
+
+            // --- 4. CHART.JS INITIALIZATION ---
+            Chart.defaults.font.family = "'Sarabun', sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            // Chart 1: Stacked Bar Chart (SKU Accuracy Comparison)
+            const ctxSku = document.getElementById('skuChart').getContext('2d');
+            new Chart(ctxSku, {
+                type: 'bar',
+                data: {
+                    labels: ['ท่อพีวีซี', 'น็อต/สกรู'],
+                    datasets: [
+                        {
+                            label: 'SKU ยอดตรง',
+                            data: [109, 77],
+                            backgroundColor: '#10b981', // Emerald
+                        },
+                        {
+                            label: 'SKU สต๊อกขาด',
+                            data: [16, 25],
+                            backgroundColor: '#f43f5e', // Rose
+                        },
+                        {
+                            label: 'SKU สต๊อกเกิน',
+                            data: [14, 20],
+                            backgroundColor: '#3b82f6', // Blue
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, grid: { color: '#f1f5f9' }, title: { display: true, text: 'จำนวนรายการ (SKU)' } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) { return ` ${context.dataset.label}: ${context.raw} รายการ`; }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Dual Axis Bar Chart (Qty vs Value Contradiction)
+            const ctxImpact = document.getElementById('impactChart').getContext('2d');
+            new Chart(ctxImpact, {
+                type: 'bar',
+                data: {
+                    labels: ['ท่อพีวีซี (ขาด/เกินรวม)', 'น็อต/สกรู (ขาด/เกินรวม)'],
+                    datasets: [
+                        {
+                            label: 'จำนวนชิ้นรวม (Qty)',
+                            data: [195, 14312], // PVC net variance qty, Fasteners net variance qty
+                            backgroundColor: '#94a3b8', // Slate for Qty to contrast
+                            yAxisID: 'yQty',
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'มูลค่าความต่าง (THB)',
+                            data: [11077, 10286], // PVC net value, Fasteners net value
+                            backgroundColor: '#0ea5e9', // Sky blue for Value
+                            yAxisID: 'yVal',
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { grid: { display: false } },
+                        yQty: { 
+                            type: 'linear', 
+                            display: true, 
+                            position: 'left',
+                            title: { display: true, text: 'ปริมาณ (ชิ้น)' },
+                            grid: { color: '#f1f5f9' }
+                        },
+                        yVal: { 
+                            type: 'linear', 
+                            display: true, 
+                            position: 'right',
+                            title: { display: true, text: 'มูลค่า (บาท)' },
+                            grid: { drawOnChartArea: false } // Hide grid lines to prevent overlap
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.datasetIndex === 0) return ` จำนวนรวมที่คลาดเคลื่อน: ${context.raw.toLocaleString()} ชิ้น`;
+                                    if(context.datasetIndex === 1) return ` มูลค่ารวมที่คลาดเคลื่อน: ฿${context.raw.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+    </script>
+<a href="stocknk.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (stock PTN) ➜
+</body>
+</html>
