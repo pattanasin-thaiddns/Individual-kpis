@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปผลการฝึกอบรม - เมษายน 2026</title>
+    
+    <!-- นำเข้า Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- นำเข้า Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- นำเข้า Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans Thai', sans-serif;
+            /* พื้นหลังโทนพรีเมี่ยม สีเข้มตัดกับแสงสีสันสดใส */
+            background: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #f8fafc;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* เอฟเฟกต์ Premium Glassmorphism */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            border-radius: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* สีข้อความแบบไล่สี (Gradient Text) */
+        .text-gradient-primary {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .text-gradient-success {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-warning {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ตกแต่ง Scrollbar สำหรับรายชื่อ */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+
+        <!-- Header Section -->
+        <header class="glass-panel p-6 flex flex-col md:flex-row justify-between items-center gap-4 relative overflow-hidden">
+            <!-- เอฟเฟกต์แสงพื้นหลัง Header -->
+            <div class="absolute top-[-50%] left-[-10%] w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+            
+            <div class="relative z-10 text-center md:text-left">
+                <h2 class="text-sm font-semibold text-blue-300 uppercase tracking-widest mb-1">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</h2>
+                <h1 class="text-3xl md:text-4xl font-bold text-white tracking-tight">Dashboard สรุปผลการฝึกอบรม</h1>
+            </div>
+            <div class="relative z-10">
+                <div class="inline-flex items-center justify-center px-6 py-3 bg-white/10 rounded-full border border-white/20 shadow-lg backdrop-blur-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-pink-400 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span class="font-bold text-lg text-white tracking-wide">ประจำเดือน: <span class="text-pink-300">เมษายน 2026</span></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Cards Section (ข้อมูลเดือนเมษายน) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Card 1: แผนการอบรม -->
+            <div class="glass-panel p-6 relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 w-32 h-32 bg-cyan-500 rounded-full mix-blend-screen filter blur-3xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                <div class="flex items-center">
+                    <div class="p-4 bg-cyan-500/20 text-cyan-400 rounded-2xl mr-5 border border-cyan-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400 font-medium mb-1">เป้าหมายอบรมตามแผน</p>
+                        <p class="text-4xl font-bold text-white">6 <span class="text-lg font-normal text-gray-400 ml-1">คน</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: อบรมจริง -->
+            <div class="glass-panel p-6 relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 w-32 h-32 bg-emerald-500 rounded-full mix-blend-screen filter blur-3xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                <div class="flex items-center">
+                    <div class="p-4 bg-emerald-500/20 text-emerald-400 rounded-2xl mr-5 border border-emerald-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400 font-medium mb-1">เข้าอบรมจริง (เม.ย.)</p>
+                        <p class="text-4xl font-bold text-white">6 <span class="text-lg font-normal text-gray-400 ml-1">คน</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: เปอร์เซ็นต์ความสำเร็จ -->
+            <div class="glass-panel p-6 relative overflow-hidden group">
+                <div class="absolute -right-6 -top-6 w-32 h-32 bg-amber-500 rounded-full mix-blend-screen filter blur-3xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                <div class="flex items-center">
+                    <div class="p-4 bg-amber-500/20 text-amber-400 rounded-2xl mr-5 border border-amber-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-400 font-medium mb-1">อัตราความสำเร็จ</p>
+                        <p class="text-4xl font-bold text-gradient-warning">100%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- แถบสรุปผลรวมสะสม (YTD Summary) -->
+        <div class="glass-panel p-1 bg-gradient-to-r from-blue-600/30 via-purple-600/30 to-pink-600/30 rounded-2xl">
+            <div class="bg-[#0f172a]/80 backdrop-blur-sm rounded-xl p-5 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center w-full md:w-auto">
+                    <div class="bg-gradient-to-br from-purple-500 to-indigo-600 p-3 rounded-xl text-white mr-4 shadow-lg shadow-purple-500/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white tracking-wide">สรุปผลรวมสะสม (ม.ค. - เม.ย. 2026)</h3>
+                        <p class="text-sm text-blue-300">Year-to-Date (YTD) Summary</p>
+                    </div>
+                </div>
+                <div class="flex gap-6 md:gap-10 text-center divide-x divide-gray-600 w-full md:w-auto justify-center">
+                    <div class="px-2">
+                        <p class="text-xs text-gray-400 font-medium mb-1">รวมตามแผน</p>
+                        <p class="text-3xl font-bold text-white">12 <span class="text-sm font-normal text-gray-500">คน</span></p>
+                    </div>
+                    <div class="px-2 pl-6 md:pl-10">
+                        <p class="text-xs text-gray-400 font-medium mb-1">อบรมจริงสะสม</p>
+                        <p class="text-3xl font-bold text-gradient-success">12 <span class="text-sm font-normal text-gray-500">คน</span></p>
+                    </div>
+                    <div class="px-2 pl-6 md:pl-10">
+                        <p class="text-xs text-gray-400 font-medium mb-1">ความสำเร็จเฉลี่ย</p>
+                        <p class="text-3xl font-bold text-gradient-primary">100%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- กราฟแนวโน้ม (กินพื้นที่ 2 ส่วน) -->
+            <div class="glass-panel p-6 lg:col-span-2 flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-white flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                        </svg>
+                        สถิติการฝึกอบรมรายเดือน (ม.ค. - เม.ย. 2026)
+                    </h3>
+                </div>
+                <div class="relative flex-1 w-full min-h-[350px]">
+                    <canvas id="trainingChart"></canvas>
+                </div>
+            </div>
+
+            <!-- รายละเอียดหลักสูตรและรายชื่อ (กินพื้นที่ 1 ส่วน) -->
+            <div class="glass-panel flex flex-col overflow-hidden">
+                <!-- Header ของส่วนรายละเอียด -->
+                <div class="p-6 border-b border-white/10 bg-gradient-to-br from-white/5 to-transparent">
+                    <h3 class="text-xl font-bold text-white flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                        </svg>
+                        ไฮไลท์เดือนเมษายน
+                    </h3>
+                </div>
+                
+                <div class="p-6 flex-1 flex flex-col gap-5">
+                    <!-- กล่องข้อมูลหลักสูตร -->
+                    <div class="bg-white/5 rounded-xl p-4 border border-white/10 hover:border-pink-500/30 transition-colors">
+                        <p class="text-xs text-gray-400 uppercase tracking-wider mb-1">หัวข้อหลักสูตร</p>
+                        <h4 class="font-bold text-lg text-pink-300 leading-tight mb-3">Service Culture & Experience Design</h4>
+                        
+                        <div class="flex items-center text-sm text-gray-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            วันที่จัดอบรม: <span class="text-white ml-1 font-medium">27 เม.ย. 69</span>
+                        </div>
+                    </div>
+
+                    <!-- รายชื่อผู้เข้าอบรม -->
+                    <div class="flex-1 flex flex-col min-h-0">
+                        <div class="flex justify-between items-end mb-3">
+                            <p class="text-sm font-semibold text-gray-300">รายชื่อผู้เข้าอบรม</p>
+                            <span class="text-xs bg-white/10 px-2 py-1 rounded-md text-gray-400">ทั้งหมด 6 ท่าน</span>
+                        </div>
+                        
+                        <!-- List รายชื่อ (มี Scrollbar ถ้าล้น) -->
+                        <div class="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-2 max-h-[250px]">
+                            <!-- คนที่ 1 -->
+                            <div class="flex items-center bg-white/5 p-2 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 flex items-center justify-center text-white text-xs font-bold mr-3 flex-shrink-0">ช</div>
+                                <span class="text-sm text-gray-200">คุณชัยพร อร่ามเรือง (เฮียกบ)</span>
+                            </div>
+                            <!-- คนที่ 2 -->
+                            <div class="flex items-center bg-white/5 p-2 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 flex items-center justify-center text-white text-xs font-bold mr-3 flex-shrink-0">ธ</div>
+                                <span class="text-sm text-gray-200">ธงชัย คุยดี</span>
+                            </div>
+                            <!-- คนที่ 3 -->
+                            <div class="flex items-center bg-white/5 p-2 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 flex items-center justify-center text-white text-xs font-bold mr-3 flex-shrink-0">ว</div>
+                                <span class="text-sm text-gray-200">วิญารัตน์ พิบาลขัน</span>
+                            </div>
+                            <!-- คนที่ 4 -->
+                            <div class="flex items-center bg-white/5 p-2 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 flex items-center justify-center text-white text-xs font-bold mr-3 flex-shrink-0">ภ</div>
+                                <span class="text-sm text-gray-200">ภคพร สีแวงนอก</span>
+                            </div>
+                            <!-- คนที่ 5 -->
+                            <div class="flex items-center bg-white/5 p-2 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 flex items-center justify-center text-white text-xs font-bold mr-3 flex-shrink-0">ณ</div>
+                                <span class="text-sm text-gray-200">ณัฐวริยา คงกล้า</span>
+                            </div>
+                            <!-- คนที่ 6 -->
+                            <div class="flex items-center bg-white/5 p-2 rounded-lg border border-white/5 hover:bg-white/10 transition-colors">
+                                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 flex items-center justify-center text-white text-xs font-bold mr-3 flex-shrink-0">ส</div>
+                                <span class="text-sm text-gray-200">สมบัติ แก้วมงคล</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script สำหรับสร้างกราฟ -->
+    <script>
+        const ctx = document.getElementById('trainingChart').getContext('2d');
+        
+        // กำหนดฟอนต์และสีข้อความพื้นฐานสำหรับกราฟในธีมมืด
+        Chart.defaults.font.family = "'Noto Sans Thai', sans-serif";
+        Chart.defaults.color = '#94a3b8'; // slate-400
+
+        const trainingChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['ม.ค. (Jan)', 'ก.พ. (Feb)', 'มี.ค. (Mar)', 'เม.ย. (Apr)'],
+                datasets: [
+                    {
+                        label: 'พนักงานที่ต้องเข้าอบรมตามแผน (คน)',
+                        data: [4, 1, 1, 6], // เพิ่มข้อมูลเดือน เม.ย.
+                        backgroundColor: 'rgba(56, 189, 248, 0.2)', // Light Blue transparent
+                        borderColor: '#38bdf8', // Light Blue solid
+                        borderWidth: 2,
+                        borderRadius: 6,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8,
+                        maxBarThickness: 45 // จำกัดขนาดความกว้างแท่งกราฟไม่ให้ใหญ่เกินไป
+                    },
+                    {
+                        label: 'พนักงานที่เข้าอบรมจริง (คน)',
+                        data: [4, 1, 1, 6], // เพิ่มข้อมูลเดือน เม.ย.
+                        backgroundColor: 'rgba(52, 211, 153, 0.8)', // Emerald
+                        borderColor: '#34d399',
+                        borderWidth: 2,
+                        borderRadius: 6,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8,
+                        maxBarThickness: 45 // จำกัดขนาดความกว้างแท่งกราฟไม่ให้ใหญ่เกินไป
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            usePointStyle: true,
+                            boxWidth: 8,
+                            padding: 20,
+                            color: '#e2e8f0' // สีขาวหม่นสำหรับตัวหนังสือใน Legend
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)', // สีพื้นหลัง tooltip เข้ม
+                        titleColor: '#f8fafc',
+                        bodyColor: '#cbd5e1',
+                        borderColor: 'rgba(255,255,255,0.1)',
+                        borderWidth: 1,
+                        padding: 12,
+                        boxPadding: 6,
+                        usePointStyle: true,
+                        cornerRadius: 8
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 2,
+                            color: '#64748b'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)', // เส้น Grid จางๆ
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#cbd5e1'
+                        },
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+            }
+        });
+    </script>
+<a href="newcustomersale.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (new customer sale) ➜
+</body>
+</html>
