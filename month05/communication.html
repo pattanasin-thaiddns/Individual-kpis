@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard ข้อผิดพลาดจากการสื่อสาร - พัฒนาสิน ไทยเทรดดิ้ง</title>
+    
+    <!-- Tailwind CSS สำหรับจัด Layout และ Style แบบรวดเร็ว -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js สำหรับวาดกราฟ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts: Prompt สำหรับภาษาไทย -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome สำหรับ Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            /* พื้นหลังสีสว่าง มี Gradient อ่อนๆ เพื่อให้ Glassmorphism ดูมีมิติ */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background-attachment: fixed;
+            color: #334155;
+        }
+
+        /* Glassmorphism CSS */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            border-radius: 1rem;
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(107, 114, 128, 0.8); 
+        }
+        
+        .target-exceeded {
+            color: #ef4444; /* Tailwind red-500 */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <!-- Header -->
+    <header class="glass-header rounded-2xl p-6 mb-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">
+                <i class="fa-solid fa-chart-pie text-blue-500 mr-2"></i> Dashboard สรุปผลข้อผิดพลาด
+            </h1>
+            <p class="text-slate-500 mt-1">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | หัวข้อ: ข้อผิดพลาดจากการสื่อสาร</p>
+        </div>
+        <div class="glass-card px-6 py-2 rounded-full border-blue-200 bg-blue-50/50">
+            <span class="text-blue-700 font-semibold"><i class="fa-regular fa-calendar-alt mr-2"></i> ประจำเดือน พฤษภาคม 2026</span>
+        </div>
+    </header>
+
+    <!-- KPI Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- KPI 1 -->
+        <div class="glass-card p-6 flex items-center justify-between transition hover:-translate-y-1 duration-300">
+            <div>
+                <p class="text-sm text-slate-500 font-medium mb-1">ข้อผิดพลาดรวม (พ.ค.)</p>
+                <h3 class="text-4xl font-bold text-slate-800">6 <span class="text-lg font-normal text-slate-500">ครั้ง</span></h3>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl shadow-inner">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+        </div>
+
+        <!-- KPI 2 -->
+        <div class="glass-card p-6 flex items-center justify-between transition hover:-translate-y-1 duration-300">
+            <div>
+                <p class="text-sm text-slate-500 font-medium mb-1">พนักงาน: ตั๊กกี้</p>
+                <h3 class="text-4xl font-bold target-exceeded">3 <span class="text-lg font-normal text-slate-500">ครั้ง</span></h3>
+                <p class="text-xs text-red-500 mt-1"><i class="fa-solid fa-arrow-up"></i> เกินเป้าหมาย (≤2)</p>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-2xl shadow-inner">
+                <i class="fa-solid fa-user-xmark"></i>
+            </div>
+        </div>
+
+        <!-- KPI 3 -->
+        <div class="glass-card p-6 flex items-center justify-between transition hover:-translate-y-1 duration-300">
+            <div>
+                <p class="text-sm text-slate-500 font-medium mb-1">พนักงาน: แอน</p>
+                <h3 class="text-4xl font-bold target-exceeded">3 <span class="text-lg font-normal text-slate-500">ครั้ง</span></h3>
+                <p class="text-xs text-red-500 mt-1"><i class="fa-solid fa-arrow-up"></i> เกินเป้าหมาย (≤2)</p>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center text-red-500 text-2xl shadow-inner">
+                <i class="fa-solid fa-user-xmark"></i>
+            </div>
+        </div>
+
+        <!-- KPI 4 -->
+        <div class="glass-card p-6 flex items-center justify-between transition hover:-translate-y-1 duration-300">
+            <div>
+                <p class="text-sm text-slate-500 font-medium mb-1">สาเหตุหลัก (พ.ค.)</p>
+                <h3 class="text-xl font-bold text-slate-800 mt-2">เขียนออเดอร์ผิด</h3>
+                <p class="text-sm text-slate-500 mt-1">คิดเป็น 50% ของปัญหา</p>
+            </div>
+            <div class="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center text-orange-500 text-2xl shadow-inner">
+                <i class="fa-solid fa-pen-to-square"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Monthly Trend Chart -->
+        <div class="glass-card p-6">
+            <h2 class="text-lg font-semibold mb-4 text-slate-800"><i class="fa-solid fa-chart-line mr-2 text-indigo-500"></i> แนวโน้มข้อผิดพลาดสะสม (ม.ค. - พ.ค.)</h2>
+            <div class="relative h-72">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Causes Pie Chart -->
+        <div class="glass-card p-6">
+            <h2 class="text-lg font-semibold mb-4 text-slate-800"><i class="fa-solid fa-chart-donut mr-2 text-teal-500"></i> สัดส่วนประเภทข้อผิดพลาด (เดือน พ.ค.)</h2>
+            <div class="relative h-72 flex justify-center">
+                <canvas id="causeChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table & Analysis Section -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-8">
+        <!-- Data Table (Takes up 2 columns on extra large screens) -->
+        <div class="glass-card p-6 xl:col-span-2 overflow-hidden">
+            <h2 class="text-lg font-semibold mb-4 text-slate-800"><i class="fa-solid fa-table-list mr-2 text-sky-500"></i> รายละเอียดปัญหา (พฤษภาคม 2026)</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left whitespace-nowrap">
+                    <thead class="text-xs text-slate-600 uppercase bg-slate-100/50 border-b border-slate-200">
+                        <tr>
+                            <th class="px-4 py-3 rounded-tl-lg">วันที่</th>
+                            <th class="px-4 py-3">รถขนส่ง</th>
+                            <th class="px-4 py-3">ลูกค้า</th>
+                            <th class="px-4 py-3">รายละเอียดปัญหา</th>
+                            <th class="px-4 py-3 text-center">หมวด</th>
+                            <th class="px-4 py-3 text-center rounded-tr-lg">ผู้รับผิดชอบ</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr class="hover:bg-white/40 transition">
+                            <td class="px-4 py-3">2-May-2026</td>
+                            <td class="px-4 py-3">ออมสิน</td>
+                            <td class="px-4 py-3">โชตสุวรรณ</td>
+                            <td class="px-4 py-3 whitespace-normal min-w-[300px]">คืน สี่ทาง 1/2" =100 ตัว เนื่องจากเขียนออเดอร์ผิด ลูกค้าสั่งต่อตรงสีขาว 1/2"</td>
+                            <td class="px-4 py-3 text-center">1</td>
+                            <td class="px-4 py-3 text-center font-medium">แอน</td>
+                        </tr>
+                        <tr class="hover:bg-white/40 transition">
+                            <td class="px-4 py-3">5-May-2026</td>
+                            <td class="px-4 py-3">นำโชค</td>
+                            <td class="px-4 py-3">กีรติ</td>
+                            <td class="px-4 py-3 whitespace-normal min-w-[300px]">นำกลับสินค้า 7รายการ เนื่องจากเขียนออเดอร์ผิดร้าน</td>
+                            <td class="px-4 py-3 text-center">1</td>
+                            <td class="px-4 py-3 text-center font-medium">ตั๊กกี้</td>
+                        </tr>
+                        <tr class="hover:bg-white/40 transition">
+                            <td class="px-4 py-3">7-May-2026</td>
+                            <td class="px-4 py-3">ออมสิน</td>
+                            <td class="px-4 py-3">สิงห์สุวรรณ</td>
+                            <td class="px-4 py-3 whitespace-normal min-w-[300px]">ไม่ได้ใส่ส่วนลดให้ลูกค้า</td>
+                            <td class="px-4 py-3 text-center">1</td>
+                            <td class="px-4 py-3 text-center font-medium">ตั๊กกี้</td>
+                        </tr>
+                        <tr class="hover:bg-white/40 transition">
+                            <td class="px-4 py-3">8-May-2026</td>
+                            <td class="px-4 py-3">ออมสิน</td>
+                            <td class="px-4 py-3">เอสพีเอส</td>
+                            <td class="px-4 py-3 whitespace-normal min-w-[300px]">คืนก๊อกแฟนซี 1/2" =5 กล่อง เนื่องจาก เขียนออเดอร์ผิด ลูกค้าสั่ง ก๊อกแฟนซี ซันวา 1/2"</td>
+                            <td class="px-4 py-3 text-center">1</td>
+                            <td class="px-4 py-3 text-center font-medium">ตั๊กกี้</td>
+                        </tr>
+                        <tr class="hover:bg-white/40 transition">
+                            <td class="px-4 py-3">18-May-2026</td>
+                            <td class="px-4 py-3">พี่หมาน</td>
+                            <td class="px-4 py-3">ศิริมงคล</td>
+                            <td class="px-4 py-3 whitespace-normal min-w-[300px]">แก้ไขจำนวนท่อ เนื่องจากออกบิลไม่ครบตามจำนวนที่ส่ง</td>
+                            <td class="px-4 py-3 text-center">1</td>
+                            <td class="px-4 py-3 text-center font-medium">แอน</td>
+                        </tr>
+                        <tr class="hover:bg-white/40 transition">
+                            <td class="px-4 py-3">20-May-2026</td>
+                            <td class="px-4 py-3">ออมสิน</td>
+                            <td class="px-4 py-3">เอสพีเอส</td>
+                            <td class="px-4 py-3 whitespace-normal min-w-[300px]">รายการเช็ควาล์ว สปริงทองเหลือง 11/4" ANA ลูกค้าได้รับไม่ครบ 2 ตัวเนื่องจากสินค้าไม่เต็มกล่อง</td>
+                            <td class="px-4 py-3 text-center">1</td>
+                            <td class="px-4 py-3 text-center font-medium">แอน</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analysis & Recommendations -->
+        <div class="glass-card p-6 flex flex-col h-full">
+            <h2 class="text-lg font-semibold mb-4 text-slate-800"><i class="fa-solid fa-magnifying-glass-chart mr-2 text-purple-500"></i> วิเคราะห์สาเหตุและข้อเสนอแนะ</h2>
+            
+            <div class="flex-1 space-y-4 text-sm text-slate-700">
+                <div class="bg-red-50/50 p-4 rounded-lg border border-red-100">
+                    <h3 class="font-semibold text-red-700 mb-2"><i class="fa-solid fa-circle-exclamation mr-1"></i> ประเด็นสำคัญ (Key Findings)</h3>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>เดือน พ.ค. มีข้อผิดพลาดรวม <strong>6 ครั้ง</strong> สูงที่สุดเมื่อเทียบกับ 4 เดือนที่ผ่านมา (ม.ค.-เม.ย.)</li>
+                        <li>ทั้ง <strong>ตั๊กกี้</strong> และ <strong>แอน</strong> มีข้อผิดพลาดคนละ 3 ครั้ง ซึ่ง <span class="text-red-600 font-bold">เกินเป้าหมาย</span> ที่ตั้งไว้ (ไม่เกิน 2 ครั้ง/เดือน)</li>
+                        <li>ปัญหา <strong>50% (3 ครั้ง)</strong> เกิดจาก <span class="underline decoration-red-400">การเขียนออเดอร์ผิด</span> (ผิดรุ่น, ผิดแบรนด์, ผิดร้าน)</li>
+                    </ul>
+                </div>
+
+                <div class="bg-green-50/50 p-4 rounded-lg border border-green-100">
+                    <h3 class="font-semibold text-green-700 mb-2"><i class="fa-solid fa-lightbulb mr-1"></i> แนวทางแก้ไข (Recommendations)</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>
+                            <strong>ระบบ Double Check:</strong> กำหนดให้พนักงานทวนออเดอร์กับลูกค้า หรือให้เพื่อนร่วมงานช่วยรีเช็ครายการสินค้าและแบรนด์ก่อนคีย์บิล (เช่น กรณี ก๊อกแฟนซี vs ก๊อกซันวา, สี่ทาง vs ต่อตรง)
+                        </li>
+                        <li>
+                            <strong>เช็คสินค้าระหว่างจัดของ:</strong> กรณีได้สินค้าไม่ครบกล่อง (เคส ANA) ควรให้คลังสินค้าเช็คจำนวนจริงในกล่องก่อนส่งมอบให้ขนส่ง
+                        </li>
+                        <li>
+                            <strong>Checklist ส่วนลด:</strong> เพิ่มช่อง Checkbox ในระบบหรือบิล เพื่อป้องกันการลืมใส่ส่วนลดให้ลูกค้า
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-slate-500 text-sm mt-8 pb-4">
+        &copy; 2026 บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด. Internal Use Only.
+    </footer>
+
+    <!-- JavaScript สำหรับ Render กราฟ -->
+    <script>
+        // กำหนด Font เริ่มต้นให้ Chart.js
+        Chart.defaults.font.family = "'Prompt', sans-serif";
+        Chart.defaults.color = '#64748b';
+
+        // 1. กราฟแนวโน้มรายเดือน (Line & Bar Chart)
+        const ctxTrend = document.getElementById('trendChart').getContext('2d');
+        const trendChart = new Chart(ctxTrend, {
+            type: 'line',
+            data: {
+                labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.'],
+                datasets: [
+                    {
+                        label: 'ตั๊กกี้',
+                        data: [4, 0, 1, 1, 3],
+                        borderColor: '#3b82f6', // Blue
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true,
+                        markerType: 'circle'
+                    },
+                    {
+                        label: 'แอน',
+                        data: [0, 2, 1, 3, 3],
+                        borderColor: '#ec4899', // Pink
+                        backgroundColor: 'rgba(236, 72, 153, 0.2)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'เป้าหมาย (Max)',
+                        data: [2, 2, 2, 2, 2],
+                        borderColor: '#ef4444', // Red
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        fill: false,
+                        type: 'line'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 6,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. กราฟสัดส่วนสาเหตุ (Doughnut Chart)
+        const ctxCause = document.getElementById('causeChart').getContext('2d');
+        const causeChart = new Chart(ctxCause, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    'เขียนออเดอร์ผิด (ผิดรุ่น/ร้าน)', 
+                    'ออกบิล/ได้ของไม่ครบ', 
+                    'ลืมใส่ส่วนลด'
+                ],
+                datasets: [{
+                    data: [3, 2, 1], // จาก 6 เคสในเดือน พ.ค.
+                    backgroundColor: [
+                        'rgba(249, 115, 22, 0.8)', // Orange
+                        'rgba(56, 189, 248, 0.8)', // Sky
+                        'rgba(167, 139, 250, 0.8)'  // Purple
+                    ],
+                    borderColor: [
+                        '#fff',
+                        '#fff',
+                        '#fff'
+                    ],
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + ' ครั้ง';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                cutout: '65%' // ทำให้รูตรงกลางใหญ่ขึ้น ดูโปร่งสบายตา
+            }
+        });
+    </script>
+<a href="deliveryError.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (delivery Error) ➜
+</body>
+</html>

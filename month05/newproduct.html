@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปผลยอดขายสินค้าใหม่ - พฤษภาคม 2026 | พัฒนาสิน ไทยเทรดดิ้ง</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Google Fonts (Prompt) -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            /* พื้นหลังโทนสว่าง สะอาดตา พร้อม texture อ่อนๆ */
+            background-color: #f3f4f6;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23e5e7eb' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        /* Glassmorphism Effect - Light Theme */
+        .glass {
+            background: rgba(255, 255, 255, 0.75);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        /* ปรับแต่ง Scrollbar ให้ดูดีขึ้น */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.8);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(107, 114, 128, 0.9);
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 md:p-8">
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto space-y-8">
+        
+        <!-- Header Section -->
+        <header class="glass p-6 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-blue-900 mb-2">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</h1>
+                <h2 class="text-xl font-semibold text-blue-700">Dashboard สรุปผลยอดขายสินค้าในกลุ่มสินค้าใหม่</h2>
+            </div>
+            <div class="mt-4 md:mt-0 text-right">
+                <div class="inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-medium glass">
+                    <i class="far fa-calendar-alt mr-2"></i>
+                    <span>ประจำเดือน พฤษภาคม 2569 (May 2026)</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Cards Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- KPI Card 1: เป้าหมาย -->
+            <div class="glass p-6 flex items-center space-x-4 transition transform hover:-translate-y-1 hover:shadow-lg">
+                <div class="p-4 bg-blue-100 text-blue-600 rounded-full">
+                    <i class="fas fa-bullseye fa-2x"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">เป้าหมายเดือน พ.ค.</p>
+                    <p class="text-2xl font-bold text-gray-900">600,000.00 <span class="text-sm font-normal">บาท</span></p>
+                </div>
+            </div>
+            <!-- KPI Card 2: ยอดขายจริง -->
+            <div class="glass p-6 flex items-center space-x-4 transition transform hover:-translate-y-1 hover:shadow-lg">
+                <div class="p-4 bg-green-100 text-green-600 rounded-full">
+                    <i class="fas fa-chart-line fa-2x"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">ยอดขายจริงเดือน พ.ค.</p>
+                    <p class="text-2xl font-bold text-gray-900">48,370.14 <span class="text-sm font-normal">บาท</span></p>
+                </div>
+            </div>
+            <!-- KPI Card 3: ส่วนต่าง -->
+            <div class="glass p-6 flex items-center space-x-4 transition transform hover:-translate-y-1 hover:shadow-lg">
+                <div class="p-4 bg-red-100 text-red-600 rounded-full">
+                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">ส่วนต่างจากเป้าหมาย</p>
+                    <p class="text-2xl font-bold text-red-600">-551,630.00 <span class="text-sm font-normal">บาท</span></p>
+                </div>
+            </div>
+            <!-- KPI Card 4: % ความสำเร็จ -->
+            <div class="glass p-6 flex items-center space-x-4 transition transform hover:-translate-y-1 hover:shadow-lg">
+                <div class="p-4 bg-yellow-100 text-yellow-600 rounded-full">
+                    <i class="fas fa-percent fa-2x"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">% ความสำเร็จเดือน พ.ค.</p>
+                    <p class="text-2xl font-bold text-yellow-600">8.06%</p>
+                    <p class="text-xs text-gray-400">สะสม 5 เดือน: 8.26%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Sales Trend Chart (2/3 width) -->
+            <div class="glass p-6 lg:col-span-2 flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-semibold text-gray-800"><i class="fas fa-chart-area mr-2 text-blue-600"></i>แนวโน้มยอดขายสินค้าใหม่ (ม.ค. - พ.ค. 2026)</h3>
+                    <div class="flex items-center space-x-4 text-sm">
+                        <span class="flex items-center"><span class="w-3 h-3 bg-blue-500 rounded-full mr-1"></span> เป้าหมายรวม</span>
+                        <span class="flex items-center"><span class="w-3 h-3 bg-indigo-500 rounded-full mr-1"></span> อุดรธานี</span>
+                        <span class="flex items-center"><span class="w-3 h-3 bg-teal-500 rounded-full mr-1"></span> หนองคาย</span>
+                    </div>
+                </div>
+                <div class="w-full flex-grow min-h-[350px]">
+                    <canvas id="salesTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Analysis Section (1/3 width) -->
+            <div class="glass p-6 flex flex-col space-y-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3"><i class="fas fa-map-marker-alt mr-2 text-indigo-600"></i>ยอดขายแยกตามสาขา (พ.ค.)</h3>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-end mb-2">
+                            <div>
+                                <p class="text-sm text-gray-500">สาขาอุดรธานี</p>
+                                <p class="text-lg font-bold text-indigo-700">42,190.14 ฿</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-500">สาขาหนองคาย</p>
+                                <p class="text-lg font-bold text-teal-600">6,180.00 ฿</p>
+                            </div>
+                        </div>
+                        <!-- Progress bar representing the split -->
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2 flex overflow-hidden">
+                            <div class="bg-indigo-500 h-2.5" style="width: 87.2%"></div> <!-- 42190.14 / 48370.14 -->
+                            <div class="bg-teal-500 h-2.5" style="width: 12.8%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs mt-1 text-gray-400">
+                            <span>87.2%</span>
+                            <span>12.8%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-grow flex flex-col">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-3"><i class="fas fa-search-dollar mr-2 text-purple-600"></i>วิเคราะห์สถานการณ์</h3>
+                    <div class="flex-grow space-y-3 text-gray-700 overflow-y-auto pr-2">
+                        <div class="bg-red-50 p-3 rounded-lg border-l-4 border-red-500">
+                            <h4 class="font-semibold text-red-700 mb-1 text-sm"><i class="fas fa-exclamation-circle mr-1"></i>ประเด็นหลัก</h4>
+                            <p class="text-xs">ยอดขายทำได้เพียง 8% ของเป้าหมาย 600,000 บาท สาขาอุดรธานีเป็นตัวขับเคลื่อนหลัก (87%)</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 mb-1 text-sm"><i class="fas fa-lightbulb mr-1 text-yellow-500"></i>ข้อสังเกต:</h4>
+                            <ul class="list-disc list-inside text-xs space-y-1 pl-1 text-gray-600">
+                                <li><strong>ความแตกต่างระหว่างสาขา:</strong> หนองคายมียอดขายสินค้าใหม่ค่อนข้างน้อย อาจต้องวิเคราะห์ความต้องการของลูกค้าในพื้นที่</li>
+                                <li><strong>การรับรู้:</strong> ลูกค้าอาจยังไม่คุ้นเคยกับแบรนด์ใหม่ (ANA, 3DI) ที่เพิ่งนำเข้ามา</li>
+                            </ul>
+                        </div>
+                        <div class="mt-auto bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500">
+                             <h4 class="font-semibold text-blue-700 mb-1 text-sm"><i class="fas fa-tasks mr-1"></i>ข้อเสนอแนะ:</h4>
+                             <ul class="list-disc list-inside text-xs space-y-1 pl-1 text-blue-800">
+                                <li>ผลักดันกิจกรรมส่งเสริมการขายที่สาขาหนองคายเป็นพิเศษ</li>
+                                <li>เน้นโปรโมทจุดเด่นของสินค้าใหม่เทียบกับแบรนด์เดิม</li>
+                             </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Products Section -->
+        <div class="glass p-6">
+            <h3 class="text-xl font-semibold text-gray-800 mb-6"><i class="fas fa-box-open mr-2 text-orange-600"></i>สินค้าใหม่และการประชาสัมพันธ์ในเดือนพฤษภาคม</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                <!-- Product 1 -->
+                <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col items-center text-center glass transition transform hover:scale-105">
+                    <div class="h-32 w-full flex items-center justify-center mb-4 bg-gray-100 rounded-lg overflow-hidden">
+                        <!-- ใส่รูปภาพตรงนี้ โดยเปลี่ยนชื่อไฟล์ใน src="..." ให้ตรงกับชื่อไฟล์รูปของคุณ -->
+                        <img src="product1.jpg" alt="สเปรย์โฟม พียูโฟม บอสนี่" class="w-full h-full object-contain p-2" onerror="this.src='https://placehold.co/200x200/e2e8f0/64748b?text=Image+1'">
+                    </div>
+                    <h4 class="font-semibold text-gray-800 text-sm mb-1">สเปรย์โฟม พียูโฟม บอสนี่</h4>
+                    <p class="text-xs text-gray-500">อุดช่องว่าง กันเสียง/น้ำ</p>
+                </div>
+                 <!-- Product 2 -->
+                 <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col items-center text-center glass transition transform hover:scale-105">
+                    <div class="h-32 w-full flex items-center justify-center mb-4 bg-gray-100 rounded-lg overflow-hidden">
+                         <img src="product2.jpg" alt="ลูกรีเวท 3DI" class="w-full h-full object-contain p-2" onerror="this.src='https://placehold.co/200x200/e2e8f0/64748b?text=Image+2'">
+                    </div>
+                    <h4 class="font-semibold text-gray-800 text-sm mb-1">ลูกรีเวท 3DI</h4>
+                    <p class="text-xs text-gray-500">งานประกอบ/ติดตั้ง</p>
+                </div>
+                <!-- Product 3 -->
+                <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col items-center text-center glass transition transform hover:scale-105">
+                    <div class="h-32 w-full flex items-center justify-center mb-4 bg-gray-100 rounded-lg overflow-hidden">
+                         <img src="product3.jpg" alt="ก๊อกน้ำ ANA / NNK" class="w-full h-full object-contain p-2" onerror="this.src='https://placehold.co/200x200/e2e8f0/64748b?text=Image+3'">
+                    </div>
+                    <h4 class="font-semibold text-gray-800 text-sm mb-1">ก๊อกน้ำ ANA / NNK</h4>
+                    <p class="text-xs text-gray-500">หลายรุ่น (จริงใจ, จิ๋วแจ๋ว)</p>
+                </div>
+                 <!-- Product 4 -->
+                 <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col items-center text-center glass transition transform hover:scale-105">
+                    <div class="h-32 w-full flex items-center justify-center mb-4 bg-gray-100 rounded-lg overflow-hidden">
+                         <img src="product4.jpg" alt="เครื่องตัดหญ้า RBC411" class="w-full h-full object-contain p-2" onerror="this.src='https://placehold.co/200x200/e2e8f0/64748b?text=Image+4'">
+                    </div>
+                    <h4 class="font-semibold text-gray-800 text-sm mb-1">เครื่องตัดหญ้า RBC411</h4>
+                    <p class="text-xs text-gray-500">นาคาชิ 2 จังหวะ</p>
+                </div>
+                <!-- Product 5 -->
+                <div class="bg-white rounded-xl shadow-sm p-4 flex flex-col items-center text-center glass transition transform hover:scale-105">
+                    <div class="h-32 w-full flex items-center justify-center mb-4 bg-gray-100 rounded-lg overflow-hidden">
+                         <img src="product5.jpg" alt="บานพับรมดำ 4 นิ้ว" class="w-full h-full object-contain p-2" onerror="this.src='https://placehold.co/200x200/e2e8f0/64748b?text=Image+5'">
+                    </div>
+                    <h4 class="font-semibold text-gray-800 text-sm mb-1">บานพับ 4" / เช็ควาล์ว</h4>
+                    <p class="text-xs text-gray-500">อุปกรณ์ฮาร์ดแวร์ต่างๆ</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // ข้อมูลยอดขายจากภาพที่ให้มา พร้อมแยกสาขาในเดือน พ.ค.
+        const salesData = {
+            months: ['ม.ค. 26', 'ก.พ. 26', 'มี.ค. 26', 'เม.ย. 26', 'พ.ค. 26'],
+            targets: [600000, 600000, 600000, 600000, 600000],
+            // สมมติข้อมูลสาขาสำหรับเดือนก่อนๆ ให้สอดคล้องกับยอดรวมเดิม เพื่อให้กราฟดูต่อเนื่อง
+            udon: [2500.00, 22000.00, 85000.00, 60000.00, 42190.14],
+            nongkhai: [443.00, 4596.60, 15610.41, 9290.36, 6180.00]
+        };
+
+        // การตั้งค่า Chart.js
+        const ctx = document.getElementById('salesTrendChart').getContext('2d');
+        
+        // Gradient สำหรับเป้าหมาย
+        const targetGradient = ctx.createLinearGradient(0, 0, 0, 400);
+        targetGradient.addColorStop(0, 'rgba(59, 130, 246, 0.15)');
+        targetGradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+
+        Chart.defaults.font.family = "'Prompt', sans-serif";
+
+        const myChart = new Chart(ctx, {
+            type: 'bar', // เปลี่ยนเป็นกราฟแท่งแบบผสมเส้น
+            data: {
+                labels: salesData.months,
+                datasets: [
+                    {
+                        type: 'line',
+                        label: 'เป้าหมายรวม (Target)',
+                        data: salesData.targets,
+                        borderColor: 'rgba(59, 130, 246, 0.8)', // Blue-500
+                        backgroundColor: targetGradient,
+                        borderWidth: 2,
+                        borderDash: [5, 5], // ทำให้เป็นเส้นประ ดูหรูหราขึ้น
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: 'rgba(59, 130, 246, 1)',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        tension: 0.3,
+                        order: 1 // ให้อยู่ด้านหลัง
+                    },
+                    {
+                        type: 'bar',
+                        label: 'สาขาอุดรธานี (Udon Thani)',
+                        data: salesData.udon,
+                        backgroundColor: 'rgba(99, 102, 241, 0.85)', // Indigo-500
+                        hoverBackgroundColor: 'rgba(79, 70, 229, 1)', // Indigo-600
+                        borderRadius: 6, // ขอบโค้งมน
+                        borderSkipped: false,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8,
+                        order: 2
+                    },
+                    {
+                        type: 'bar',
+                        label: 'สาขาหนองคาย (Nong Khai)',
+                        data: salesData.nongkhai,
+                        backgroundColor: 'rgba(20, 184, 166, 0.85)', // Teal-500
+                        hoverBackgroundColor: 'rgba(13, 148, 136, 1)', // Teal-600
+                        borderRadius: 6,
+                        borderSkipped: false,
+                        barPercentage: 0.6,
+                        categoryPercentage: 0.8,
+                        order: 3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false // ใช้ custom legend ด้านบน
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        titleColor: '#1e293b', // Slate-800
+                        bodyColor: '#475569', // Slate-600
+                        borderColor: '#e2e8f0', // Slate-200
+                        borderWidth: 1,
+                        padding: 12,
+                        boxPadding: 6,
+                        usePointStyle: true,
+                        titleFont: { size: 14, weight: 'bold' },
+                        bodyFont: { size: 13 },
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(context.parsed.y);
+                                }
+                                return label;
+                            },
+                            footer: function(tooltipItems) {
+                                // คำนวณยอดรวมเฉพาะ Bar chart (ยอดขายจริง)
+                                let totalActual = 0;
+                                tooltipItems.forEach(function(tooltipItem) {
+                                    if (tooltipItem.dataset.type === 'bar') {
+                                        totalActual += tooltipItem.parsed.y;
+                                    }
+                                });
+                                return '\nรวมยอดขายจริง: ' + new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(totalActual);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true, // ทำเป็น Stacked Bar Chart สำหรับยอดขาย
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            color: '#64748b', // Slate-500
+                            font: { size: 12, weight: '500' }
+                        }
+                    },
+                    y: {
+                        stacked: false, // แกน Y ไม่ต้อง stack เพื่อให้เทียบกับเส้น Target ได้ถูกต้อง
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(241, 245, 249, 1)', // Slate-100
+                            drawBorder: false,
+                            borderDash: [5, 5]
+                        },
+                        ticks: {
+                            color: '#94a3b8', // Slate-400
+                            font: { size: 12 },
+                            callback: function(value) {
+                                if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
+                                if (value >= 1000) return (value / 1000).toFixed(0) + 'k';
+                                return value;
+                            },
+                            stepSize: 100000 // กำหนดสเกลให้ดูสวยงาม
+                        },
+                        suggestedMax: 650000 // ปรับลดลงมานิดหน่อยให้กราฟดูเต็มขึ้น
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutQuart'
+                }
+            }
+        });
+    </script>
+<a href="trainingemployee.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;   หน้าถัดไป (training employee) ➜
+</body>
+</html>

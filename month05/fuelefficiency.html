@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานประสิทธิภาพการใช้เชื้อเพลิง - พฤษภาคม 2569</title>
+    <!-- เรียกใช้ Font Noto Sans Thai เพื่อความสวยงามและอ่านง่าย -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- เรียกใช้ Chart.js สำหรับสร้างกราฟ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* --- การตั้งค่าพื้นฐานและ Theme --- */
+        :root {
+            --bg-color: #f0f4f8; /* สีพื้นหลังหลักแบบ Light Theme */
+            --text-color: #334155; /* สีตัวอักษรหลัก (Dark Slate) */
+            --glass-bg: rgba(255, 255, 255, 0.3); /* พื้นหลังกระจก */
+            --glass-border: 1px solid rgba(255, 255, 255, 0.7); /* ขอบกระจก */
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1); /* เงากระจก */
+            --accent-blue: #0ea5e9; /* สีน้ำเงินเน้น */
+            --accent-green: #10b981; /* สีเขียวเน้น (สำหรับค่าที่ดี) */
+            --accent-red: #ef4444; /* สีแดงเน้น (สำหรับค่าที่ควรปรับปรุง) */
+        }
+
+        body {
+            font-family: 'Noto Sans Thai', sans-serif;
+            /* พื้นหลังแบบ Gradient นุ่มนวล */
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* --- Glassmorphism Card Style --- */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px); /* เอฟเฟกต์เบลอพื้นหลัง */
+            -webkit-backdrop-filter: blur(16px); /* รองรับ Safari */
+            border-radius: 16px;
+            border: var(--glass-border);
+            box-shadow: var(--glass-shadow);
+            padding: 24px;
+            transition: transform 0.2s;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-3px); /* ขยับขึ้นเล็กน้อยเมื่อเอาเมาส์ชี้ */
+        }
+
+        /* --- Layout Setup --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .company-title h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .company-title p {
+            margin: 5px 0 0;
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+        .report-date {
+            text-align: right;
+            font-weight: 500;
+            color: var(--accent-blue);
+        }
+
+        /* KPI Section (4 Cards Top Row) */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .kpi-card h3 {
+            margin: 0 0 10px;
+            font-size: 1rem;
+            color: #64748b;
+        }
+        .kpi-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        .kpi-card .unit {
+            font-size: 1rem;
+            color: #64748b;
+            margin-left: 5px;
+        }
+
+        /* Charts Section (Middle Row) */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .chart-container {
+            position: relative;
+            height: 350px; /* ความสูงคงที่สำหรับกราฟ */
+        }
+
+        /* Table & Insights Section (Bottom Row) */
+        .bottom-grid {
+            /* เปลี่ยนกลับมาแสดงเป็น 1 คอลัมน์กว้างเต็มหน้าจอ สำหรับตาราง */
+            display: block; 
+            margin-bottom: 30px;
+        }
+
+        /* Data Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: right; /* จัดชิดขวาสำหรับตัวเลข */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        th {
+            /* พื้นหลังหัวตารางแบบกระจกทึบขึ้นเล็กน้อย */
+            background: rgba(255, 255, 255, 0.5); 
+            font-weight: 600;
+            color: #475569;
+            text-align: center; /* จัดกึ่งกลางสำหรับหัวตาราง */
+        }
+        td:first-child, td:nth-child(2), td:nth-child(3), td:nth-child(4) {
+            text-align: left; /* จัดชิดซ้ายสำหรับคอลัมน์ข้อความ */
+        }
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.4); /* ไฮไลท์แถวเมื่อเอาเมาส์ชี้ */
+        }
+        .total-row {
+            font-weight: 700;
+            background: rgba(241, 245, 249, 0.5) !important; /* สีพื้นหลังแถวรวม */
+        }
+
+        /* Insights Panel Styles */
+        .insights-list {
+            list-style: none;
+            padding: 0;
+        }
+        .insights-list li {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+            line-height: 1.5;
+        }
+        .insights-list li::before {
+            content: '•'; /* สัญลักษณ์หัวข้อ */
+            color: var(--accent-blue);
+            font-size: 1.5em;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+        
+        /* ขยายส่วนบทวิเคราะห์ให้เต็มหน้าจอ */
+        .insights-section {
+            margin-top: 30px;
+        }
+        
+        .insights-card {
+            background: rgba(255, 255, 255, 0.4); /* ทำให้ส่วนสรุปสว่างขึ้นเล็กน้อย */
+            border-left: 5px solid var(--accent-blue); /* เพิ่มเส้นขอบซ้ายเน้นความสำคัญ */
+        }
+
+        .highlight-good { color: var(--accent-green); font-weight: 600; }
+        .highlight-bad { color: var(--accent-red); font-weight: 600; }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .charts-grid, .bottom-grid {
+                grid-template-columns: 1fr; /* เรียงเป็นคอลัมน์เดียวบนจอมือถือ */
+            }
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .report-date {
+                text-align: center;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- --- ส่วนหัว --- -->
+    <header class="header glass-card">
+        <div class="company-title">
+            <h1>บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</h1>
+            <p>รายงานประสิทธิภาพการใช้เชื้อเพลิง (Fuel Efficiency Report)</p>
+        </div>
+        <div class="report-date">
+            <h2>ประจำเดือน พฤษภาคม 2569</h2>
+            <span>(May-26)</span>
+        </div>
+    </header>
+
+    <!-- --- ส่วน KPI หลัก (Top KPIs) --- -->
+    <section class="kpi-grid">
+        <div class="kpi-card glass-card">
+            <h3>ระยะทางรวม</h3>
+            <div><span class="value">17,849</span> <span class="unit">km</span></div>
+        </div>
+        <div class="kpi-card glass-card">
+            <h3>ต้นทุนเชื้อเพลิงรวม</h3>
+            <div><span class="value" style="color: var(--accent-red);">84,590</span> <span class="unit">บาท</span></div>
+        </div>
+        <div class="kpi-card glass-card">
+            <h3>อัตราสิ้นเปลืองเฉลี่ย</h3>
+            <div><span class="value" style="color: var(--accent-green);">8.80</span> <span class="unit">km/ลิตร</span></div>
+        </div>
+        <div class="kpi-card glass-card">
+            <h3>ต้นทุนเฉลี่ยต่อ กม.</h3>
+            <div><span class="value">4.74</span> <span class="unit">บาท/km</span></div>
+        </div>
+    </section>
+
+    <!-- --- ส่วนกราฟวิเคราะห์ (Charts) --- -->
+    <section class="charts-grid">
+        <!-- Chart 1: ประสิทธิภาพการใช้น้ำมัน (km/L) -->
+        <div class="glass-card">
+            <h3 style="text-align: center;">ประสิทธิภาพการใช้น้ำมันรายคัน (km/ลิตร)</h3>
+            <p style="text-align: center; font-size: 0.9em; color: #666;">(ยิ่งมาก ยิ่งดี)</p>
+            <div class="chart-container">
+                <canvas id="efficiencyChart"></canvas>
+            </div>
+        </div>
+        <!-- Chart 2: ความสัมพันธ์ ต้นทุน vs ระยะทาง -->
+        <div class="glass-card">
+            <h3 style="text-align: center;">ความสัมพันธ์ ต้นทุน vs ระยะทาง</h3>
+            <div class="chart-container">
+                <canvas id="costVsDistanceChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- --- ส่วนตารางข้อมูลและบทวิเคราะห์ (Table & Insights) --- -->
+    <section class="bottom-grid">
+        <!-- ตารางข้อมูล -->
+        <div class="glass-card table-container">
+            <h3>ข้อมูลยานพาหนะโดยละเอียด</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ทะเบียน</th>
+                        <th>ชื่อรถ</th>
+                        <th>ผู้ขับ</th>
+                        <th>น้ำมัน (ลิตร)</th>
+                        <th>น้ำมัน (บาท)</th>
+                        <th>ระยะทาง (km)</th>
+                        <th>km/ลิตร</th>
+                        <th>บาท/km</th>
+                        <th>%เทียบยอดขาย</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>84-5551 อด</td>
+                        <td>บุญหนัก</td>
+                        <td>วิชัย</td>
+                        <td>109.70</td>
+                        <td>4,500.00</td>
+                        <td>786.00</td>
+                        <td style="color: var(--accent-red);">7.16</td>
+                        <td>5.73</td>
+                        <td>1.38%</td>
+                    </tr>
+                    <tr>
+                        <td>84-3178 อด</td>
+                        <td>ทำเงิน</td>
+                        <td>บูรพา</td>
+                        <td>282.85</td>
+                        <td>11,770.00</td>
+                        <td>2,037.00</td>
+                        <td style="color: var(--accent-red);">7.20</td>
+                        <td>5.78</td>
+                        <td>1.02%</td>
+                    </tr>
+                    <tr>
+                        <td>83-9195 อด</td>
+                        <td>พี่หมาน</td>
+                        <td>ใย</td>
+                        <td>461.81</td>
+                        <td>19,300.00</td>
+                        <td>4,136.00</td>
+                        <td>8.96</td>
+                        <td>4.67</td>
+                        <td>1.00%</td>
+                    </tr>
+                    <tr>
+                        <td>84-1902 อด</td>
+                        <td>นำโชค</td>
+                        <td>เรืองยศ</td>
+                        <td>721.65</td>
+                        <td>30,150.00</td>
+                        <td>6,156.00</td>
+                        <td>8.53</td>
+                        <td>4.90</td>
+                        <td>1.25%</td>
+                    </tr>
+                    <tr>
+                        <td>2ฒบ 2585 กทม.</td>
+                        <td>ออมสิน</td>
+                        <td>นาวี</td>
+                        <td>451.36</td>
+                        <td>18,870.00</td>
+                        <td>4,734.00</td>
+                        <td style="color: var(--accent-green); font-weight: bold;">10.49</td>
+                        <td>3.99</td>
+                        <td>1.24%</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="3" style="text-align: center;">รวม / เฉลี่ย</td>
+                        <td>2,027.37</td>
+                        <td>84,590.00</td>
+                        <td>17,849.00</td>
+                        <td>8.80</td>
+                        <td>4.74</td>
+                        <td>1.15%</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </section>
+
+    <!-- --- ส่วนบทวิเคราะห์ (ย้ายมาไว้ด้านล่างและขยายใหญ่) --- -->
+    <section class="insights-section">
+        <div class="glass-card insights-card">
+            <h3>ข้อเสนอแนะและบทวิเคราะห์</h3>
+            <ul class="insights-list">
+                <li>
+                    <strong>รถที่ประหยัดที่สุด:</strong> <span class="highlight-good">"ออมสิน"</span> (2ฒบ 2585) ทำได้ถึง 10.49 km/ลิตร และมีต้นทุนต่อกิโลเมตรต่ำที่สุด (3.99 บาท/km) ถือเป็นเกณฑ์ที่ดีเยี่ยม
+                </li>
+                <li>
+                    <strong>จุดที่ควรปรับปรุง:</strong> <span class="highlight-bad">"บุญหนัก"</span> และ <span class="highlight-bad">"ทำเงิน"</span> มีอัตราสิ้นเปลืองเชื้อเพลิงค่อนข้างสูง (ประมาณ 7.2 km/ลิตร) ต่ำกว่าค่าเฉลี่ยรวม อาจต้องตรวจสอบสภาพเครื่องยนต์หรือพฤติกรรมการขับขี่
+                </li>
+                <li>
+                    <strong>การใช้งานสูงสุด:</strong> <span class="highlight-good">"นำโชค"</span> วิ่งระยะทางไกลที่สุด (6,156 km) ส่งผลให้มีค่าน้ำมันรวมสูงสุดตามไปด้วย แต่ยังรักษาระดับอัตราสิ้นเปลืองได้ดีพอสมควร (8.53 km/ลิตร)
+                </li>
+                <li>
+                    <strong>ภาพรวมต้นทุน:</strong> สัดส่วนต้นทุนน้ำมันต่อยอดขายรวมอยู่ที่ <span class="highlight-good">1.15%</span> ซึ่งถือว่าอยู่ในเกณฑ์ที่ควบคุมได้ดีมาก
+                </li>
+            </ul>
+        </div>
+    </section>
+
+</div>
+
+<!-- --- Script สำหรับสร้างกราฟ (Chart.js Configuration) --- -->
+<script>
+    // ข้อมูลดิบจากรายงาน
+    const carNames = ['บุญหนัก', 'ทำเงิน', 'พี่หมาน', 'นำโชค', 'ออมสิน'];
+    const kmPerLiterData = [7.16, 7.20, 8.96, 8.53, 10.49];
+    const fuelCostData = [4500, 11770, 19300, 30150, 18870];
+    const distanceData = [786, 2037, 4136, 6156, 4734];
+
+    // Chart 1: Efficiency Chart (Horizontal Bar)
+    const ctxEfficiency = document.getElementById('efficiencyChart').getContext('2d');
+    new Chart(ctxEfficiency, {
+        type: 'bar',
+        data: {
+            labels: carNames,
+            datasets: [{
+                label: 'กม./ลิตร (km/L)',
+                data: kmPerLiterData,
+                // ใช้สีไล่ระดับ เขียว -> แดง ตามประสิทธิภาพ
+                backgroundColor: [
+                    'rgba(239, 68, 68, 0.7)',   // บุญหนัก (แดง - แย่สุด)
+                    'rgba(249, 115, 22, 0.7)',  // ทำเงิน (ส้ม)
+                    'rgba(59, 130, 246, 0.7)',  // พี่หมาน (ฟ้า)
+                    'rgba(59, 130, 246, 0.7)',  // นำโชค (ฟ้า)
+                    'rgba(16, 185, 129, 0.7)'   // ออมสิน (เขียว - ดีสุด)
+                ],
+                borderColor: 'rgba(255, 255, 255, 0.5)',
+                borderWidth: 1,
+                borderRadius: 8, // มุมแท่งกราฟโค้งมน
+            }]
+        },
+        options: {
+            indexAxis: 'y', // ทำให้เป็นกราฟแนวนอน
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'กิโลเมตรต่อลิตร (km/L)' }
+                }
+            },
+            plugins: {
+                legend: { display: false } // ซ่อน Legend เพราะมี dataset เดียว
+            }
+        }
+    });
+
+    // Chart 2: Cost vs Distance (Mixed Chart - Bar & Line)
+    const ctxCostVsDist = document.getElementById('costVsDistanceChart').getContext('2d');
+    new Chart(ctxCostVsDist, {
+        data: {
+            labels: carNames,
+            datasets: [
+                {
+                    type: 'bar', // กราฟแท่งแสดงต้นทุน
+                    label: 'ค่าน้ำมัน (บาท)',
+                    data: fuelCostData,
+                    backgroundColor: 'rgba(14, 165, 233, 0.6)', // สีฟ้า Accent
+                    borderColor: 'rgba(14, 165, 233, 1)',
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    yAxisID: 'yCost', // ผูกกับแกน Y ฝั่งซ้าย
+                    order: 2
+                },
+                {
+                    type: 'line', // กราฟเส้นแสดงระยะทาง
+                    label: 'ระยะทาง (km)',
+                    data: distanceData,
+                    backgroundColor: 'rgba(245, 158, 11, 0.2)', // สีส้ม Accent
+                    borderColor: 'rgba(245, 158, 11, 1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: 'rgba(245, 158, 11, 1)',
+                    pointRadius: 5,
+                    tension: 0.3, // ความโค้งของเส้น
+                    yAxisID: 'yDistance', // ผูกกับแกน Y ฝั่งขวา
+                    order: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                yCost: { // แกน Y ซ้าย (ต้นทุน)
+                    type: 'linear',
+                    position: 'left',
+                    title: { display: true, text: 'ค่าน้ำมัน (บาท)' },
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                },
+                yDistance: { // แกน Y ขวา (ระยะทาง)
+                    type: 'linear',
+                    position: 'right',
+                    title: { display: true, text: 'ระยะทาง (km)' },
+                    grid: { drawOnChartArea: false } // ไม่ต้องวาดเส้น grid ทับ
+                }
+            }
+        }
+    });
+</script>
+<a href="index.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #198754; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;   ⟲ กลับหน้าหลัก
+
+</body>
+</html>
