@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปการตรวจนับสินค้าคงคลัง - บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</title>
+    
+    <!-- Google Fonts: Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        prompt: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            dark: '#0f172a',    // slate-900
+                            card: '#1e293b',    // slate-800
+                            primary: '#6366f1', // indigo-500
+                            accent: '#f43f5e',  // rose-500
+                            success: '#10b981', // emerald-500
+                            warning: '#f59e0b', // amber-500
+                            info: '#0ea5e9'     // sky-500
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #0f172a; /* brand.dark */
+            color: #f8fafc;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header Section -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center glass-card p-6 rounded-2xl mb-8 border-l-4 border-brand-primary">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+                    บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด
+                </h1>
+                <p class="text-slate-400 mt-1 text-sm md:text-base"><i class="fa-solid fa-chart-pie mr-2"></i>Dashboard สรุปการตรวจนับสินค้าคงคลัง (หน้าร้าน) ประจำเดือน พฤษภาคม 2569</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex gap-3">
+                <button onclick="window.print()" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors shadow-lg">
+                    <i class="fa-solid fa-print mr-2"></i>พิมพ์รายงาน
+                </button>
+                <div class="px-4 py-2 bg-gradient-to-r from-brand-primary to-purple-600 rounded-lg text-sm font-semibold shadow-lg shadow-indigo-500/30">
+                    <i class="fa-solid fa-calendar-check mr-2"></i>พฤษภาคม 2569
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Cards Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Card 1 -->
+            <div class="glass-card p-6 rounded-2xl relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 transform group-hover:scale-110 transition-transform duration-500">
+                    <i class="fa-solid fa-boxes-stacked text-6xl text-brand-info"></i>
+                </div>
+                <h3 class="text-slate-400 text-sm font-medium">รวมรายการสินค้าที่ตรวจนับ</h3>
+                <div class="text-3xl font-bold mt-2 text-white">471 <span class="text-sm font-normal text-slate-400">รายการ</span></div>
+                <div class="mt-2 text-sm text-brand-info font-medium">
+                    ประจำเดือน พฤษภาคม 2026
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="glass-card p-6 rounded-2xl relative overflow-hidden group border-b-4 border-brand-accent">
+                <div class="absolute top-0 right-0 p-4 opacity-10 transform group-hover:scale-110 transition-transform duration-500">
+                    <i class="fa-solid fa-bullseye text-6xl text-brand-accent"></i>
+                </div>
+                <h3 class="text-slate-400 text-sm font-medium">% ความแม่นยำสต๊อกรวม (Accuracy)</h3>
+                <div class="text-4xl font-bold mt-2 text-brand-accent">74%</div>
+                <div class="mt-2 text-sm text-slate-400 font-medium">
+                    เป้าหมาย <span class="text-white">90%</span> • ตรงตามระบบ 349 รายการ
+                </div>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="glass-card p-6 rounded-2xl relative overflow-hidden group border-b-4 border-brand-accent">
+                <div class="absolute top-0 right-0 p-4 opacity-10 transform group-hover:scale-110 transition-transform duration-500">
+                    <i class="fa-solid fa-arrow-trend-down text-6xl text-brand-accent"></i>
+                </div>
+                <h3 class="text-slate-400 text-sm font-medium">สต็อกขาด (Shortage)</h3>
+                <div class="text-3xl font-bold mt-2 text-brand-accent">109 <span class="text-sm font-normal text-slate-400">รายการ (697 ชิ้น)</span></div>
+                <div class="mt-2 text-sm text-slate-400 font-medium">
+                    มูลค่ารวม <span class="text-brand-accent font-bold">29,613.28 ฿</span>
+                </div>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="glass-card p-6 rounded-2xl relative overflow-hidden group border-b-4 border-brand-warning">
+                <div class="absolute top-0 right-0 p-4 opacity-10 transform group-hover:scale-110 transition-transform duration-500">
+                    <i class="fa-solid fa-plus-circle text-6xl text-brand-warning"></i>
+                </div>
+                <h3 class="text-slate-400 text-sm font-medium">สต็อกเกิน (Overage)</h3>
+                <div class="text-3xl font-bold mt-2 text-brand-warning">13 <span class="text-sm font-normal text-slate-400">รายการ (47 ชิ้น)</span></div>
+                <div class="mt-2 text-sm text-slate-400 font-medium">
+                    มูลค่ารวม <span class="text-brand-warning font-bold">6,678.68 ฿</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Doughnut Chart -->
+            <div class="glass-card p-6 rounded-2xl lg:col-span-1 flex flex-col">
+                <h3 class="text-lg font-semibold mb-4 text-white"><i class="fa-solid fa-chart-pie mr-2 text-indigo-400"></i>สัดส่วนสถานะสินค้า</h3>
+                <div class="flex-grow flex items-center justify-center relative h-64">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Bar Chart -->
+            <div class="glass-card p-6 rounded-2xl lg:col-span-2">
+                <h3 class="text-lg font-semibold mb-4 text-white"><i class="fa-solid fa-chart-bar mr-2 text-indigo-400"></i>5 กลุ่มสินค้าที่มีจำนวนชิ้นคลาดเคลื่อนสูงสุด</h3>
+                <div class="relative h-64 w-full">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis & Solutions Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Analysis / Problems -->
+            <div class="glass-card p-6 rounded-2xl">
+                <h3 class="text-xl font-bold mb-6 text-brand-accent"><i class="fa-solid fa-triangle-exclamation mr-2"></i>วิเคราะห์ปัญหาที่พบจากการตรวจนับ</h3>
+                
+                <div class="space-y-4">
+                    <div class="p-4 bg-slate-800/50 rounded-xl border border-slate-700 hover:border-slate-500 transition-colors">
+                        <div class="flex items-start">
+                            <div class="bg-rose-500/20 p-2 rounded-lg text-rose-400 mr-4">
+                                <i class="fa-solid fa-bullseye text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-white">1. ความแม่นยำต่ำกว่าเป้าหมาย (Accuracy)</h4>
+                                <p class="text-sm text-slate-400 mt-1">ความถูกต้องของสต็อกอยู่ที่ 74% ซึ่งต่ำกว่าเป้าหมายที่ตั้งไว้ที่ 90% มีรายการขาดหายจำนวนมาก (109 รายการ / 697 ชิ้น) มูลค่าความเสียหายสูงถึงเกือบ 3 หมื่นบาท</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/50 rounded-xl border border-slate-700 hover:border-slate-500 transition-colors">
+                        <div class="flex items-start">
+                            <div class="bg-amber-500/20 p-2 rounded-lg text-amber-400 mr-4">
+                                <i class="fa-solid fa-box text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-white">2. ปัญหาการขายสินค้าผิดรุ่น (Wrong Item Sold)</h4>
+                                <p class="text-sm text-slate-400 mt-1">พบกลุ่มสินค้าคล้ายกัน เช่น ใบตัด, ลูกปืน, สายพาน มีการขาดและเกินในหมวดเดียวกัน สันนิษฐานว่าพนักงานหยิบสินค้าผิดรุ่น/ผิดขนาดให้ลูกค้า แต่ตัดสต็อกอีกรุ่นในระบบ</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-slate-800/50 rounded-xl border border-slate-700 hover:border-slate-500 transition-colors">
+                        <div class="flex items-start">
+                            <div class="bg-indigo-500/20 p-2 rounded-lg text-indigo-400 mr-4">
+                                <i class="fa-solid fa-cubes text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-white">3. การจัดการสินค้าชิ้นเล็ก (Small Items Handling)</h4>
+                                <p class="text-sm text-slate-400 mt-1">สินค้าขนาดเล็กและมีจำนวนมาก (เช่น น็อต, สกรู, กระดาษทราย, ลูกปืน) มีความคลาดเคลื่อนสูง อาจเกิดจากการสูญหาย, นับพลาด หรือการชั่งน้ำหนัก/แบ่งขายที่ไม่แม่นยำ</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-4 bg-slate-800/50 rounded-xl border border-slate-700 hover:border-slate-500 transition-colors">
+                        <div class="flex items-start">
+                            <div class="bg-red-500/20 p-2 rounded-lg text-red-400 mr-4">
+                                <i class="fa-solid fa-dolly text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-white">4. การรับเข้า-เบิกออก ไม่เป็นระบบ (Inventory Flow)</h4>
+                                <p class="text-sm text-slate-400 mt-1">การมีสต็อกเกิน (Overage) 13 รายการ สะท้อนว่ามีการรับสินค้าเข้าโดยไม่ได้บันทึก หรือมีการนำสินค้าคืนกลับเข้าชั้นวางโดยไม่ปรับปรุงยอดในระบบ POS</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solutions / Actions -->
+            <div class="glass-card p-6 rounded-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-bl-full -z-10"></div>
+                <h3 class="text-xl font-bold mb-6 text-brand-success"><i class="fa-solid fa-lightbulb mr-2"></i>แนวทางแก้ไขและแผนปฏิบัติการ (Action Plan)</h3>
+                
+                <div class="space-y-4 relative z-10">
+                    <div class="relative pl-6 border-l-2 border-brand-success pb-4">
+                        <div class="absolute w-4 h-4 bg-brand-success rounded-full -left-[9px] top-1 shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+                        <h4 class="font-semibold text-white">ติดบาร์โค้ดและป้ายระบุสินค้าให้ชัดเจน (Barcode & Labeling)</h4>
+                        <p class="text-sm text-slate-300 mt-1">บังคับใช้การ <strong>"สแกนบาร์โค้ดทุกครั้ง"</strong> แทนการคีย์รหัสเอง โดยเฉพาะกลุ่มใบตัดและลูกปืน เพื่อป้องกันการหยิบผิดรุ่น และจัดทำป้ายกำกับขนาด/รุ่น ให้ชัดเจนที่ชั้นวาง</p>
+                    </div>
+
+                    <div class="relative pl-6 border-l-2 border-brand-success pb-4">
+                        <div class="absolute w-4 h-4 bg-brand-success rounded-full -left-[9px] top-1 shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+                        <h4 class="font-semibold text-white">จัดระเบียบสินค้าชิ้นเล็ก (Binning & Sorting)</h4>
+                        <p class="text-sm text-slate-300 mt-1">จัดหากล่องใส่อะไหล่ (Parts Bin) แยกตามรุ่น/ขนาดอย่างชัดเจน ห้ามปะปนกัน และใช้วิธีการชั่งน้ำหนักดิจิทัลที่มีความแม่นยำสูงสำหรับการนับ/ขาย สินค้าที่มีจำนวนมาก</p>
+                    </div>
+
+                    <div class="relative pl-6 border-l-2 border-brand-success pb-4">
+                        <div class="absolute w-4 h-4 bg-brand-success rounded-full -left-[9px] top-1 shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+                        <h4 class="font-semibold text-white">เพิ่มความถี่ในการ Cycle Count (รอบนับย่อย)</h4>
+                        <p class="text-sm text-slate-300 mt-1">แทนที่จะรอตรวจนับใหญ่ปลายเดือน ให้กำหนดกลุ่มสินค้าที่มีปัญหาบ่อย (Top 5 Variance) มาทำการ <strong>Cycle Count ทุกสัปดาห์</strong> เพื่อพบข้อผิดพลาดและแก้ไขได้ทันที</p>
+                    </div>
+
+                    <div class="relative pl-6 border-l-2 border-transparent">
+                        <div class="absolute w-4 h-4 bg-brand-success rounded-full -left-[9px] top-1 shadow-[0_0_10px_rgba(16,185,129,0.8)]"></div>
+                        <h4 class="font-semibold text-white">อบรมพนักงานเรื่องกระบวนการคลังสินค้า (SOP Training)</h4>
+                        <p class="text-sm text-slate-300 mt-1">เน้นย้ำระเบียบปฏิบัติ (SOP) ในการรับของเข้า การตัดจ่ายของชำรุด และการคืนสินค้า (Return) ต้องมีการบันทึกผ่านระบบ POS ทุกครั้ง ห้ามลัดขั้นตอนเด็ดขาด</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Chart Configuration Script -->
+    <script>
+        // กำหนด Global สีข้อความของ Chart เป็นสีเทาอ่อน
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = "'Prompt', sans-serif";
+
+        // 1. Doughnut Chart: สัดส่วนสถานะสินค้า
+        const ctxStatus = document.getElementById('statusChart').getContext('2d');
+        const statusChart = new Chart(ctxStatus, {
+            type: 'doughnut',
+            data: {
+                labels: ['สินค้าถูกต้อง', 'สต็อกขาด', 'สต็อกเกิน'],
+                datasets: [{
+                    data: [349, 109, 13],
+                    backgroundColor: [
+                        '#10b981', // Emerald 500
+                        '#f43f5e', // Rose 500
+                        '#f59e0b'  // Amber 500
+                    ],
+                    borderColor: '#1e293b',
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += new Intl.NumberFormat('th-TH').format(context.parsed) + ' รายการ';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [{
+                id: 'textCenter',
+                beforeDraw: function(chart) {
+                    var width = chart.width,
+                        height = chart.height,
+                        ctx = chart.ctx;
+
+                    ctx.restore();
+                    var fontSize = (height / 120).toFixed(2);
+                    ctx.font = "bold " + fontSize + "em 'Prompt'";
+                    ctx.textBaseline = "middle";
+                    ctx.fillStyle = "#f8fafc";
+
+                    var text = "74%",
+                        textX = Math.round((width - ctx.measureText(text).width) / 2),
+                        textY = (height / 2) - 15;
+
+                    ctx.fillText(text, textX, textY);
+
+                    ctx.font = "normal " + (fontSize * 0.35) + "em 'Prompt'";
+                    ctx.fillStyle = "#94a3b8";
+                    var subText = "ความแม่นยำ";
+                    var subTextX = Math.round((width - ctx.measureText(subText).width) / 2);
+                    ctx.fillText(subText, subTextX, textY + 30);
+                    ctx.save();
+                }
+            }]
+        });
+
+        // 2. Bar Chart: หมวดหมู่ที่มีความคลาดเคลื่อน
+        const ctxCategory = document.getElementById('categoryChart').getContext('2d');
+        const categoryChart = new Chart(ctxCategory, {
+            type: 'bar',
+            data: {
+                labels: ['ใบตัด/ใบเจียร', 'ลูกปืน', 'สายพาน', 'กระดาษทราย', 'ดอกสว่าน/ดอกต๊าป'],
+                datasets: [
+                    {
+                        label: 'ชิ้นส่วนขาด (Shortage)',
+                        data: [185, 120, 85, 150, 45], // ข้อมูลจำลองอิงจากรูป
+                        backgroundColor: 'rgba(244, 63, 94, 0.8)', // Rose 500
+                        borderColor: '#f43f5e',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    },
+                    {
+                        label: 'ชิ้นส่วนเกิน (Overage)',
+                        data: [15, 8, 5, 12, 2], // ข้อมูลจำลองอิงจากรูป
+                        backgroundColor: 'rgba(245, 158, 11, 0.8)', // Amber 500
+                        borderColor: '#f59e0b',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(148, 163, 184, 0.1)' // grid line color
+                        },
+                        title: {
+                            display: true,
+                            text: 'จำนวนรายการ'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            usePointStyle: true,
+                            boxWidth: 8
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+<a href="stockwarehouse.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (stock warehouse) ➜
+</body>
+</html>
