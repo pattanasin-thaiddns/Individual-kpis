@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปผลการฝึกอบรม - บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Sarabun) -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .premium-gradient {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #06b6d4 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="premium-gradient text-white shadow-lg">
+        <div class="container mx-auto px-6 py-6 md:py-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-white/10 p-3 rounded-2xl backdrop-blur-md border border-white/20">
+                    <i class="fa-solid fa-graduation-cap text-3xl text-cyan-300"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold tracking-wide">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</h1>
+                    <p class="text-white/80 text-sm md:text-base mt-1 flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-check text-cyan-300"></i>
+                        ระบบรายงานผลการฝึกอบรมพนักงาน ประจำเดือนมิถุนายน 2569
+                    </p>
+                </div>
+            </div>
+            <div class="bg-white/10 px-5 py-3 rounded-2xl backdrop-blur-md border border-white/15 text-center md:text-right">
+                <span class="text-xs uppercase tracking-wider text-cyan-200 block font-medium">อัปเดตล่าสุด</span>
+                <span class="text-lg font-bold">28 มิถุนายน 2569</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 md:px-6 py-8 flex-grow">
+
+        <!-- KPI Overviews -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Card 1: ผู้เข้าร่วมอบรมจริง -->
+            <div class="bg-white p-6 rounded-3xl card-shadow border border-slate-100 flex items-center justify-between transition-all hover:-translate-y-1 hover:shadow-xl">
+                <div>
+                    <span class="text-sm font-semibold text-slate-400 block mb-1">เข้าร่วมอบรมจริง</span>
+                    <span class="text-3xl font-extrabold text-blue-900">10 <span class="text-base font-normal text-slate-500">คน</span></span>
+                    <span class="text-xs text-emerald-600 block mt-2 font-medium">
+                        <i class="fa-solid fa-circle-check mr-1"></i>จากเป้าหมายทั้งหมด 11 คน
+                    </span>
+                </div>
+                <div class="bg-blue-50 p-4 rounded-2xl text-blue-600">
+                    <i class="fa-solid fa-user-check text-2xl"></i>
+                </div>
+            </div>
+
+            <!-- Card 2: อัตราการเข้าร่วม (%) -->
+            <div class="bg-white p-6 rounded-3xl card-shadow border border-slate-100 flex items-center justify-between transition-all hover:-translate-y-1 hover:shadow-xl">
+                <div>
+                    <span class="text-sm font-semibold text-slate-400 block mb-1">คิดเป็นร้อยละ (Jun-26)</span>
+                    <span class="text-3xl font-extrabold text-emerald-600">91%</span>
+                    <span class="text-xs text-slate-500 block mt-2 font-medium">
+                        <i class="fa-solid fa-chart-line mr-1"></i>เกณฑ์ผ่านเกณฑ์มาตรฐาน
+                    </span>
+                </div>
+                <div class="bg-emerald-50 p-4 rounded-2xl text-emerald-600">
+                    <i class="fa-solid fa-percent text-2xl"></i>
+                </div>
+            </div>
+
+            <!-- Card 3: แผนงานที่ต้องอบรม -->
+            <div class="bg-white p-6 rounded-3xl card-shadow border border-slate-100 flex items-center justify-between transition-all hover:-translate-y-1 hover:shadow-xl">
+                <div>
+                    <span class="text-sm font-semibold text-slate-400 block mb-1">พนักงานตามแผนงาน</span>
+                    <span class="text-3xl font-extrabold text-violet-900">11 <span class="text-base font-normal text-slate-500">คน</span></span>
+                    <span class="text-xs text-slate-500 block mt-2 font-medium">
+                        <i class="fa-solid fa-clipboard-list mr-1"></i>อิงตามรายชื่อเป้าหมายหลัก
+                    </span>
+                </div>
+                <div class="bg-violet-50 p-4 rounded-2xl text-violet-600">
+                    <i class="fa-solid fa-users text-2xl"></i>
+                </div>
+            </div>
+
+            <!-- Card 4: ขาดการอบรม -->
+            <div class="bg-white p-6 rounded-3xl card-shadow border border-slate-100 flex items-center justify-between transition-all hover:-translate-y-1 hover:shadow-xl">
+                <div>
+                    <span class="text-sm font-semibold text-slate-400 block mb-1">ขาดการอบรม</span>
+                    <span class="text-3xl font-extrabold text-rose-600">1 <span class="text-base font-normal text-slate-500">คน</span></span>
+                    <span class="text-xs text-rose-500 block mt-2 font-medium">
+                        <i class="fa-solid fa-circle-exclamation mr-1"></i>ต้องเข้ารับการอบรมชดเชย
+                    </span>
+                </div>
+                <div class="bg-rose-50 p-4 rounded-2xl text-rose-600">
+                    <i class="fa-solid fa-user-minus text-2xl"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts and Course Details -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <!-- Left Side: Course & Information -->
+            <div class="lg:col-span-2 flex flex-col gap-8">
+                <!-- Course Info Table Card -->
+                <div class="bg-white p-6 rounded-3xl card-shadow border border-slate-100">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-bookmark text-blue-600"></i>
+                            รายละเอียดหลักสูตรการฝึกอบรมประจำรอบปี 69
+                        </h2>
+                        <span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-bold">2 หลักสูตร</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider font-semibold">
+                                    <th class="py-3 px-4 rounded-l-xl">วัน / เดือน / ปี</th>
+                                    <th class="py-3 px-4">หัวข้ออบรม</th>
+                                    <th class="py-3 px-4 rounded-r-xl text-center">ผู้เข้าอบรมเป้าหมาย</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-sm">
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="py-4 px-4 font-bold text-slate-700">26 Jun 69</td>
+                                    <td class="py-4 px-4 font-medium text-slate-800">ยกระดับมาตรฐานการทำงาน ฝ่ายจัดส่ง</td>
+                                    <td class="py-4 px-4 text-center font-bold text-slate-700">11 คน</td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="py-4 px-4 font-bold text-slate-700">27 Jun 69</td>
+                                    <td class="py-4 px-4 font-medium text-slate-800">Service Protocol งานจัดส่งสินค้า</td>
+                                    <td class="py-4 px-4 text-center font-bold text-slate-700">11 คน</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Training Attendance Statistics Summary -->
+                <div class="bg-white p-6 rounded-3xl card-shadow border border-slate-100">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-bar text-cyan-600"></i>
+                            สรุปตัวเลขเปรียบเทียบแผนงาน VS หน้างานจริง (Jun-26)
+                        </h2>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Stat Item 1 -->
+                        <div class="bg-slate-50 p-5 rounded-2xl text-center border border-slate-100">
+                            <p class="text-sm font-semibold text-slate-500">เข้าร่วมจริง</p>
+                            <p class="text-4xl font-extrabold text-blue-600 mt-2">10</p>
+                            <p class="text-xs text-slate-400 mt-1">จากพนักงานที่ลงทะเบียน</p>
+                        </div>
+                        <!-- Stat Item 2 -->
+                        <div class="bg-slate-50 p-5 rounded-2xl text-center border border-slate-100">
+                            <p class="text-sm font-semibold text-slate-500">แผนงานตั้งเป้า</p>
+                            <p class="text-4xl font-extrabold text-slate-700 mt-2">11</p>
+                            <p class="text-xs text-slate-400 mt-1">เป้าหมายกำลังพลขับรถ/จัดส่ง</p>
+                        </div>
+                        <!-- Stat Item 3 -->
+                        <div class="bg-emerald-50 p-5 rounded-2xl text-center border border-emerald-100">
+                            <p class="text-sm font-semibold text-emerald-800">เปอร์เซ็นต์สำเร็จ</p>
+                            <p class="text-4xl font-extrabold text-emerald-600 mt-2">91%</p>
+                            <p class="text-xs text-emerald-700/70 mt-1">ประเมินผล: ดีเยี่ยม</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Beautiful Interactive Chart -->
+            <div class="bg-white p-6 rounded-3xl card-shadow border border-slate-100 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-pie text-rose-500"></i>
+                        สัดส่วนผลการเข้าร่วมอบรม
+                    </h2>
+                    <p class="text-xs text-slate-400 mb-6">สรุปผลภาพรวมข้อมูลประจำรอบวันที่ 26 มิถุนายน 2569</p>
+                </div>
+                <div class="relative w-full max-w-[240px] mx-auto aspect-square my-4">
+                    <canvas id="attendanceChart"></canvas>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-100 space-y-2">
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="flex items-center gap-2 text-slate-600">
+                            <span class="w-3 h-3 rounded-full bg-blue-500"></span> เข้าอบรมจริง
+                        </span>
+                        <span class="text-slate-800">10 คน (91%)</span>
+                    </div>
+                    <div class="flex justify-between text-xs font-semibold">
+                        <span class="flex items-center gap-2 text-slate-600">
+                            <span class="w-3 h-3 rounded-full bg-rose-500"></span> ขาดอบรม
+                        </span>
+                        <span class="text-slate-800">1 คน (9%)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Attendance Detail List -->
+        <section class="bg-white p-6 rounded-3xl card-shadow border border-slate-100 mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-user text-violet-600"></i>
+                        รายชื่อและสถานะของผู้เข้าอบรม (วันที่ 26 มิถุนายน 2569)
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-1">ตรวจสอบรายบุคคลตามลายเซ็นและการเข้าร่วมจริง ณ วันจัดอบรม</p>
+                </div>
+                <div class="flex gap-2">
+                    <span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1.5 rounded-full font-bold flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> เข้าร่วม 10 คน
+                    </span>
+                    <span class="bg-rose-100 text-rose-800 text-xs px-3 py-1.5 rounded-full font-bold flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span> ขาดอบรม 1 คน
+                    </span>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl border border-slate-100">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider font-semibold">
+                            <th class="py-4 px-6 text-center w-20">ลำดับ</th>
+                            <th class="py-4 px-6">ชื่อ-สกุล</th>
+                            <th class="py-4 px-6">ตำแหน่งงาน</th>
+                            <th class="py-4 px-6 text-center">สถานะเข้าร่วม</th>
+                            <th class="py-4 px-6 text-center">หมายเหตุ</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-sm">
+                        <!-- Item 1 -->
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="py-4 px-6 text-center font-bold text-slate-400">1</td>
+                            <td class="py-4 px-6 font-bold text-slate-800">นาย เรืองยศ นาจะรูญ</td>
+                            <td class="py-4 px-6 text-slate-600">
+                                <span class="bg-sky-50 text-sky-800 text-xs font-bold px-2.5 py-1 rounded-lg">พนักงานขับรถ</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> เข้าร่วมแล้ว
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center text-xs text-slate-400">-</td>
+                        </tr>
+                        <!-- Item 2 -->
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="py-4 px-6 text-center font-bold text-slate-400">2</td>
+                            <td class="py-4 px-6 font-bold text-slate-800">นาย บูรพา แสงโสดา</td>
+                            <td class="py-4 px-6 text-slate-600">
+                                <span class="bg-sky-50 text-sky-800 text-xs font-bold px-2.5 py-1 rounded-lg">พนักงานขับรถ</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> เข้าร่วมแล้ว
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center text-xs text-slate-400">-</td>
+                        </tr>
+                        <!-- Item 3 -->
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="py-4 px-6 text-center font-bold text-slate-400">3</td>
+                            <td class="py-4 px-6 font-bold text-slate-800">นาย วิชัย ทองเหล็ก</td>
+                            <td class="py-4 px-6 text-slate-600">
+                                <span class="bg-sky-50 text-sky-800 text-xs font-bold px-2.5 py-1 rounded-lg">พนักงานขับรถ</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> เข้าร่วมแล้ว
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center text-xs text-slate-400">-</td>
+                        </tr>
+                        <!-- Item 4 -->
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="py-4 px-6 text-center font-bold text-slate-400">4</td>
+                            <td class="py-4 px-6 font-bold text-slate-800">นาย สุรชัย สมสนุก</td>
+                            <td class="py-4 px-6 text-slate-600">
+                                <span class="bg-teal-50 text-teal-800 text-xs font-bold px-2.5 py-1 rounded-lg">พนักงานจัดส่ง</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> เข้าร่วมแล้ว
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center text-xs text-slate-400">-</td>
+                        </tr>
+                        <!-- Item 5 -->
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="py-4 px-6 text-center font-bold text-slate-400">5</td>
+                            <td class="py-4 px-6 font-bold text-slate-800">นาย พัฒน์พงษ์ ทองขันธ์</td>
+                            <td class="py-4 px-6 text-slate-600">
+                                <span class="bg-amber-50 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-lg">พนักงานขาย-หนองคาย</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> เข้าร่วมแล้ว
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center text-xs text-slate-400">-</td>
+                        </tr>
+                        <!-- Item 6 -->
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="py-4 px-6 text-center font-bold text-slate-400">6</td>
+                            <td class="py-4 px-6 font-bold text-slate-800">นาย นาวี มอโท</td>
+                            <td class="py-4 px-6 text-slate-600">
+                                <span class="bg-indigo-50 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded-lg">พนักงานขับรถ</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> เข้าร่วมแล้ว
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center text-xs text-slate-400">-</td>
+                        </tr>
+                        <!-- Item 7 -->
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="py-4 px-6 text-center font-bold text-slate-400">7</td>
+                            <td class="py-4 px-6 font-bold text-slate-800">นาย ไชยา อุตรักษ์</td>
+                            <td class="py-4 px-6 text-slate-600">
+                                <span class="bg-teal-50 text-teal-800 text-xs font-bold px-2.5 py-1 rounded-lg">พนักงานจัดส่ง</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> เข้าร่วมแล้ว
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center text-xs text-slate-400">-</td>
+                        </tr>
+                        <!-- Item 8 -->
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="py-4 px-6 text-center font-bold text-slate-400">8</td>
+                            <td class="py-4 px-6 font-bold text-slate-800">นาย หนุ่ย วงศ์ใหญ่</td>
+                            <td class="py-4 px-6 text-slate-600">
+                                <span class="bg-teal-50 text-teal-800 text-xs font-bold px-2.5 py-1 rounded-lg">พนักงานจัดส่ง</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> เข้าร่วมแล้ว
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center text-xs text-slate-400">-</td>
+                        </tr>
+                        <!-- Item 9 -->
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="py-4 px-6 text-center font-bold text-slate-400">9</td>
+                            <td class="py-4 px-6 font-bold text-slate-800">นาย สุมาต ทองเหล็ก</td>
+                            <td class="py-4 px-6 text-slate-600">
+                                <span class="bg-teal-50 text-teal-800 text-xs font-bold px-2.5 py-1 rounded-lg">พนักงานจัดส่ง</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> เข้าร่วมแล้ว
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center text-xs text-slate-400">-</td>
+                        </tr>
+                        <!-- Item 10 -->
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="py-4 px-6 text-center font-bold text-slate-400">10</td>
+                            <td class="py-4 px-6 font-bold text-slate-800">นาย ธีระวุฒิ ป่าแฝก</td>
+                            <td class="py-4 px-6 text-slate-600">
+                                <span class="bg-amber-50 text-amber-800 text-xs font-bold px-2.5 py-1 rounded-lg">พนักงานขาย-หนองคาย</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200">
+                                    <i class="fa-solid fa-circle-check mr-1"></i> เข้าร่วมแล้ว
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center text-xs text-slate-400">-</td>
+                        </tr>
+                        <!-- Item 11 (Absent) -->
+                        <tr class="bg-rose-50/30 hover:bg-rose-50/50 transition-colors">
+                            <td class="py-4 px-6 text-center font-bold text-rose-500">11</td>
+                            <td class="py-4 px-6 font-bold text-rose-900">นาย ใย รุนชนะ</td>
+                            <td class="py-4 px-6 text-slate-600">
+                                <span class="bg-sky-50 text-sky-800 text-xs font-bold px-2.5 py-1 rounded-lg">พนักงานขับรถ</span>
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <span class="bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1.5 rounded-full border border-rose-300">
+                                    <i class="fa-solid fa-circle-xmark mr-1"></i> ขาดการอบรม
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 text-center text-xs text-rose-600 font-bold">ลาป่วย</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800">
+        <div class="container mx-auto px-6 text-center text-xs md:text-sm">
+            <p>© 2026 บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด. สงวนลิขสิทธิ์ทั้งหมด.</p>
+            <p class="mt-1 text-slate-600">ออกแบบมาเพื่อใช้ในงานบริหารความปลอดภัยและการทำงาน (พนักงานขับรถและพนักงานจัดส่ง)</p>
+        </div>
+    </footer>
+
+    <!-- Chart Configuration Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['เข้าร่วมจริง', 'ขาดอบรม'],
+                    datasets: [{
+                        data: [10, 1],
+                        backgroundColor: [
+                            '#3b82f6', // Premium Indigo-Blue
+                            '#f43f5e'  // Premium Rose
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += context.parsed + ' คน';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        });
+    </script>
+<a href="newcustomersale.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (new customer sale) ➜
+</body>
+</html>

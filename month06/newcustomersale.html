@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปยอดขาย 2569 - บจก.พัฒนาสิน ไทยเทรดดิ้ง</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .table-highlight {
+            background-color: #fef08a; /* Yellow-200 equivalent */
+        }
+    </style>
+</head>
+<body class="text-gray-800 p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+
+        <!-- Header Section -->
+        <header class="bg-white rounded-2xl shadow-sm p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-blue-800">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</h1>
+                <p class="text-gray-500 mt-1">Dashboard สรุปยอดขายลูกค้าใหม่ ปี 2569 | รายงานประจำเดือน <b>มิถุนายน</b></p>
+            </div>
+            
+            <!-- PowerPoint Button -->
+            <!-- หมายเหตุ: ใส่ URL ของไฟล์ PPTX จริงในแอตทริบิวต์ href -->
+            <a href="https://docs.google.com/presentation/d/1DSPOCjE_9d_OeyAq0HoPmZ8f0n_HvoOPhL005vVRCe0/edit?usp=sharing" download class="inline-flex items-center px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white text-sm font-medium rounded-lg shadow transition-colors duration-200">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                ดาวน์โหลด PowerPoint Report
+            </a>
+        </header>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Card 1 -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 border-l-4 border-blue-500">
+                <p class="text-sm text-gray-500 font-medium">ยอดขายสะสม (ม.ค. - มิ.ย.)</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2">429,959.48 <span class="text-base font-normal text-gray-500">บาท</span></h3>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 border-l-4 border-yellow-400">
+                <p class="text-sm text-gray-500 font-medium">ยอดขายประจำเดือน มิถุนายน</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2">91,694.10 <span class="text-base font-normal text-gray-500">บาท</span></h3>
+            </div>
+            <!-- Card 3 -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 border-l-4 border-green-500">
+                <p class="text-sm text-gray-500 font-medium">ลูกค้าที่ซื้อในเดือน มิ.ย.</p>
+                <h3 class="text-3xl font-bold text-gray-800 mt-2">5 <span class="text-base font-normal text-gray-500">ราย</span></h3>
+                <p class="text-xs text-green-600 mt-1">เป็นลูกค้าที่เพิ่งเปิดบิลแรก 3 ราย</p>
+            </div>
+            <!-- Card 4 -->
+            <div class="bg-white rounded-2xl shadow-sm p-6 border-l-4 border-purple-500">
+                <p class="text-sm text-gray-500 font-medium">ลูกค้ายอดสั่งซื้อสูงสุดสะสม</p>
+                <h3 class="text-xl font-bold text-gray-800 mt-2 truncate">คุณธีรพงศ์ จันเลียง</h3>
+                <p class="text-sm text-purple-600 mt-1">50.2% ของยอดขายทั้งหมด</p>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Monthly Trend Chart -->
+            <div class="bg-white rounded-2xl shadow-sm p-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">เปรียบเทียบยอดขายรายเดือน (ม.ค. - มิ.ย. 2569)</h2>
+                <div class="relative h-64 w-full">
+                    <canvas id="monthlyTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Customer Share Chart -->
+            <div class="bg-white rounded-2xl shadow-sm p-6">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">สัดส่วนยอดขายแยกลูกค้า (สะสม 6 เดือน)</h2>
+                <div class="relative h-64 w-full flex justify-center">
+                    <canvas id="customerShareChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis & Recommendations -->
+        <div class="bg-white rounded-2xl shadow-sm p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+                วิเคราะห์และเสนอแนะ (Analysis & Recommendations)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 p-4 rounded-xl">
+                    <h3 class="font-bold text-blue-800 mb-2">📊 วิเคราะห์สถานการณ์ (มิ.ย. และ สะสม)</h3>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2 text-sm">
+                        <li>ยอดขายเดือน <b>มิถุนายน (91,694.10)</b> ลดลงจากเดือนพฤษภาคมเล็กน้อย แต่ยังอยู่ในเกณฑ์ที่สูงเป็นอันดับ 3 ของปี</li>
+                        <li><b>คุณธีรพงศ์ จันเลียง</b> เป็นลูกค้ารายสำคัญระดับ VIP อย่างชัดเจน โดยมียอดสั่งซื้อต่อเนื่องเกือบทุกเดือน และคิดเป็นกว่าครึ่งหนึ่งของยอดขายสะสมทั้งหมด</li>
+                        <li>ในเดือนมิถุนายน มีสัญญาณที่ดีด้านการหาลูกค้าใหม่ โดยพบว่า <b>อันดับ 7-9 มีการเปิดบิลซื้อเป็นครั้งแรกของปี</b> (ร้านศิริญาการ, ส.สัมพันธ์การค้า, หจก.วรรณฉัตรการค้า)</li>
+                        <li>ลูกค้าบางรายมีการซื้อเพียง 1-2 ครั้งแล้วหายไป (เช่น ร้านโชคคำมี ซื้อแค่เดือน ก.พ., ร้านปักกิ่งอุปกรณ์ ซื้อล่าสุด เม.ย.)</li>
+                    </ul>
+                </div>
+                <div class="bg-green-50 p-4 rounded-xl">
+                    <h3 class="font-bold text-green-800 mb-2">💡 ข้อเสนอแนะเชิงกลยุทธ์ (Action Plans)</h3>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2 text-sm">
+                        <li><b>CRM พิเศษสำหรับคุณธีรพงศ์:</b> ควรจัดให้มีโปรแกรมดูแลลูกค้าระดับ VIP เช่น ส่วนลดพิเศษ, การเข้าเยี่ยมเยียนจากผู้บริหาร หรือของขวัญขอบคุณ เพื่อรักษาฐานลูกค้าหลักนี้ไว้</li>
+                        <li><b>Follow-up ลูกค้าใหม่เดือน มิ.ย.:</b> ทีมเซลส์ควรติดตามผลหลังการขายของร้านศิริญาการ, ส.สัมพันธ์การค้า และ หจก.วรรณฉัตรการค้า ในเดือน ก.ค. ทันที เพื่อกระตุ้นให้เกิดการซื้อซ้ำในเดือนถัดไป (Repeat Purchase)</li>
+                        <li><b>Re-engagement Campaign:</b> ติดต่อกลับไปยังรายชื่อลูกค้าที่ขาดการติดต่อตั้งแต่ไตรมาสที่ 1 (เช่น ร้านโชคคำมี, ร้านปักกิ่งอุปกรณ์) เพื่อสอบถามปัญหา เสนอโปรโมชั่นใหม่ หรือเช็คสต๊อกสินค้าของลูกค้า</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="bg-white rounded-2xl shadow-sm p-6 overflow-hidden">
+            <h2 class="text-lg font-bold text-gray-800 mb-4">ตารางสรุปยอดขายแยกตามลูกค้า (ม.ค. - มิ.ย. 2569)</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full text-sm text-left">
+                    <thead class="bg-gray-100 text-gray-600 border-b-2 border-gray-200">
+                        <tr>
+                            <th class="py-3 px-4 font-semibold">อันดับ</th>
+                            <th class="py-3 px-4 font-semibold">รายชื่อลูกค้า</th>
+                            <th class="py-3 px-4 font-semibold text-right text-blue-600 bg-blue-50">ยอดซื้อสะสม</th>
+                            <th class="py-3 px-4 font-semibold text-right">ม.ค.</th>
+                            <th class="py-3 px-4 font-semibold text-right">ก.พ.</th>
+                            <th class="py-3 px-4 font-semibold text-right">มี.ค.</th>
+                            <th class="py-3 px-4 font-semibold text-right">เม.ย.</th>
+                            <th class="py-3 px-4 font-semibold text-right">พ.ค.</th>
+                            <th class="py-3 px-4 font-semibold text-right table-highlight">มิ.ย.</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-2 px-4">1</td>
+                            <td class="py-2 px-4">ร้านปักกิ่งอุปกรณ์</td>
+                            <td class="py-2 px-4 text-right font-semibold bg-blue-50">18,558.10</td>
+                            <td class="py-2 px-4 text-right">13,376.00</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">5,182.10</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right table-highlight">-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-2 px-4">2</td>
+                            <td class="py-2 px-4">ร้านแดงเจริญการช่าง</td>
+                            <td class="py-2 px-4 text-right font-semibold bg-blue-50">61,845.50</td>
+                            <td class="py-2 px-4 text-right">3,877.00</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">8,934.50</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">49,034.00</td>
+                            <td class="py-2 px-4 text-right table-highlight">-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 bg-gray-50">
+                            <td class="py-2 px-4">3</td>
+                            <td class="py-2 px-4 font-bold text-blue-700">คุณธีรพงศ์ จันเลียง</td>
+                            <td class="py-2 px-4 text-right font-bold text-blue-700 bg-blue-100">215,972.34</td>
+                            <td class="py-2 px-4 text-right">110,653.00</td>
+                            <td class="py-2 px-4 text-right">11,286.60</td>
+                            <td class="py-2 px-4 text-right">21,043.00</td>
+                            <td class="py-2 px-4 text-right">9,644.74</td>
+                            <td class="py-2 px-4 text-right">19,137.00</td>
+                            <td class="py-2 px-4 text-right font-semibold table-highlight">44,208.00</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-2 px-4">4</td>
+                            <td class="py-2 px-4">ร้านโชคคำมี</td>
+                            <td class="py-2 px-4 text-right font-semibold bg-blue-50">7,925.28</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">7,925.28</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right table-highlight">-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-2 px-4">5</td>
+                            <td class="py-2 px-4">ร้านยิ่งเจริญการค้า</td>
+                            <td class="py-2 px-4 text-right font-semibold bg-blue-50">27,557.00</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">4,752.00</td>
+                            <td class="py-2 px-4 text-right">10,416.00</td>
+                            <td class="py-2 px-4 text-right">12,389.00</td>
+                            <td class="py-2 px-4 text-right table-highlight">-</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-2 px-4">6</td>
+                            <td class="py-2 px-4">คุณนิตย์ติยา ตัญลา</td>
+                            <td class="py-2 px-4 text-right font-semibold bg-blue-50">78,698.16</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">27,860.86</td>
+                            <td class="py-2 px-4 text-right">36,130.30</td>
+                            <td class="py-2 px-4 text-right font-semibold table-highlight">14,707.00</td>
+                        </tr>
+                        <!-- New June Customers Highlighted -->
+                        <tr class="hover:bg-yellow-50 bg-yellow-50/30">
+                            <td class="py-2 px-4">7</td>
+                            <td class="py-2 px-4 text-orange-600 font-medium">ร้านศิริญาการ <span class="text-xs bg-orange-100 text-orange-700 px-1 rounded ml-1">New!</span></td>
+                            <td class="py-2 px-4 text-right font-semibold bg-blue-50">15,764.10</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right font-semibold table-highlight">15,764.10</td>
+                        </tr>
+                        <tr class="hover:bg-yellow-50 bg-yellow-50/30">
+                            <td class="py-2 px-4">8</td>
+                            <td class="py-2 px-4 text-orange-600 font-medium">ร้าน ส.สัมพันธ์การค้า <span class="text-xs bg-orange-100 text-orange-700 px-1 rounded ml-1">New!</span></td>
+                            <td class="py-2 px-4 text-right font-semibold bg-blue-50">11,783.00</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right font-semibold table-highlight">11,783.00</td>
+                        </tr>
+                        <tr class="hover:bg-yellow-50 bg-yellow-50/30">
+                            <td class="py-2 px-4">9</td>
+                            <td class="py-2 px-4 text-orange-600 font-medium">หจก.วรรณฉัตรการค้า <span class="text-xs bg-orange-100 text-orange-700 px-1 rounded ml-1">New!</span></td>
+                            <td class="py-2 px-4 text-right font-semibold bg-blue-50">5,232.00</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right">-</td>
+                            <td class="py-2 px-4 text-right font-semibold table-highlight">5,232.00</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="border-t-2 border-gray-800 bg-gray-50 font-bold">
+                        <tr>
+                            <td colspan="2" class="py-3 px-4 text-right text-gray-800">รวมทั้งสิ้น</td>
+                            <td class="py-3 px-4 text-right text-blue-800 bg-blue-100 text-lg">429,959.48</td>
+                            <td class="py-3 px-4 text-right text-gray-700">114,530.00</td>
+                            <td class="py-3 px-4 text-right text-gray-700">19,211.88</td>
+                            <td class="py-3 px-4 text-right text-gray-700">34,729.50</td>
+                            <td class="py-3 px-4 text-right text-gray-700">53,103.70</td>
+                            <td class="py-3 px-4 text-right text-gray-700">116,690.30</td>
+                            <td class="py-3 px-4 text-right text-gray-800 table-highlight text-lg">91,694.10</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script สำหรับสร้างกราฟ -->
+    <script>
+        // ข้อมูลยอดขายรายเดือน
+        const monthlyLabels = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.'];
+        const monthlyData = [114530.00, 19211.88, 34729.50, 53103.70, 116690.30, 91694.10];
+
+        // กราฟแท่ง (Bar Chart) เปรียบเทียบรายเดือน
+        const ctxBar = document.getElementById('monthlyTrendChart').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: monthlyLabels,
+                datasets: [{
+                    label: 'ยอดขาย (บาท)',
+                    data: monthlyData,
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.6)', // Blue
+                        'rgba(59, 130, 246, 0.6)',
+                        'rgba(59, 130, 246, 0.6)',
+                        'rgba(59, 130, 246, 0.6)',
+                        'rgba(59, 130, 246, 0.6)',
+                        'rgba(250, 204, 21, 0.8)'  // Yellow (เน้นเดือนมิ.ย.)
+                    ],
+                    borderColor: [
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(234, 179, 8, 1)'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y.toLocaleString('th-TH') + ' บาท';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('th-TH');
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // ข้อมูลสัดส่วนยอดขายลูกค้า Top 3 และอื่นๆ
+        const topCustomer = 215972.34; // คุณธีรพงศ์
+        const secondCustomer = 78698.16; // คุณนิตย์ติยา
+        const thirdCustomer = 61845.50; // ร้านแดงเจริญ
+        const others = 429959.48 - (topCustomer + secondCustomer + thirdCustomer);
+
+        // กราฟโดนัท (Doughnut Chart) สัดส่วนลูกค้า
+        const ctxPie = document.getElementById('customerShareChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'doughnut',
+            data: {
+                labels: ['คุณธีรพงศ์ จันเลียง', 'คุณนิตย์ติยา ตัญลา', 'ร้านแดงเจริญการช่าง', 'ลูกค้าอื่นๆ'],
+                datasets: [{
+                    data: [topCustomer, secondCustomer, thirdCustomer, others],
+                    backgroundColor: [
+                        '#3b82f6', // Blue 500
+                        '#10b981', // Emerald 500
+                        '#f59e0b', // Amber 500
+                        '#9ca3af'  // Gray 400
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { font: { family: 'Prompt' } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) { label += ': '; }
+                                label += context.parsed.toLocaleString('th-TH') + ' บาท';
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+<a href="debtTracking.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (debt Tracking) ➜
+</body>
+</html>

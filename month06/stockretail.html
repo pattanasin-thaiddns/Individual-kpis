@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปการตรวจนับสินค้าคงคลัง - บจก. พัฒนาสิน ไทยเทรดดิ้ง</title>
+    <!-- Tailwind CSS สำหรับจัดรูปแบบ -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js สำหรับวาดกราฟ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome สำหรับไอคอน -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f0f4f8; /* สีพื้นหลังสบายตา */
+            background-image: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header Section -->
+        <header class="glass-card rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center border-l-8 border-indigo-600">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-800">สรุปการตรวจนับสินค้าคงคลัง (หน้าร้าน)</h1>
+                <p class="text-lg text-indigo-600 font-semibold mt-1">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | ประจำเดือน: มิถุนายน</p>
+            </div>
+            <div class="mt-4 md:mt-0 text-right bg-indigo-50 px-4 py-2 rounded-lg border border-indigo-100">
+                <p class="text-sm text-gray-500">เป้าหมายความแม่นยำ</p>
+                <p class="text-2xl font-bold text-indigo-700">90.00%</p>
+            </div>
+        </header>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- ความแม่นยำ -->
+            <div class="glass-card rounded-xl p-5 flex items-center space-x-4 border-b-4 border-red-500 relative overflow-hidden">
+                <div class="p-3 bg-red-100 text-red-600 rounded-full">
+                    <i class="fa-solid fa-bullseye text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">ความแม่นยำจริง (Actual)</p>
+                    <h2 class="text-3xl font-bold text-red-600">79%</h2>
+                    <p class="text-xs text-red-500 mt-1"><i class="fa-solid fa-arrow-down"></i> ต่ำกว่าเป้าหมาย (90%)</p>
+                </div>
+            </div>
+
+            <!-- จำนวนรายการทั้งหมด -->
+            <div class="glass-card rounded-xl p-5 flex items-center space-x-4 border-b-4 border-blue-500">
+                <div class="p-3 bg-blue-100 text-blue-600 rounded-full">
+                    <i class="fa-solid fa-boxes-stacked text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">รายการที่ตรวจนับทั้งหมด</p>
+                    <h2 class="text-3xl font-bold text-gray-800">336 <span class="text-sm font-normal text-gray-500">รายการ</span></h2>
+                </div>
+            </div>
+
+            <!-- จำนวนตรง -->
+            <div class="glass-card rounded-xl p-5 flex items-center space-x-4 border-b-4 border-green-500">
+                <div class="p-3 bg-green-100 text-green-600 rounded-full">
+                    <i class="fa-solid fa-check-circle text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">จำนวนรายการที่ตรง</p>
+                    <h2 class="text-3xl font-bold text-gray-800">266 <span class="text-sm font-normal text-gray-500">รายการ</span></h2>
+                </div>
+            </div>
+
+            <!-- มูลค่ารวมสุทธิ (Discrepancy) -->
+            <div class="glass-card rounded-xl p-5 flex items-center space-x-4 border-b-4 border-orange-500">
+                <div class="p-3 bg-orange-100 text-orange-600 rounded-full">
+                    <i class="fa-solid fa-baht-sign text-2xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium">ผลต่างมูลค่ารวม (ขาด/เกิน)</p>
+                    <h2 class="text-3xl font-bold text-orange-600">11,689.53</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts & Summary Table -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- สรุปผลต่าง (ตาราง) -->
+            <div class="glass-card rounded-xl p-6 lg:col-span-2">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2"><i class="fa-solid fa-table-list text-indigo-500 mr-2"></i> สรุปรายละเอียดสต๊อกขาด-เกิน</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-700">
+                                <th class="p-3 rounded-tl-lg">รายการ</th>
+                                <th class="p-3 text-center">จำนวนรายการ</th>
+                                <th class="p-3 text-center">จำนวนชิ้น</th>
+                                <th class="p-3 text-right rounded-tr-lg">มูลค่ารวม (บาท)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-gray-100 hover:bg-red-50 transition">
+                                <td class="p-3 font-semibold text-red-600"><i class="fa-solid fa-arrow-trend-down mr-2"></i> สต๊อกขาด (Shortage)</td>
+                                <td class="p-3 text-center text-red-600">55</td>
+                                <td class="p-3 text-center text-red-600">140</td>
+                                <td class="p-3 text-right font-bold text-red-600">- 9,983.57</td>
+                            </tr>
+                            <tr class="border-b border-gray-100 hover:bg-blue-50 transition">
+                                <td class="p-3 font-semibold text-blue-600"><i class="fa-solid fa-arrow-trend-up mr-2"></i> สต๊อกเกิน (Overage)</td>
+                                <td class="p-3 text-center text-blue-600">15</td>
+                                <td class="p-3 text-center text-blue-600">85</td>
+                                <td class="p-3 text-right font-bold text-blue-600">+ 1,705.96</td>
+                            </tr>
+                            <tr class="bg-gray-50 font-bold text-gray-800">
+                                <td class="p-3 rounded-bl-lg">รวมสุทธิ (Net Variance)</td>
+                                <td class="p-3 text-center">70</td>
+                                <td class="p-3 text-center">225</td>
+                                <td class="p-3 text-right rounded-br-lg text-orange-600">11,689.53</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Bar Chart -->
+                <div class="mt-6 h-64">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+
+            <!-- กราฟสัดส่วนความแม่นยำ -->
+            <div class="glass-card rounded-xl p-6 flex flex-col items-center justify-center">
+                <h3 class="text-xl font-bold text-gray-800 mb-4 w-full text-left border-b pb-2"><i class="fa-solid fa-chart-pie text-indigo-500 mr-2"></i> สัดส่วนความแม่นยำ</h3>
+                <div class="w-full max-w-[250px] relative">
+                    <canvas id="donutChart"></canvas>
+                    <div class="absolute inset-0 flex items-center justify-center flex-col mt-4">
+                        <span class="text-3xl font-bold text-gray-800">79%</span>
+                        <span class="text-xs text-gray-500">ตรงตามระบบ</span>
+                    </div>
+                </div>
+                <div class="w-full mt-6 space-y-2">
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-green-500 mr-2"></span> ตรง (266)</span>
+                        <span class="font-semibold text-green-600">79%</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-red-500 mr-2"></span> ขาด (55)</span>
+                        <span class="font-semibold text-red-600">16%</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-blue-500 mr-2"></span> เกิน (15)</span>
+                        <span class="font-semibold text-blue-600">5%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Section (Problems & Solutions) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <!-- ปัญหาที่พบ -->
+            <div class="glass-card rounded-xl p-6 border-t-4 border-red-500 bg-gradient-to-b from-white to-red-50/30">
+                <h3 class="text-xl font-bold text-red-700 mb-4 flex items-center">
+                    <i class="fa-solid fa-triangle-exclamation mr-2 text-2xl"></i> วิเคราะห์ปัญหาที่พบ (Root Causes)
+                </h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <span class="bg-red-100 text-red-600 rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm mr-3 mt-0.5 shrink-0">1</span>
+                        <div>
+                            <p class="font-semibold text-gray-800">สินค้าสูญหาย (Theft/Loss)</p>
+                            <p class="text-sm text-gray-600">รายการ "สต๊อกขาด" มีมูลค่าสูงถึงเกือบหมื่นบาท สินค้าจำพวกฮาร์ดแวร์ขนาดเล็ก (เช่น ก๊อกน้ำ, บอลวาล์ว, สีสเปรย์) ง่ายต่อการสูญหายหรือถูกหยิบฉวย</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-red-100 text-red-600 rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm mr-3 mt-0.5 shrink-0">2</span>
+                        <div>
+                            <p class="font-semibold text-gray-800">ความผิดพลาดหน้าจุดชำระเงิน (Cashier Error)</p>
+                            <p class="text-sm text-gray-600">การมีทั้งยอด "ขาด" และ "เกิน" มักเกิดจากการยิงบาร์โค้ดสลับสี/สลับรุ่นกัน (เช่น ลูกค้าซื้อสีแดง แต่พนักงานยิงบาร์โค้ดสีขาว) ทำให้สต๊อกตัวนึงขาด อีกตัวนึงเกิน</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-red-100 text-red-600 rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm mr-3 mt-0.5 shrink-0">3</span>
+                        <div>
+                            <p class="font-semibold text-gray-800">ปัญหาการรับ-จ่ายสินค้า / การจัดเก็บ</p>
+                            <p class="text-sm text-gray-600">สินค้าปะปนกันบนชั้นวาง ทำให้เวลานับสต๊อกหรือหยิบขายเกิดความสับสน เช่น บอลวาล์วขนาด 1/2" กับ 3/4" วางรวมกัน</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- แนวทางแก้ไข -->
+            <div class="glass-card rounded-xl p-6 border-t-4 border-green-500 bg-gradient-to-b from-white to-green-50/30">
+                <h3 class="text-xl font-bold text-green-700 mb-4 flex items-center">
+                    <i class="fa-solid fa-lightbulb mr-2 text-2xl"></i> แนวทางแก้ไขเพื่อบรรลุเป้าหมาย 90%
+                </h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <span class="bg-green-100 text-green-600 rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm mr-3 mt-0.5 shrink-0"><i class="fa-solid fa-check"></i></span>
+                        <div>
+                            <p class="font-semibold text-gray-800">กำชับวินัยการยิงบาร์โค้ด (Barcode Discipline)</p>
+                            <p class="text-sm text-gray-600">อบรมแคชเชียร์ให้ยิงบาร์โค้ดสินค้า <span class="font-bold text-red-500">ทีละชิ้นตามจริง ห้ามใช้การคูณจำนวน</span> หากสินค้าต่างสี/ต่างขนาด เพื่อแก้ปัญหาสต๊อกสลับกัน</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-green-100 text-green-600 rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm mr-3 mt-0.5 shrink-0"><i class="fa-solid fa-check"></i></span>
+                        <div>
+                            <p class="font-semibold text-gray-800">จัดระเบียบชั้นวาง (5S & Visual Control)</p>
+                            <p class="text-sm text-gray-600">แยกตะกร้าหรือช่องวางให้ชัดเจน ติดป้ายชื่อและขนาดตัวใหญ่ๆ โดยเฉพาะสินค้ากลุ่ม ฮาร์ดแวร์, ท่อ PVC, และสีสเปรย์</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-green-100 text-green-600 rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm mr-3 mt-0.5 shrink-0"><i class="fa-solid fa-check"></i></span>
+                        <div>
+                            <p class="font-semibold text-gray-800">ตรวจนับย่อยแบบสุ่ม (Cycle Counting)</p>
+                            <p class="text-sm text-gray-600">ไม่ต้องรอสิ้นเดือน ให้จัดทีมสุ่มนับสินค้ากลุ่มเสี่ยง (มูลค่าสูง/ชิ้นเล็ก) สัปดาห์ละ 1-2 ครั้ง เพื่อเจอความผิดปกติได้เร็วขึ้น</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-green-100 text-green-600 rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm mr-3 mt-0.5 shrink-0"><i class="fa-solid fa-check"></i></span>
+                        <div>
+                            <p class="font-semibold text-gray-800">เพิ่มมาตรการความปลอดภัย</p>
+                            <p class="text-sm text-gray-600">ตรวจสอบมุมกล้องวงจรปิดในโซนที่พบยอดขาดจำนวนมาก และจัดเก็บสินค้ามีราคาในตู้กระจก</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Footer Data sample -->
+        <div class="text-center mt-8 text-gray-400 text-sm">
+            <p>&copy; 2026 บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด - Inventory Management Dashboard</p>
+        </div>
+
+    </div>
+
+    <!-- Script สำหรับวาดกราฟ -->
+    <script>
+        // ข้อมูลกราฟ Donut (สัดส่วนความแม่นยำ)
+        const donutCtx = document.getElementById('donutChart').getContext('2d');
+        new Chart(donutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['รายการที่ตรง', 'รายการสต๊อกขาด', 'รายการสต๊อกเกิน'],
+                datasets: [{
+                    data: [266, 55, 15],
+                    backgroundColor: [
+                        '#22c55e', // Green
+                        '#ef4444', // Red
+                        '#3b82f6'  // Blue
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '75%',
+                plugins: {
+                    legend: {
+                        display: false // ซ่อน legend เพราะทำ custom ไว้ด้านนอกแล้ว
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += context.raw + ' รายการ';
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // ข้อมูลกราฟ Bar (เปรียบเทียบชิ้น และ มูลค่า)
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['สต๊อกขาด (Shortage)', 'สต๊อกเกิน (Overage)'],
+                datasets: [
+                    {
+                        label: 'จำนวน (ชิ้น)',
+                        data: [140, 85],
+                        backgroundColor: '#f59e0b', // Amber
+                        borderRadius: 4,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'มูลค่า (บาท)',
+                        data: [9983.57, 1705.96],
+                        backgroundColor: '#6366f1', // Indigo
+                        borderRadius: 4,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { font: { family: 'Sarabun' } }
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: { display: true, text: 'จำนวน (ชิ้น)' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: { display: true, text: 'มูลค่า (บาท)' },
+                        grid: { drawOnChartArea: false } // ไม่ให้เส้นกริดทับซ้อนกัน
+                    }
+                }
+            }
+        });
+    </script>
+<a href="stockwarehouse.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (stock warehouse) ➜
+</body>
+</html>

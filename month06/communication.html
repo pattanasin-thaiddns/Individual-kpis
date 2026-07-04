@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - สรุปผลข้อผิดพลาดจากการสื่อสาร</title>
+    
+    <!-- Fonts: Noto Sans Thai / Prompt for modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6',
+                        danger: '#ef4444',
+                        success: '#22c55e',
+                        warning: '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Glassmorphism Styles */
+        body {
+            /* Clean light gradient background to make glass pop */
+            background: linear-gradient(135deg, #f0f4fd 0%, #e1e9f4 100%);
+            background-attachment: fixed;
+            color: #334155;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+            border-radius: 1.25rem;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.03);
+            border-radius: 1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        /* Custom Scrollbar for tables */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.8); 
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-6 lg:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header Section -->
+        <header class="glass-panel p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-blue-600 p-3 rounded-xl shadow-lg shadow-blue-200 text-white">
+                    <i data-lucide="bar-chart-2" class="w-8 h-8"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800">สรุปผลข้อผิดพลาดจากการสื่อสาร</h1>
+                    <p class="text-slate-500 font-medium">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | ประจำเดือน มิถุนายน</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 bg-white/50 px-4 py-2 rounded-lg border border-white">
+                <i data-lucide="calendar" class="w-5 h-5 text-blue-500"></i>
+                <span class="font-semibold text-slate-700">อัปเดตล่าสุด: มิถุนายน 2569</span>
+            </div>
+        </header>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- KPI 1: Total Errors (June) -->
+            <div class="glass-card p-5 relative overflow-hidden">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-slate-500 mb-1">ยอดรวมข้อผิดพลาด (มิ.ย.)</p>
+                        <h3 class="text-4xl font-bold text-slate-800">3 <span class="text-base font-normal text-slate-500">ครั้ง</span></h3>
+                    </div>
+                    <div class="p-2 bg-red-100 text-red-600 rounded-lg">
+                        <i data-lucide="alert-circle" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm flex items-center text-red-500 font-medium">
+                    <i data-lucide="trending-up" class="w-4 h-4 mr-1"></i>
+                    เทียบกับเดือนก่อน (พ.ค. 6 ครั้ง) ลดลง 50%
+                </div>
+            </div>
+
+            <!-- KPI 2: Target Status -->
+            <div class="glass-card p-5">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-slate-500 mb-1">เป้าหมาย (ไม่เกิน 2 ครั้ง/คน)</p>
+                        <h3 class="text-2xl font-bold text-warning mt-2">ไม่ผ่านเกณฑ์ 1 คน</h3>
+                    </div>
+                    <div class="p-2 bg-amber-100 text-amber-600 rounded-lg">
+                        <i data-lucide="target" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm text-slate-600">
+                    <span class="font-semibold">แอน: 3 ครั้ง</span> (เกินเป้าหมาย)
+                </div>
+            </div>
+
+            <!-- KPI 3: Tukky Performance -->
+            <div class="glass-card p-5 border-l-4 border-l-success">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-slate-500 mb-1">ผลงาน: ตั๊กกี้</p>
+                        <h3 class="text-3xl font-bold text-success">0 <span class="text-base font-normal text-slate-500">ครั้ง</span></h3>
+                    </div>
+                    <div class="p-2 bg-green-100 text-green-600 rounded-lg">
+                        <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm text-green-600 font-medium">
+                    ผ่านเกณฑ์เป้าหมาย (ลดลงจาก พ.ค. ที่มี 3 ครั้ง)
+                </div>
+            </div>
+
+            <!-- KPI 4: Ann Performance -->
+            <div class="glass-card p-5 border-l-4 border-l-danger">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-slate-500 mb-1">ผลงาน: แอน</p>
+                        <h3 class="text-3xl font-bold text-danger">3 <span class="text-base font-normal text-slate-500">ครั้ง</span></h3>
+                    </div>
+                    <div class="p-2 bg-red-100 text-red-600 rounded-lg">
+                        <i data-lucide="x-circle" class="w-6 h-6"></i>
+                    </div>
+                </div>
+                <div class="mt-4 text-sm text-red-500 font-medium">
+                    ไม่ผ่านเกณฑ์ (เท่ากับเดือน พ.ค.)
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Trend Chart -->
+            <div class="glass-panel p-6 lg:col-span-2">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                    <i data-lucide="activity" class="w-5 h-5 mr-2 text-blue-500"></i>
+                    สถิติข้อผิดพลาดรายเดือน (ม.ค. - มิ.ย.)
+                </h3>
+                <div class="relative h-72 w-full">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Proportion Chart (June) -->
+            <div class="glass-panel p-6">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                    <i data-lucide="pie-chart" class="w-5 h-5 mr-2 text-purple-500"></i>
+                    สัดส่วนข้อผิดพลาด (มิ.ย.)
+                </h3>
+                <div class="relative h-64 w-full flex justify-center items-center">
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="mt-4 text-center text-sm text-slate-600">
+                    <p>ข้อผิดพลาดทั้งหมดในเดือนมิถุนายนมาจาก <strong>คุณแอน (100%)</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Details Table -->
+        <div class="glass-panel p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center">
+                    <i data-lucide="list-x" class="w-5 h-5 mr-2 text-rose-500"></i>
+                    รายละเอียดปัญหา (เดือนมิถุนายน)
+                </h3>
+                <span class="bg-rose-100 text-rose-700 text-xs px-3 py-1 rounded-full font-semibold border border-rose-200">
+                    หมวด: 1 (ทั้งหมด)
+                </span>
+            </div>
+            
+            <div class="overflow-x-auto rounded-xl border border-white/60 shadow-sm">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-white/60 border-b border-slate-200/60">
+                            <th class="p-4 font-semibold text-slate-700 w-16 text-center">ลำดับ</th>
+                            <th class="p-4 font-semibold text-slate-700">รายละเอียดปัญหา (Description)</th>
+                            <th class="p-4 font-semibold text-slate-700 w-24 text-center">หมวด</th>
+                            <th class="p-4 font-semibold text-slate-700 w-32 text-center">ผู้รับผิดชอบ</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200/50">
+                        <tr class="hover:bg-white/40 transition-colors">
+                            <td class="p-4 text-center text-slate-600">1</td>
+                            <td class="p-4">
+                                <div class="font-medium text-slate-800">ขึ้นท่อผิด ท่อ 1 1/4" ชั้น 5 เพชร 40 เส้น</div>
+                                <div class="text-sm text-red-500 mt-1 flex items-start">
+                                    <i data-lucide="corner-down-right" class="w-4 h-4 mr-1 mt-0.5 inline-block"></i>
+                                    เนื่องจากลูกค้าสั่ง ท่อ 1 1/4" ชั้น 8.5
+                                </div>
+                            </td>
+                            <td class="p-4 text-center"><span class="bg-slate-200/70 text-slate-700 px-2 py-1 rounded text-xs font-medium">1</span></td>
+                            <td class="p-4 text-center"><span class="font-semibold text-red-600">แอน</span></td>
+                        </tr>
+                        <tr class="hover:bg-white/40 transition-colors">
+                            <td class="p-4 text-center text-slate-600">2</td>
+                            <td class="p-4">
+                                <div class="font-medium text-slate-800">แก้ไขราคา ออกบิลใหม่</div>
+                                <div class="text-sm text-red-500 mt-1 flex items-start">
+                                    <i data-lucide="corner-down-right" class="w-4 h-4 mr-1 mt-0.5 inline-block"></i>
+                                    เนื่องจากใส่ส่วนลดผิด
+                                </div>
+                            </td>
+                            <td class="p-4 text-center"><span class="bg-slate-200/70 text-slate-700 px-2 py-1 rounded text-xs font-medium">1</span></td>
+                            <td class="p-4 text-center"><span class="font-semibold text-red-600">แอน</span></td>
+                        </tr>
+                        <tr class="hover:bg-white/40 transition-colors">
+                            <td class="p-4 text-center text-slate-600">3</td>
+                            <td class="p-4">
+                                <div class="font-medium text-slate-800">จัดของให้ลูกค้าผิด สามทาง 1 1/2" x 1/2" = 65 ตัว (1 ลัง)</div>
+                                <div class="text-sm text-red-500 mt-1 flex items-start">
+                                    <i data-lucide="corner-down-right" class="w-4 h-4 mr-1 mt-0.5 inline-block"></i>
+                                    เนื่องจากลูกค้าสั่ง สามทาง 1 1/2" x 1"
+                                </div>
+                            </td>
+                            <td class="p-4 text-center"><span class="bg-slate-200/70 text-slate-700 px-2 py-1 rounded text-xs font-medium">1</span></td>
+                            <td class="p-4 text-center"><span class="font-semibold text-red-600">แอน</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analysis & Action Plan -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-8">
+            <!-- Root Cause Analysis -->
+            <div class="glass-panel p-6 border-t-4 border-t-amber-400">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                    <div class="bg-amber-100 p-2 rounded-lg mr-3">
+                        <i data-lucide="search" class="w-5 h-5 text-amber-600"></i>
+                    </div>
+                    วิเคราะห์สาเหตุของปัญหา (Root Cause)
+                </h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <div class="mt-1 min-w-[24px] text-amber-500"><i data-lucide="chevron-right" class="w-5 h-5"></i></div>
+                        <div>
+                            <span class="font-semibold text-slate-800">ความสับสนในสเปคสินค้าที่คล้ายกัน:</span>
+                            <p class="text-sm text-slate-600 mt-1">ปัญหาการหยิบสินค้าผิดสเปค (เช่น ท่อชั้น 5 แทน 8.5 และ สามทางลดขนาดผิด) เกิดจากการอ่านรายละเอียดใบสั่งซื้อคลาดเคลื่อน หรือป้ายสินค้าอาจระบุไม่ชัดเจน ทำให้หยิบผิดพลาดได้ง่าย</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="mt-1 min-w-[24px] text-amber-500"><i data-lucide="chevron-right" class="w-5 h-5"></i></div>
+                        <div>
+                            <span class="font-semibold text-slate-800">ขาดการตรวจสอบซ้ำ (Double Check):</span>
+                            <p class="text-sm text-slate-600 mt-1">ปัญหาการให้ส่วนลดผิด และการจัดของผิด แสดงให้เห็นว่ากระบวนการทำงานในปัจจุบันอาจพึ่งพาพนักงานคนเดียวตั้งแต่ต้นจนจบ โดยไม่มีขั้นตอนทวนสอบความถูกต้องก่อนส่งมอบหรือออกบิล</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="glass-panel p-6 border-t-4 border-t-blue-500">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                    <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                        <i data-lucide="lightbulb" class="w-5 h-5 text-blue-600"></i>
+                    </div>
+                    ข้อเสนอแนะและแนวทางแก้ไข (Action Plan)
+                </h3>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <div class="mt-1 min-w-[24px] text-blue-500"><i data-lucide="check-square" class="w-5 h-5"></i></div>
+                        <div>
+                            <span class="font-semibold text-slate-800">ระบบทวนสอบ (Maker & Checker):</span>
+                            <p class="text-sm text-slate-600 mt-1">กำหนดให้มีการรีเช็คออเดอร์ก่อนแพ็คสินค้า และรีเช็คบิลก่อนพิมพ์ออก โดยอาจให้เพื่อนร่วมงาน (เช่น คุณตั๊กกี้) ช่วยตรวจสอบไขว้ (Cross-check) ก่อนกระบวนการสิ้นสุด</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="mt-1 min-w-[24px] text-blue-500"><i data-lucide="check-square" class="w-5 h-5"></i></div>
+                        <div>
+                            <span class="font-semibold text-slate-800">ทำเครื่องหมายจุดที่มักผิดพลาด (Highlighting):</span>
+                            <p class="text-sm text-slate-600 mt-1">ใช้ปากกาไฮไลท์ขีดเน้นข้อความ "ขนาด", "ความหนา(ชั้น)", และ "ส่วนลด" ในใบสั่งซื้อ เพื่อดึงดูดสายตาพนักงาน ลดการอ่านข้ามหรือจำสับสน</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="mt-1 min-w-[24px] text-blue-500"><i data-lucide="check-square" class="w-5 h-5"></i></div>
+                        <div>
+                            <span class="font-semibold text-slate-800">จัดระเบียบสต็อก (Visual Management):</span>
+                            <p class="text-sm text-slate-600 mt-1">แยกโซนการจัดเก็บท่อและข้อต่อที่มีขนาด/สเปคใกล้เคียงกันให้ห่างกัน หรือทำป้ายสี (Color Coding) ที่ชั้นวางให้ชัดเจน เพื่อป้องกันการหยิบผิดช่อง</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Data from images
+        const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.'];
+        const tukkyData = [4, 0, 1, 1, 3, 0];
+        const annData = [0, 2, 1, 3, 3, 3];
+        const targetLine = [2, 2, 2, 2, 2, 2];
+
+        // Chart Global defaults
+        Chart.defaults.font.family = "'Prompt', sans-serif";
+        Chart.defaults.color = '#64748b';
+
+        // 1. Trend Chart (Line Chart)
+        const ctxTrend = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctxTrend, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: 'ตั๊กกี้',
+                        data: tukkyData,
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#22c55e',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#22c55e',
+                        pointRadius: 5,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'แอน',
+                        data: annData,
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#ef4444',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#ef4444',
+                        pointRadius: 5,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'เป้าหมายสูงสุด (2 ครั้ง)',
+                        data: targetLine,
+                        borderColor: '#f59e0b',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointRadius: 0,
+                        fill: false,
+                        tension: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        titleColor: '#1e293b',
+                        bodyColor: '#334155',
+                        borderColor: '#e2e8f0',
+                        borderWidth: 1,
+                        padding: 12,
+                        boxPadding: 6
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 5,
+                        ticks: { stepSize: 1 },
+                        grid: {
+                            color: 'rgba(148, 163, 184, 0.1)',
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        }
+                    }
+                },
+                interaction: {
+                    mode: 'nearest',
+                    axis: 'x',
+                    intersect: false
+                }
+            }
+        });
+
+        // 2. Proportion Chart (Pie/Doughnut Chart for June)
+        const ctxPie = document.getElementById('pieChart').getContext('2d');
+        new Chart(ctxPie, {
+            type: 'doughnut',
+            data: {
+                labels: ['แอน', 'ตั๊กกี้'],
+                datasets: [{
+                    data: [3, 0],
+                    backgroundColor: [
+                        '#ef4444', // Red for Ann
+                        '#22c55e'  // Green for Tukky
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff',
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + ' ครั้ง';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [{
+                id: 'textCenter',
+                beforeDraw: function(chart) {
+                    var width = chart.width,
+                        height = chart.height,
+                        ctx = chart.ctx;
+
+                    ctx.restore();
+                    var fontSize = (height / 114).toFixed(2);
+                    ctx.font = "bold " + fontSize + "em Prompt";
+                    ctx.textBaseline = "middle";
+                    ctx.fillStyle = "#334155";
+
+                    var text = "3 ครั้ง",
+                        textX = Math.round((width - ctx.measureText(text).width) / 2),
+                        textY = height / 2.3;
+
+                    ctx.fillText(text, textX, textY);
+                    
+                    var subText = "รวมทั้งหมด";
+                    ctx.font = "normal " + (fontSize/2.5) + "em Prompt";
+                    ctx.fillStyle = "#64748b";
+                    var subTextX = Math.round((width - ctx.measureText(subText).width) / 2);
+                    ctx.fillText(subText, subTextX, textY + 25);
+                    
+                    ctx.save();
+                }
+            }]
+        });
+    </script>
+<a href="deliveryError.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (delivery Error) ➜
+</body>
+</html>

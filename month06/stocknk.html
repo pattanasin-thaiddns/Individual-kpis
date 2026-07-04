@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปการตรวจนับสินค้าคงคลัง - สาขาหนองคาย</title>
+    <!-- โหลด Tailwind CSS สำหรับจัดการ Layout และความสวยงาม -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- โหลด Font Prompt จาก Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- โหลด FontAwesome สำหรับไอคอน -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f3f4f6;
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+        }
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Custom Scrollbar สำหรับตาราง */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body class="text-gray-800 font-sans p-4 md:p-8 min-h-screen">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header Section -->
+        <header class="glass-card rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-700 to-indigo-600 gradient-text">
+                    <i class="fa-solid fa-chart-pie mr-2 text-blue-600"></i> สรุปการตรวจนับสินค้าคงคลัง
+                </h1>
+                <p class="text-lg text-gray-600 mt-1">บริษัท พัฒนาสิน หนองคาย จำกัด (สาขาหนองคาย) | <span class="font-medium text-gray-800">ประจำเดือนมิถุนายน</span></p>
+                <div class="flex items-center gap-2 mt-2 text-sm text-gray-500 bg-gray-100 w-fit px-3 py-1 rounded-full">
+                    <i class="fa-solid fa-layer-group text-indigo-500"></i>
+                    <span>ประเภทที่ตรวจนับ: ท่อพีวีซี-ปุ๋ย-อาหารสัตว์-เมล็ดพันธุ์-ปูน-เหล็ก, กลุ่มสีและเคมีภัณฑ์</span>
+                </div>
+            </div>
+            
+            <div class="text-right flex gap-4">
+                <div class="bg-blue-50 border border-blue-100 rounded-xl p-3 text-center min-w-[120px]">
+                    <p class="text-xs text-blue-600 font-semibold mb-1">รายการทั้งหมด</p>
+                    <p class="text-2xl font-bold text-blue-800">286 <span class="text-sm font-normal">SKU</span></p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Top KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            
+            <!-- Accuracy Card -->
+            <div class="md:col-span-2 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+                <i class="fa-solid fa-bullseye absolute -right-4 -bottom-4 text-9xl opacity-20 transform -rotate-12"></i>
+                <div class="relative z-10 flex justify-between items-center h-full">
+                    <div>
+                        <p class="text-emerald-100 font-medium text-lg mb-1">ความแม่นยำในการนับ (Accuracy)</p>
+                        <div class="flex items-baseline gap-2">
+                            <h2 class="text-5xl font-bold">96%</h2>
+                            <span class="text-emerald-100 text-sm bg-black/20 px-2 py-1 rounded-md">เป้าหมาย 95%</span>
+                        </div>
+                        <p class="mt-2 text-emerald-50"><i class="fa-solid fa-check-circle mr-1"></i> จำนวนรายการที่ตรง 275 จาก 286 รายการ</p>
+                    </div>
+                    <div class="hidden sm:block">
+                        <!-- Progress Circle CSS -->
+                        <div class="relative w-24 h-24">
+                            <svg class="w-full h-full" viewBox="0 0 36 36">
+                                <path class="text-black/20" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                <path class="text-white" stroke-dasharray="96, 100" stroke-width="3" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span class="text-xl font-bold">Pass</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shortage Card -->
+            <div class="glass-card rounded-2xl p-6 border-l-4 border-l-red-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 font-medium mb-1">สต๊อกขาด (Shortage)</p>
+                        <h3 class="text-3xl font-bold text-red-600">3 <span class="text-sm text-gray-500 font-normal">SKU</span></h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-500">
+                        <i class="fa-solid fa-arrow-trend-down"></i>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+                    <div class="text-gray-600">จำนวน: <span class="font-semibold text-gray-800">15.01 ชิ้น</span></div>
+                    <div class="text-red-600 font-semibold">-224.22 ฿</div>
+                </div>
+            </div>
+
+            <!-- Overage Card -->
+            <div class="glass-card rounded-2xl p-6 border-l-4 border-l-amber-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-gray-500 font-medium mb-1">สต๊อกเกิน (Overage)</p>
+                        <h3 class="text-3xl font-bold text-amber-500">8 <span class="text-sm text-gray-500 font-normal">SKU</span></h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
+                        <i class="fa-solid fa-arrow-trend-up"></i>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between text-sm">
+                    <div class="text-gray-600">จำนวน: <span class="font-semibold text-gray-800">23.09 ชิ้น</span></div>
+                    <div class="text-amber-600 font-semibold">+478.55 ฿</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Data Table Section -->
+            <div class="lg:col-span-2 glass-card rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-gray-800"><i class="fa-solid fa-list-ul mr-2 text-indigo-500"></i> รายการสินค้าที่มีผลต่าง (Variance Details)</h3>
+                    <div class="bg-gray-100 px-3 py-1 rounded-lg text-sm font-medium">
+                        ยอดสุทธิ: <span class="text-blue-600">11 SKU</span> | <span class="text-blue-600">38.10 ชิ้น</span> | <span class="text-blue-600">702.77 บาท</span>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto rounded-xl border border-gray-200">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
+                                <th class="p-3 font-semibold">รหัสสินค้า</th>
+                                <th class="p-3 font-semibold">ชื่อสินค้า</th>
+                                <th class="p-3 font-semibold">คลัง</th>
+                                <th class="p-3 font-semibold">หน่วย</th>
+                                <th class="p-3 font-semibold text-right">คงเหลือ (ระบบ)</th>
+                                <th class="p-3 font-semibold text-right">ยอดที่นับได้</th>
+                                <th class="p-3 font-semibold text-center">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-gray-100">
+                            <!-- Row 1 -->
+                            <tr class="hover:bg-blue-50 transition-colors">
+                                <td class="p-3 font-medium text-gray-700">B9-1012</td>
+                                <td class="p-3">ปอกคาน 10"x25"</td>
+                                <td class="p-3 text-gray-500">B02</td>
+                                <td class="p-3 text-gray-500">กิโลกรัม</td>
+                                <td class="p-3 text-right">6.45</td>
+                                <td class="p-3 text-right font-medium">6.49</td>
+                                <td class="p-3 text-center"><span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">เกิน</span></td>
+                            </tr>
+                            <!-- Row 2 -->
+                            <tr class="hover:bg-blue-50 transition-colors">
+                                <td class="p-3 font-medium text-gray-700">B9-1014</td>
+                                <td class="p-3">ปอกคาน 15"x35"</td>
+                                <td class="p-3 text-gray-500">B02</td>
+                                <td class="p-3 text-gray-500">กิโลกรัม</td>
+                                <td class="p-3 text-right">21.58</td>
+                                <td class="p-3 text-right font-medium">21.60</td>
+                                <td class="p-3 text-center"><span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">เกิน</span></td>
+                            </tr>
+                            <!-- Row 3 -->
+                            <tr class="hover:bg-red-50 transition-colors">
+                                <td class="p-3 font-medium text-gray-700">B9-9001</td>
+                                <td class="p-3">ปลอกเสา 10"x10"</td>
+                                <td class="p-3 text-gray-500">B02</td>
+                                <td class="p-3 text-gray-500">กิโลกรัม</td>
+                                <td class="p-3 text-right">14.28</td>
+                                <td class="p-3 text-right font-medium">14.27</td>
+                                <td class="p-3 text-center"><span class="inline-block px-2 py-1 bg-red-100 text-red-600 rounded text-xs font-semibold">ขาด</span></td>
+                            </tr>
+                            <!-- Row 4 -->
+                            <tr class="hover:bg-blue-50 transition-colors">
+                                <td class="p-3 font-medium text-gray-700">B9-9002</td>
+                                <td class="p-3">ปลอกเสา 15"x15"</td>
+                                <td class="p-3 text-gray-500">B02</td>
+                                <td class="p-3 text-gray-500">กิโลกรัม</td>
+                                <td class="p-3 text-right">18.70</td>
+                                <td class="p-3 text-right font-medium">18.73</td>
+                                <td class="p-3 text-center"><span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">เกิน</span></td>
+                            </tr>
+                            <!-- Row 5 -->
+                            <tr class="hover:bg-blue-50 transition-colors">
+                                <td class="p-3 font-medium text-gray-700">H0-0001-06</td>
+                                <td class="p-3">ซิสสเปรย์RedFox#21(213)ฟ้า</td>
+                                <td class="p-3 text-gray-500">B02</td>
+                                <td class="p-3 text-gray-500">กระป๋อง</td>
+                                <td class="p-3 text-right">8.00</td>
+                                <td class="p-3 text-right font-medium">13.00</td>
+                                <td class="p-3 text-center"><span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">เกิน</span></td>
+                            </tr>
+                            <!-- Row 6 -->
+                            <tr class="hover:bg-blue-50 transition-colors">
+                                <td class="p-3 font-medium text-gray-700">H0-0006-10</td>
+                                <td class="p-3">ซิสสเปรย์ สีพ่นรองพื้นเทา National...</td>
+                                <td class="p-3 text-gray-500">B02</td>
+                                <td class="p-3 text-gray-500">กระป๋อง</td>
+                                <td class="p-3 text-right">4.00</td>
+                                <td class="p-3 text-right font-medium">7.00</td>
+                                <td class="p-3 text-center"><span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">เกิน</span></td>
+                            </tr>
+                            <!-- Row 7 -->
+                            <tr class="hover:bg-blue-50 transition-colors">
+                                <td class="p-3 font-medium text-gray-700">H4-0003</td>
+                                <td class="p-3">แชลแล็คขวด #4 โอ๊ก จระเข้</td>
+                                <td class="p-3 text-gray-500">B02</td>
+                                <td class="p-3 text-gray-500">ขวด</td>
+                                <td class="p-3 text-right">8.00</td>
+                                <td class="p-3 text-right font-medium">9.00</td>
+                                <td class="p-3 text-center"><span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">เกิน</span></td>
+                            </tr>
+                            <!-- Row 8 -->
+                            <tr class="hover:bg-blue-50 transition-colors">
+                                <td class="p-3 font-medium text-gray-700">H5-0006</td>
+                                <td class="p-3">ทินเนอร์ ขวดใหญ่ ซิฟิช</td>
+                                <td class="p-3 text-gray-500">B02</td>
+                                <td class="p-3 text-gray-500">ขวด</td>
+                                <td class="p-3 text-right">12.00</td>
+                                <td class="p-3 text-right font-medium">14.00</td>
+                                <td class="p-3 text-center"><span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">เกิน</span></td>
+                            </tr>
+                            <!-- Row 9 -->
+                            <tr class="hover:bg-red-50 transition-colors">
+                                <td class="p-3 font-medium text-gray-700">H5-0012</td>
+                                <td class="p-3">น้ำมันสน ขวดใหญ่ ซิฟิช</td>
+                                <td class="p-3 text-gray-500">B02</td>
+                                <td class="p-3 text-gray-500">ขวด</td>
+                                <td class="p-3 text-right">16.00</td>
+                                <td class="p-3 text-right font-medium">13.00</td>
+                                <td class="p-3 text-center"><span class="inline-block px-2 py-1 bg-red-100 text-red-600 rounded text-xs font-semibold">ขาด</span></td>
+                            </tr>
+                            <!-- Row 10 -->
+                            <tr class="hover:bg-blue-50 transition-colors">
+                                <td class="p-3 font-medium text-gray-700">H5-0018</td>
+                                <td class="p-3">น้ำกรดเติมแบตเตอรี่</td>
+                                <td class="p-3 text-gray-500">B02</td>
+                                <td class="p-3 text-gray-500">ขวด</td>
+                                <td class="p-3 text-right">20.00</td>
+                                <td class="p-3 text-right font-medium">32.00</td>
+                                <td class="p-3 text-center"><span class="inline-block px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-semibold">เกิน</span></td>
+                            </tr>
+                             <!-- Row 11 -->
+                             <tr class="hover:bg-red-50 transition-colors">
+                                <td class="p-3 font-medium text-gray-700">H5-0019</td>
+                                <td class="p-3">น้ำกลั่นบริสุทธิ์ DIWater</td>
+                                <td class="p-3 text-gray-500">B02</td>
+                                <td class="p-3 text-gray-500">ขวด</td>
+                                <td class="p-3 text-right">23.00</td>
+                                <td class="p-3 text-right font-medium">11.00</td>
+                                <td class="p-3 text-center"><span class="inline-block px-2 py-1 bg-red-100 text-red-600 rounded text-xs font-semibold">ขาด</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Problems & Solutions Section -->
+            <div class="glass-card rounded-2xl p-6 flex flex-col">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2">
+                    <i class="fa-solid fa-lightbulb text-amber-500 mr-2"></i> วิเคราะห์ปัญหา & แนวทางแก้ไข
+                </h3>
+                
+                <div class="space-y-4 flex-grow">
+                    <!-- Issue 1 -->
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                        <div class="flex gap-3">
+                            <div class="mt-1 text-red-500"><i class="fa-solid fa-circle-exclamation"></i></div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800 text-sm">ปัญหาหน่วยนับน้ำหนัก (กิโลกรัม)</h4>
+                                <p class="text-xs text-gray-500 mt-1">กลุ่มปอกเสา/ปอกคาน มีทศนิยมคลาดเคลื่อนเล็กน้อย อาจเกิดจากความคลาดเคลื่อนของเครื่องชั่งตอนรับเข้าและเบิกออก</p>
+                                <div class="mt-2 bg-emerald-50 text-emerald-800 p-2 rounded text-xs border border-emerald-100">
+                                    <span class="font-semibold"><i class="fa-solid fa-wrench mr-1"></i> แก้ไข:</span> กำหนด % Tolerance (ค่าเผื่อ) ในระบบสำหรับสินค้าชั่งน้ำหนัก และหมั่นสอบเทียบตาชั่ง
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Issue 2 -->
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                        <div class="flex gap-3">
+                            <div class="mt-1 text-orange-500"><i class="fa-solid fa-boxes-stacked"></i></div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800 text-sm">ปัญหาสต๊อกเกิน (ของเหลว/สเปรย์)</h4>
+                                <p class="text-xs text-gray-500 mt-1">พบกลุ่มสีสเปรย์, ทินเนอร์, น้ำกรด มียอดนับได้มากกว่าระบบ คาดว่าอาจมีการรับของเข้าผิดพลาด หรือรับแถมจาก Supplier แล้วไม่ได้บันทึกเข้า</p>
+                                <div class="mt-2 bg-emerald-50 text-emerald-800 p-2 rounded text-xs border border-emerald-100">
+                                    <span class="font-semibold"><i class="fa-solid fa-wrench mr-1"></i> แก้ไข:</span> เพิ่มขั้นตอนตรวจรับ (Double Check) สินค้าที่เป็นขวด/กระป๋อง และบันทึกสินค้าแถม (ถ้ามี) ให้ถูกต้อง
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Issue 3 -->
+                    <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                        <div class="flex gap-3">
+                            <div class="mt-1 text-red-500"><i class="fa-solid fa-arrow-right-from-bracket"></i></div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800 text-sm">ปัญหาสต๊อกขาด (น้ำมันสน/น้ำกลั่น)</h4>
+                                <p class="text-xs text-gray-500 mt-1">สินค้าขาดหายไปจำนวนหนึ่ง อาจเกิดจากการเบิกไปใช้ในกิจการภายในหรือแถมลูกค้าโดยไม่ได้ทำใบตัดเบิกในระบบ POS</p>
+                                <div class="mt-2 bg-emerald-50 text-emerald-800 p-2 rounded text-xs border border-emerald-100">
+                                    <span class="font-semibold"><i class="fa-solid fa-wrench mr-1"></i> แก้ไข:</span> กำชับพนักงานทุกครั้งที่มีการนำสินค้าออกไปใช้หรือแถม ต้องเปิดบิลตัดสต๊อกทันที ห้ามทำย้อนหลัง
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-gray-100 text-center">
+                    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full">
+                        <i class="fa-solid fa-print mr-2"></i> พิมพ์รายงานนี้
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        
+        <footer class="text-center text-gray-400 text-sm py-4">
+            Generated Dashboard for Internal Audit | Pattanasin Nong Khai Co., Ltd.
+        </footer>
+    </div>
+<a href="caruseefficiency.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (caruse efficiency) ➜
+
+</body>
+</html>

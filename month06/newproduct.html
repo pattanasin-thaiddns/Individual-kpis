@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปผลยอดขายกลุ่มสินค้าใหม่ - พัฒนาสิน ไทยเทรดดิ้ง</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Glassmorphism utility classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 16px 0 rgba(135, 142, 205, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px 0 rgba(135, 142, 205, 0.2);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #a0aec0;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #718096;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header Section -->
+        <header class="glass-panel rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+            
+            <div class="relative z-10 text-center md:text-left mb-4 md:mb-0">
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Dashboard สรุปผลยอดขายกลุ่มสินค้าใหม่</h1>
+                <p class="text-lg text-gray-600 font-medium">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | ประจำเดือน <span class="gradient-text font-semibold">มิถุนายน</span></p>
+            </div>
+            <div class="relative z-10 flex space-x-3">
+                <div class="glass-card px-4 py-2 rounded-lg text-center">
+                    <p class="text-xs text-gray-500 uppercase tracking-wider">สถานะ</p>
+                    <p class="text-sm font-semibold text-green-600">อัปเดตล่าสุด</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Key Metrics Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Target Card -->
+            <div class="glass-card rounded-2xl p-6 relative overflow-hidden border-l-4 border-l-blue-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1 font-medium">เป้าหมายยอดขายรวม</p>
+                        <h3 class="text-3xl font-bold text-gray-800">600,000.00 <span class="text-sm text-gray-500 font-normal">บาท</span></h3>
+                    </div>
+                    <div class="p-3 bg-blue-50 rounded-full">
+                        <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actual Sales Card -->
+            <div class="glass-card rounded-2xl p-6 relative overflow-hidden border-l-4 border-l-green-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1 font-medium">ยอดขายจริงทำได้</p>
+                        <h3 class="text-3xl font-bold text-gray-800">73,448.03 <span class="text-sm text-gray-500 font-normal">บาท</span></h3>
+                    </div>
+                    <div class="p-3 bg-green-50 rounded-full">
+                        <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-green-500 h-2.5 rounded-full" style="width: 12.24%"></div>
+                    </div>
+                    <p class="text-xs text-right mt-1 text-gray-500">12.24% ของเป้าหมาย</p>
+                </div>
+            </div>
+
+            <!-- Gap/Remaining Card -->
+            <div class="glass-card rounded-2xl p-6 relative overflow-hidden border-l-4 border-l-red-400">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1 font-medium">ส่วนต่าง / ยอดที่ต้องทำเพิ่ม</p>
+                        <h3 class="text-3xl font-bold text-red-500">321,258.40 <span class="text-sm text-gray-500 font-normal">บาท</span></h3>
+                    </div>
+                    <div class="p-3 bg-red-50 rounded-full">
+                        <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-4">*ยอดส่วนต่างอ้างอิงจากข้อมูลรายงาน (อาจมีการปรับปรุงตัวเลขยอดรวม)</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Sales by Region Chart -->
+            <div class="glass-panel rounded-2xl p-6 lg:col-span-1">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                    ยอดขายแยกตามพื้นที่
+                </h3>
+                <div class="relative h-64 w-full flex justify-center items-center">
+                    <canvas id="regionChart"></canvas>
+                </div>
+                <div class="mt-4 flex justify-around text-sm">
+                    <div class="text-center">
+                        <span class="block font-bold text-gray-800">อุดรธานี</span>
+                        <span class="text-gray-600">61,511.03 บาท</span>
+                    </div>
+                    <div class="text-center">
+                        <span class="block font-bold text-gray-800">หนองคาย</span>
+                        <span class="text-gray-600">11,937.00 บาท</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analysis & Insights -->
+            <div class="glass-panel rounded-2xl p-6 lg:col-span-2 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        วิเคราะห์สาเหตุและปัจจัยยอดขาย (มิถุนายน)
+                    </h3>
+                    
+                    <div class="space-y-4">
+                        <div class="p-4 bg-white/50 rounded-xl border border-gray-100 shadow-sm">
+                            <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                                <span class="w-2 h-2 rounded-full bg-yellow-400 mr-2"></span>
+                                สถานการณ์ปัจจุบัน
+                            </h4>
+                            <p class="text-gray-600 text-sm leading-relaxed">
+                                ยอดขายจริง (73,448.03 บาท) ยังอยู่ห่างจากเป้าหมายที่ตั้งไว้ (600,000 บาท) ค่อนข้างมาก คิดเป็นเพียง 12.24% ของเป้าหมายทั้งหมด แสดงให้เห็นว่ากลุ่มสินค้าใหม่ยังอยู่ในช่วงเริ่มต้นของการทำตลาด
+                            </p>
+                        </div>
+
+                        <div class="p-4 bg-white/50 rounded-xl border border-gray-100 shadow-sm">
+                            <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                                <span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span>
+                                ปัจจัยสนับสนุน (Positive Factors)
+                            </h4>
+                            <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                <li>ฝ่ายจัดซื้อได้นำเข้าสินค้าใหม่หลากหลายรายการอย่างต่อเนื่อง</li>
+                                <li>มีการจัดทำสื่อประชาสัมพันธ์ (Poster/Catalogue) เพื่อสร้างการรับรู้</li>
+                                <li>พื้นที่อุดรธานีมีการตอบรับสินค้าใหม่ได้ดีกว่า (สัดส่วน 83.7%)</li>
+                            </ul>
+                        </div>
+
+                        <div class="p-4 bg-white/50 rounded-xl border border-gray-100 shadow-sm">
+                            <h4 class="font-semibold text-gray-800 mb-2 flex items-center">
+                                <span class="w-2 h-2 rounded-full bg-red-400 mr-2"></span>
+                                ข้อเสนอแนะเพื่อกระตุ้นยอดขาย
+                            </h4>
+                            <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                <li>เพิ่มความเข้มข้นในการแนะนำสินค้าใหม่ให้แก่ลูกค้าหน้าร้านโดยตรง</li>
+                                <li>พิจารณาจัดโปรโมชั่นพ่วง (Bundle) สินค้าใหม่กับสินค้าเดิมที่ขายดี</li>
+                                <li>วิเคราะห์ความต้องการเชิงลึกของลูกค้าในพื้นที่หนองคายเพื่อปรับกลยุทธ์</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Products Highlight -->
+        <div class="glass-panel rounded-2xl p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center justify-center text-center">
+                <svg class="w-6 h-6 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                รายการสินค้าเข้าใหม่ (Highlight)
+            </h3>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                <!-- Product 1 -->
+                <div class="glass-card rounded-xl p-3 flex flex-col items-center text-center hover:shadow-lg transition-shadow bg-white/60">
+                    <div class="w-full h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center overflow-hidden border border-gray-200 relative">
+                        <img src="สิงแดง.jpg" alt="ใบตัด 4 นิ้ว สิงห์แดง" class="object-cover h-full w-full">
+                    </div>
+                    <p class="text-sm font-semibold text-gray-800 line-clamp-2">ใบตัด 4" สิงห์แดง (10)</p>
+                    <p class="text-xs text-blue-600 mt-1 bg-blue-50 px-2 py-1 rounded-md">บรรจุ 10 ใบ</p>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="glass-card rounded-xl p-3 flex flex-col items-center text-center hover:shadow-lg transition-shadow bg-white/60">
+                    <div class="w-full h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center overflow-hidden border border-gray-200 relative">
+                        <img src="เจียรสิงแดง.jpg" alt="ใบเจียร 4 นิ้ว สิงห์แดง" class="object-cover h-full w-full">
+                    </div>
+                    <p class="text-sm font-semibold text-gray-800 line-clamp-2">ใบเจียร 4" สิงห์แดง(25)</p>
+                    <p class="text-xs text-blue-600 mt-1 bg-blue-50 px-2 py-1 rounded-md">บรรจุ 25 ใบ</p>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="glass-card rounded-xl p-3 flex flex-col items-center text-center hover:shadow-lg transition-shadow bg-white/60">
+                    <div class="w-full h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center overflow-hidden border border-gray-200 relative">
+                        <img src="อ่างเปล.jpg" alt="อ่างเปล PVC ใหญ่" class="object-cover h-full w-full">
+                    </div>
+                    <p class="text-sm font-semibold text-gray-800 line-clamp-2">อ่างเปล PVC ใหญ่</p>
+                    <p class="text-xs text-blue-600 mt-1 bg-blue-50 px-2 py-1 rounded-md">ความจุ 220 ลิตร</p>
+                </div>
+
+                <!-- Product 4 -->
+                <div class="glass-card rounded-xl p-3 flex flex-col items-center text-center hover:shadow-lg transition-shadow bg-white/60">
+                    <div class="w-full h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center overflow-hidden border border-gray-200 relative">
+                        <img src="หวาย.jpg" alt="บุ้งกี๋หวาย PVC เล็ก" class="object-cover h-full w-full">
+                    </div>
+                    <p class="text-sm font-semibold text-gray-800 line-clamp-2">บุ้งกี๋หวาย PVC เล็ก สีดำ (NEW)</p>
+                    <p class="text-xs text-blue-600 mt-1 bg-blue-50 px-2 py-1 rounded-md">10 ใบ/มัด</p>
+                </div>
+
+                <!-- Product 5 -->
+                <div class="glass-card rounded-xl p-3 flex flex-col items-center text-center hover:shadow-lg transition-shadow bg-white/60">
+                    <div class="w-full h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center overflow-hidden border border-gray-200 relative">
+                         <img src="ทึบ.jpg" alt="บุ้งกี๋ทึบ PVC" class="object-cover h-full w-full">
+                    </div>
+                    <p class="text-sm font-semibold text-gray-800 line-clamp-2">บุ้งกี๋ทึบ PVC สีดำ (NEW)</p>
+                    <p class="text-xs text-blue-600 mt-1 bg-blue-50 px-2 py-1 rounded-md">10 ใบ/มัด</p>
+                </div>
+                 <!-- Product 6 -->
+                 <div class="glass-card rounded-xl p-3 flex flex-col items-center text-center hover:shadow-lg transition-shadow bg-white/60 hidden md:flex">
+                    <div class="w-full h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center overflow-hidden border border-gray-200 relative">
+                         <img src="ถังปูนฟ้า.jpg" alt="ถังปูนไนล่อนเล็ก" class="object-cover h-full w-full">
+                    </div>
+                    <p class="text-sm font-semibold text-gray-800 line-clamp-2">ถังปูนไนล่อนเล็ก สีดำ</p>
+                    <p class="text-xs text-blue-600 mt-1 bg-blue-50 px-2 py-1 rounded-md">12 ใบ/มัด</p>
+                </div>
+                <!-- Product 7 -->
+                 <div class="glass-card rounded-xl p-3 flex flex-col items-center text-center hover:shadow-lg transition-shadow bg-white/60 hidden md:flex">
+                    <div class="w-full h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center overflow-hidden border border-gray-200 relative">
+                         <img src="เซี่ยม.jpg" alt="เซี้ยม PVC" class="object-cover h-full w-full">
+                    </div>
+                    <p class="text-sm font-semibold text-gray-800 line-clamp-2">เซี้ยม PVC สำเร็จรูป 2m</p>
+                    <p class="text-xs text-blue-600 mt-1 bg-blue-50 px-2 py-1 rounded-md">ขนาด 5mm, 7mm</p>
+                </div>
+                 <!-- Product 8 -->
+                 <div class="glass-card rounded-xl p-3 flex flex-col items-center text-center hover:shadow-lg transition-shadow bg-white/60 hidden lg:flex">
+                    <div class="w-full h-32 bg-gray-100 rounded-lg mb-3 flex items-center justify-center overflow-hidden border border-gray-200 relative">
+                         <img src="เทปวัด.jpg" alt="เทปวัดที่ TOPLON" class="object-cover h-full w-full">
+                    </div>
+                    <p class="text-sm font-semibold text-gray-800 line-clamp-2">เทปวัดที่ TOPLON รุ่นBK</p>
+                    <p class="text-xs text-blue-600 mt-1 bg-blue-50 px-2 py-1 rounded-md">รุ่น 30M, 40M, 50M</p>
+                </div>
+
+            </div>
+            <div class="mt-4 text-center">
+                <p class="text-sm text-gray-500 italic">*อ้างอิงจากสื่อประชาสัมพันธ์ "สินค้าเข้าใหม่สัปดาห์นี้ มีพร้อมจำหน่ายแล้ววันนี้!"</p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm mt-8 pb-4">
+            <p>&copy; 2026 บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด. All rights reserved.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('regionChart').getContext('2d');
+            
+            // Data from the provided image
+            const udonSales = 61511.03;
+            const nongKhaiSales = 11937.00;
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['อุดรธานี', 'หนองคาย'],
+                    datasets: [{
+                        data: [udonSales, nongKhaiSales],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)', // Blue-500
+                            'rgba(167, 139, 250, 0.8)'  // Purple-400
+                        ],
+                        borderColor: [
+                            'rgba(255, 255, 255, 1)',
+                            'rgba(255, 255, 255, 1)'
+                        ],
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    family: "'Sarabun', sans-serif",
+                                    size: 14
+                                },
+                                color: '#4b5563'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(context.parsed);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        });
+    </script>
+<a href="trainingemployee.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;   หน้าถัดไป (training employee) ➜
+</body>
+</html>

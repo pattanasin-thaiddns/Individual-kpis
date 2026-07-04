@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ติดตามผลการดำเนินงาน มิ.ย. 2026</title>
+    <!-- Tailwind CSS สำหรับการจัดรูปแบบความสวยงาม -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome สำหรับไอคอน -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* Custom Scrollbar สำหรับตาราง */
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased">
+
+    <!-- Navigation / Header -->
+    <nav class="bg-blue-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white p-1 rounded">
+                        <!-- โลโก้จำลอง P -->
+                        <span class="text-blue-600 font-bold text-xl px-2">P</span>
+                    </div>
+                    <span class="font-semibold text-lg md:text-xl tracking-wide hidden sm:block">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</span>
+                </div>
+                <div>
+                    <!-- ปุ่มกลับสู่หน้าหลัก Dashboard -->
+                    <a href="../index.html" class="inline-flex items-center px-4 py-2 bg-blue-700 hover:bg-blue-600 text-white text-sm font-medium rounded-md transition-colors duration-200 shadow-sm border border-blue-500">
+                        <i class="fas fa-chart-line mr-2"></i>
+                        กลับสู่หน้าหลัก (Dashboard)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Header Section -->
+        <div class="mb-8 flex flex-col md:flex-row md:items-end justify-between bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">ติดตามผลการดำเนินงานรายบุคคล 2026</h1>
+                <p class="text-gray-500 text-sm"><i class="fas fa-map-marker-alt mr-1 text-red-500"></i> 51/3 หมู่ 1 ถ.อุดร-เชียงยืน ต.บ้านเลื่อม อ.เมือง อุดรธานี 41000</p>
+            </div>
+            <div class="mt-4 md:mt-0 text-right">
+                <span class="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-semibold border border-blue-200">
+                    <i class="far fa-calendar-alt mr-1"></i> ประจำเดือน: มิถุนายน (June)
+                </span>
+            </div>
+        </div>
+
+        <!-- Summary Widgets -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Card 1: Total KPIs -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500 flex items-center">
+                <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+                    <i class="fas fa-list-check text-2xl w-8 h-8 flex justify-center items-center"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium mb-1">ตัวชี้วัดทั้งหมด (KPIs)</p>
+                    <p class="text-3xl font-bold text-gray-800" id="total-kpi">0</p>
+                </div>
+            </div>
+            <!-- Card 2: Passed -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500 flex items-center">
+                <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+                    <i class="fas fa-check-circle text-2xl w-8 h-8 flex justify-center items-center"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium mb-1">ผ่านเกณฑ์ (Pass)</p>
+                    <p class="text-3xl font-bold text-gray-800" id="pass-kpi">0</p>
+                </div>
+            </div>
+            <!-- Card 3: Failed -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-red-500 flex items-center">
+                <div class="p-3 rounded-full bg-red-100 text-red-600 mr-4">
+                    <i class="fas fa-times-circle text-2xl w-8 h-8 flex justify-center items-center"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500 font-medium mb-1">ต่ำกว่าเกณฑ์ (Need Improvement)</p>
+                    <p class="text-3xl font-bold text-gray-800" id="fail-kpi">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Data Table -->
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+                <h2 class="text-lg font-semibold text-gray-800"><i class="fas fa-table mr-2 text-gray-500"></i>รายละเอียดผลการดำเนินงาน (เดือนมิถุนายน)</h2>
+            </div>
+            
+            <div class="overflow-x-auto table-container">
+                <table class="min-w-full divide-y divide-gray-200 whitespace-nowrap">
+                    <thead class="bg-gray-100 text-gray-600 text-xs uppercase font-medium">
+                        <tr>
+                            <th scope="col" class="px-4 py-3 text-left tracking-wider w-1/4">ดัชนีชี้วัดผลการทำงาน (KPI)</th>
+                            <th scope="col" class="px-4 py-3 text-left tracking-wider">ผู้รับผิดชอบ</th>
+                            <th scope="col" class="px-4 py-3 text-center tracking-wider">เงื่อนไข</th>
+                            <th scope="col" class="px-4 py-3 text-right tracking-wider">เป้าหมาย (มิ.ย.)</th>
+                            <th scope="col" class="px-4 py-3 text-right tracking-wider">ทำได้จริง (มิ.ย.)</th>
+                            <th scope="col" class="px-4 py-3 text-center tracking-wider">หน่วย</th>
+                            <th scope="col" class="px-4 py-3 text-center tracking-wider">สถานะ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kpi-table-body" class="bg-white divide-y divide-gray-200 text-sm">
+                        <!-- ข้อมูลจะถูกแทรกที่นี่ด้วย JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-sm text-gray-500">
+            <p>&copy; 2026 บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด. ข้อมูลสำหรับการติดตามภายในองค์กรเท่านั้น.</p>
+        </footer>
+
+    </main>
+
+    <!-- JavaScript สำหรับจัดการข้อมูลและเรนเดอร์ลงตาราง -->
+    <script>
+        // ข้อมูลดิบสกัดจากรูปภาพ เฉพาะเดือน มิถุนายน (Jun) 2026
+        const kpiData = [
+            { kpi: "ยอดขายของลูกค้าจากช่องทางออนไลน์", person: "ผู้จัดการฝ่ายบริหาร", condition: "มากกว่า", target: 550000, actual: 309011, unit: "บาท", format: "money" },
+            { kpi: "ยอดขายของสินค้าในกลุ่มสินค้าใหม่", person: "ผู้จัดการฝ่ายบริหาร / พนักงานจัดซื้อ", condition: "มากกว่า", target: 500000, actual: 73448, unit: "บาท", format: "money" },
+            { kpi: "ฝึกอบรมพนักงานให้มีความรู้-ทักษะ ตามตำแหน่ง", person: "ผู้จัดการฝ่ายบริหาร", condition: "มากกว่า", target: 90, actual: 91, unit: "%", format: "percent" },
+            { kpi: "ยอดขายของลูกค้าใหม่เพิ่มขึ้น", person: "ผู้จัดการฝ่ายปฏิบัติการ", condition: "มากกว่า", target: 1000000, actual: 91694, unit: "บาท", format: "money" },
+            { kpi: "การติดตามการชำระหนี้ของลูกค้าทันตามกำหนด", person: "หัวหน้าแผนกบัญชี/การเงิน / พนักงานบัญชี", condition: "มากกว่า", target: 80, actual: 85, unit: "%", format: "percent" },
+            { kpi: "ยอดขายปลีกหน้าร้าน", person: "หัวหน้าแผนกขาย / พนักงานขายปลีก", condition: "มากกว่า", target: 500000, actual: 477646, unit: "บาท", format: "money" },
+            { kpi: "สินค้าคงคลัง-หน้าร้านถูกต้อง", person: "พนักงานขายปลีก", condition: "มากกว่า", target: 90, actual: 79, unit: "%", format: "percent" },
+            { kpi: "ยอดขายส่ง", person: "หัวหน้าแผนกขาย / พนักงานขายส่ง", condition: "มากกว่า", target: 11900000, actual: 7133637, unit: "บาท", format: "money" },
+            { kpi: "ยอดขาย-หนองคาย", person: "หัวหน้าแผนกขาย-หนองคาย / พนักงานขาย", condition: "มากกว่า", target: 600000, actual: 559156.98, unit: "บาท", format: "money" },
+            { kpi: "สินค้าคงคลัง-หนองคายถูกต้อง", person: "หัวหน้าแผนกขาย-หนองคาย / พนักงานขาย", condition: "มากกว่า", target: 95, actual: 96, unit: "%", format: "percent" },
+            { kpi: "ประสิทธิภาพการใช้รถบรรทุกสินค้า", person: "หัวหน้าแผนกคลังสินค้าจัดส่ง", condition: "มากกว่า", target: 85, actual: 85.72, unit: "%", format: "percent" },
+            { kpi: "สินค้าคงคลัง-คลังสินค้าถูกต้อง", person: "หัวหน้าแผนกคลังสินค้าจัดส่ง / พนักงานจัดส่ง", condition: "มากกว่า", target: 85, actual: 77, unit: "%", format: "percent" },
+            { kpi: "ข้อผิดพลาดจากการสื่อสารในแต่ละเดือน", person: "หัวหน้าแผนกขาย", condition: "ไม่เกิน", target: 2, actual: 0, unit: "ครั้ง", format: "number" },
+            { kpi: "ข้อผิดพลาดจากการสื่อสารในแต่ละเดือน", person: "พนักงานขายส่ง", condition: "ไม่เกิน", target: 2, actual: 3, unit: "ครั้ง", format: "number" },
+            { kpi: "ข้อผิดพลาดจากการจัดส่งสินค้าในแต่ละเดือน", person: "พนักงานจัดส่ง (ไชยา)", condition: "ไม่เกิน", target: 2, actual: 0, unit: "ครั้ง", format: "number" },
+            { kpi: "ข้อผิดพลาดจากการจัดส่งสินค้าในแต่ละเดือน", person: "พนักงานจัดส่ง (สุมาต)", condition: "ไม่เกิน", target: 2, actual: 0, unit: "ครั้ง", format: "number" },
+            { kpi: "ข้อผิดพลาดจากการจัดส่งสินค้าในแต่ละเดือน", person: "พนักงานจัดส่ง (หนุ่ย)", condition: "ไม่เกิน", target: 2, actual: 0, unit: "ครั้ง", format: "number" },
+            { kpi: "ข้อผิดพลาดจากการจัดส่งสินค้าในแต่ละเดือน", person: "พนักงานจัดส่ง (สุรชัย)", condition: "ไม่เกิน", target: 2, actual: 1, unit: "ครั้ง", format: "number" },
+            { kpi: "ข้อผิดพลาดจากการจัดส่งสินค้าในแต่ละเดือน", person: "พนักงานจัดส่ง (นาวี)", condition: "ไม่เกิน", target: 2, actual: 0, unit: "ครั้ง", format: "number" },
+            { kpi: "ข้อผิดพลาดจากการจัดส่งสินค้าในแต่ละเดือน", person: "พนักงานขับรถ (วิชัย)", condition: "ไม่เกิน", target: 2, actual: 0, unit: "ครั้ง", format: "number" },
+            { kpi: "ข้อผิดพลาดจากการจัดส่งสินค้าในแต่ละเดือน", person: "พนักงานขับรถ (บูรพา)", condition: "ไม่เกิน", target: 2, actual: 1, unit: "ครั้ง", format: "number" },
+            { kpi: "ข้อผิดพลาดจากการจัดส่งสินค้าในแต่ละเดือน", person: "พนักงานขับรถ (โอ)", condition: "ไม่เกิน", target: 2, actual: 0, unit: "ครั้ง", format: "number" },
+            { kpi: "ข้อผิดพลาดจากการจัดส่งสินค้าในแต่ละเดือน", person: "พนักงานขับรถ (เรืองยศ)", condition: "ไม่เกิน", target: 2, actual: 0, unit: "ครั้ง", format: "number" },
+            { kpi: "ข้อผิดพลาดจากการจัดส่งสินค้าในแต่ละเดือน", person: "พนักงานขับรถ (นาวี)", condition: "ไม่เกิน", target: 2, actual: 0, unit: "ครั้ง", format: "number" },
+            { kpi: "ประสิทธิภาพการใช้เชื้อเพลิง", person: "พนักงานขับรถ (บุญหนัก)", condition: "มากกว่า", target: 7.00, actual: 6.30, unit: "km/ลิตร", format: "decimal" },
+            { kpi: "ประสิทธิภาพการใช้เชื้อเพลิง", person: "พนักงานขับรถ (ทำเงิน)", condition: "มากกว่า", target: 6.80, actual: 7.14, unit: "km/ลิตร", format: "decimal" },
+            { kpi: "ประสิทธิภาพการใช้เชื้อเพลิง", person: "พนักงานขับรถ (พี่หมาน)", condition: "มากกว่า", target: 8.70, actual: 9.38, unit: "km/ลิตร", format: "decimal" },
+            { kpi: "ประสิทธิภาพการใช้เชื้อเพลิง", person: "พนักงานขับรถ (นำโชค)", condition: "มากกว่า", target: 9.50, actual: 8.89, unit: "km/ลิตร", format: "decimal" },
+            { kpi: "ประสิทธิภาพการใช้เชื้อเพลิง", person: "พนักงานขับรถ (ออมสิน)", condition: "มากกว่า", target: 11.80, actual: 11.44, unit: "km/ลิตร", format: "decimal" }
+        ];
+
+        // ฟังก์ชันจัดรูปแบบตัวเลข
+        function formatNumber(value, format) {
+            if (value === null || value === undefined) return "-";
+            if (format === 'money') {
+                return value.toLocaleString('th-TH', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+            } else if (format === 'percent') {
+                return value.toFixed(2);
+            } else if (format === 'decimal') {
+                return value.toFixed(2);
+            } else {
+                return value.toString();
+            }
+        }
+
+        // ฟังก์ชันประเมินผล ผ่าน / ไม่ผ่าน
+        function evaluateStatus(condition, target, actual) {
+            if (condition === "มากกว่า") {
+                return actual >= target;
+            } else if (condition === "ไม่เกิน") {
+                return actual <= target;
+            }
+            return false;
+        }
+
+        // เริ่มต้น Render ข้อมูลเมื่อโหลดหน้าเว็บเสร็จ
+        document.addEventListener('DOMContentLoaded', () => {
+            const tableBody = document.getElementById('kpi-table-body');
+            let passCount = 0;
+            let failCount = 0;
+
+            kpiData.forEach((data, index) => {
+                const isPass = evaluateStatus(data.condition, data.target, data.actual);
+                
+                // นับจำนวนผ่าน/ไม่ผ่าน
+                if (isPass) passCount++;
+                else failCount++;
+
+                // กำหนดสีตามสถานะ
+                const statusColor = isPass ? "bg-green-100 text-green-800 border-green-200" : "bg-red-100 text-red-800 border-red-200";
+                const actualTextColor = isPass ? "text-green-600 font-medium" : "text-red-500 font-bold";
+                const statusIcon = isPass ? "<i class='fas fa-check mr-1'></i> ผ่าน" : "<i class='fas fa-exclamation mr-1'></i> ต่ำกว่าเป้า";
+                
+                // แถวสลับสี (Zebra striping)
+                const rowBg = index % 2 === 0 ? "bg-white" : "bg-gray-50";
+
+                const tr = document.createElement('tr');
+                tr.className = `${rowBg} hover:bg-blue-50 transition-colors duration-150`;
+
+                tr.innerHTML = `
+                    <td class="px-4 py-4 break-words whitespace-normal text-gray-900 font-medium w-1/4">
+                        ${data.kpi}
+                    </td>
+                    <td class="px-4 py-4 text-gray-600">
+                        ${data.person}
+                    </td>
+                    <td class="px-4 py-4 text-center">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                            ${data.condition}
+                        </span>
+                    </td>
+                    <td class="px-4 py-4 text-right text-gray-700">
+                        ${formatNumber(data.target, data.format)}
+                    </td>
+                    <td class="px-4 py-4 text-right ${actualTextColor}">
+                        ${formatNumber(data.actual, data.format)}
+                    </td>
+                    <td class="px-4 py-4 text-center text-gray-500 text-xs">
+                        ${data.unit}
+                    </td>
+                    <td class="px-4 py-4 text-center">
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${statusColor}">
+                            ${statusIcon}
+                        </span>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            // อัปเดต Summary Cards
+            document.getElementById('total-kpi').textContent = kpiData.length;
+            document.getElementById('pass-kpi').textContent = passCount;
+            document.getElementById('fail-kpi').textContent = failCount;
+        });
+    </script>
+</body>
+</html>

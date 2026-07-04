@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard รายงานยอดขาย - บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            /* Light theme background with a soft gradient */
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+            border-radius: 1.5rem;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .glass-panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.08);
+        }
+
+        /* Text Gradients for premium look */
+        .text-gradient {
+            background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .text-gradient-danger {
+            background: linear-gradient(90deg, #cb2d3e 0%, #ef473a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.15); 
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header Section -->
+        <header class="glass-panel p-6 flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2"></div>
+            <div class="z-10 text-center md:text-left">
+                <h1 class="text-3xl font-bold text-gradient mb-1">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</h1>
+                <h2 class="text-xl text-gray-600 font-medium">รายงานสรุปผลยอดขาย <span class="text-blue-600 font-semibold">แผนกขายส่ง</span></h2>
+            </div>
+            <div class="z-10 mt-4 md:mt-0 text-right">
+                <p class="text-sm text-gray-500">ประจำเดือน</p>
+                <p class="text-2xl font-bold text-gray-800">มิถุนายน (26 วันทำงาน)</p>
+            </div>
+        </header>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Target -->
+            <div class="glass-panel p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">เป้าหมายรวม (บาท)</p>
+                        <h3 class="text-2xl font-bold text-gray-800">11,900,000</h3>
+                    </div>
+                    <div class="p-3 bg-blue-50 rounded-lg text-blue-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mt-4">เป้าหมายเฉลี่ยรายวัน: 457,692 บาท</p>
+            </div>
+
+            <!-- Actual -->
+            <div class="glass-panel p-6 relative overflow-hidden">
+                <div class="absolute bottom-0 right-0 w-24 h-24 bg-red-50 rounded-full filter blur-xl"></div>
+                <div class="flex justify-between items-start relative z-10">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">ยอดขายที่ทำได้ (บาท)</p>
+                        <h3 class="text-2xl font-bold text-gradient-danger">7,133,637</h3>
+                    </div>
+                    <div class="p-3 bg-red-50 rounded-lg text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-xs text-red-500 mt-4">ต่ำกว่าเป้าหมาย 4,766,363 บาท</p>
+            </div>
+
+            <!-- Percentage -->
+            <div class="glass-panel p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">เปอร์เซ็นต์ความสำเร็จ</p>
+                        <h3 class="text-2xl font-bold text-orange-500">59.95%</h3>
+                    </div>
+                    <div class="p-3 bg-orange-50 rounded-lg text-orange-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-4">
+                    <div class="bg-orange-500 h-2 rounded-full" style="width: 60%"></div>
+                </div>
+            </div>
+
+            <!-- Target Met Days -->
+            <div class="glass-panel p-6 border-l-4 border-red-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500 mb-1">จำนวนวันที่ได้ตามเป้า</p>
+                        <h3 class="text-2xl font-bold text-red-600">0 <span class="text-lg font-normal text-gray-500">/ 26 วัน</span></h3>
+                    </div>
+                    <div class="p-3 bg-red-100 rounded-lg text-red-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-xs text-red-500 mt-4 font-semibold">Critical Alert: พลาดเป้าหมายรายวันทุกวันทำงาน</p>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Line Chart -->
+            <div class="glass-panel p-6 lg:col-span-2">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">เปรียบเทียบยอดขายจริง VS เป้าหมายรายวัน</h3>
+                <div class="relative h-80 w-full">
+                    <canvas id="dailySalesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Doughnut Chart -->
+            <div class="glass-panel p-6 flex flex-col justify-center items-center">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 w-full text-left">สัดส่วนยอดขายต่อเป้าหมาย</h3>
+                <div class="relative h-64 w-full flex justify-center">
+                    <canvas id="progressChart"></canvas>
+                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-4">
+                        <span class="text-3xl font-bold text-gray-700">60%</span>
+                        <span class="text-xs text-gray-500">Achieved</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Causes -->
+            <div class="glass-panel p-6 relative">
+                <div class="absolute top-0 left-0 w-2 h-full bg-red-400 rounded-l-2xl"></div>
+                <div class="flex items-center gap-3 mb-4 pl-4">
+                    <div class="p-2 bg-red-100 text-red-600 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800">วิเคราะห์สาเหตุ (Root Causes)</h3>
+                </div>
+                <ul class="space-y-3 pl-4 text-gray-700">
+                    <li class="flex items-start gap-2">
+                        <span class="text-red-500 mt-1">•</span>
+                        <p><strong>การตั้งเป้าหมายอาจสูงเกินจริง (Unrealistic Target):</strong> ยอดขายรายวันเฉลี่ยอยู่ที่ประมาณ 200k-300k แต่เป้าหมายตั้งไว้สูงถึง 457k ทำให้ไม่มีวันใดเลยที่เซลส์ทำยอดถึงเป้า บั่นทอนกำลังใจทีมงาน</p>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-red-500 mt-1">•</span>
+                        <p><strong>ความผันผวนของยอดขาย:</strong> สังเกตจากบางวันยอดตกลงไปเหลือเพียง 104k (วันที่ 4) สะท้อนถึงความไม่แน่นอนของคำสั่งซื้อ หรืออาจมีปัญหาในการบริหารจัดการสต็อกสินค้าระหว่างสัปดาห์</p>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-red-500 mt-1">•</span>
+                        <p><strong>กำลังซื้อในตลาดขายส่งลดลง:</strong> เดือนมิถุนายนอาจเป็นช่วง Low Season ของกลุ่มลูกค้า หรือคู่แข่งมีการจัดโปรโมชั่นที่ดึงดูดใจมากกว่า</p>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-red-500 mt-1">•</span>
+                        <p><strong>จำนวนลูกค้าหลัก (Key Accounts):</strong> อาจสูญเสียลูกค้าเจ้าใหญ่หรือลูกค้ารายใหญ่ชะลอการสั่งซื้อในเดือนนี้</p>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Solutions -->
+            <div class="glass-panel p-6 relative">
+                <div class="absolute top-0 left-0 w-2 h-full bg-green-400 rounded-l-2xl"></div>
+                <div class="flex items-center gap-3 mb-4 pl-4">
+                    <div class="p-2 bg-green-100 text-green-600 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M11.3 1.046A12.014 12.014 0 0010.5 1h-1a12.01 12.01 0 00-7.854 2.923A2.001 2.001 0 001 5.617v2.324A2.002 2.002 0 002.046 9.87C2.909 10.158 3.907 10.5 5 11v3.5a2 2 0 002 2h2a2 2 0 002-2V11c1.093-.5 2.091-.842 2.954-1.13A2.002 2.002 0 0019 7.941V5.617a2.001 2.001 0 00-1.646-1.968A12.01 12.01 0 0011.3 1.046zM10 14a1 1 0 00-1 1v1h2v-1a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800">แนวทางแก้ไข (Action Plan)</h3>
+                </div>
+                <ul class="space-y-3 pl-4 text-gray-700">
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500 mt-1">✓</span>
+                        <p><strong>ปรับปรุงเป้าหมายแบบขั้นบันได (Tiered Targets):</strong> ปรับเป้าหมายให้มีความสมจริงมากขึ้น (SMART Goal) หรือแบ่งเป้าหมายเป็นขั้นๆ เพื่อสร้างแรงจูงใจ (เช่น 70%, 80%, 100%)</p>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500 mt-1">✓</span>
+                        <p><strong>จัดโปรโมชั่นกระตุ้นยอดขายส่ง (Volume Discount):</strong> จัดทำแคมเปญซื้อยกล็อต หรือสะสมยอดสั่งซื้อเพื่อรับส่วนลดพิเศษ/ของแถมในช่วงกลางปี เพื่อเร่งการตัดสินใจซื้อของลูกค้า</p>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500 mt-1">✓</span>
+                        <p><strong>ทบทวนกลยุทธ์การเยี่ยมลูกค้า (Routing & Visit Plan):</strong> ให้ทีมขายเน้นเข้าพบกลุ่มลูกค้ารายใหญ่ (Top 20%) ที่มีศักยภาพในการซื้อสูง และเจรจาขอเพิ่มแชร์พื้นที่ขาย</p>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-green-500 mt-1">✓</span>
+                        <p><strong>Coaching & Review รายสัปดาห์:</strong> หัวหน้าทีมขายควรประชุมติดตามผลเป็นรายสัปดาห์ แทนการรอสรุปสิ้นเดือน เพื่อแก้ไขปัญหาหน้างานได้ทันท่วงที</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="text-center text-gray-400 text-sm py-4">
+            Generated on Dashboard template by System &copy; 2026
+        </footer>
+    </div>
+
+    <!-- Chart Scripts -->
+    <script>
+        // Data Extraction from the provided image
+        // Target is 457,692 for working days, 0 for holidays (days 7, 14, 21, 28)
+        const days = Array.from({length: 30}, (_, i) => i + 1);
+        const targetData = [
+            457692, 457692, 457692, 457692, 457692, 457692, null, // week 1
+            457692, 457692, 457692, 457692, 457692, 457692, null, // week 2
+            457692, 457692, 457692, 457692, 457692, 457692, null, // week 3
+            457692, 457692, 457692, 457692, 457692, 457692, null, // week 4
+            457692, 457692 // week 5
+        ];
+        
+        const actualData = [
+            431871, 211836, 456516, 104566, 388108, 348787, null, // week 1
+            436633, 336527, 358759, 399210, 182626, 306974, null, // week 2
+            321849, 175083, 206290, 229066, 182693, 134515, null, // week 3
+            330013, 146565, 149200, 172574, 228545, 185325, null, // week 4
+            389046, 320457 // week 5
+        ];
+
+        // Global Chart Defaults for Kanit Font
+        Chart.defaults.font.family = "'Kanit', sans-serif";
+        Chart.defaults.color = '#64748b';
+
+        // 1. Line Chart: Daily Sales vs Target
+        const ctxLine = document.getElementById('dailySalesChart').getContext('2d');
+        
+        // Gradient for actual sales area
+        const gradientActual = ctxLine.createLinearGradient(0, 0, 0, 400);
+        gradientActual.addColorStop(0, 'rgba(239, 68, 68, 0.4)'); // Reddish due to missing target
+        gradientActual.addColorStop(1, 'rgba(239, 68, 68, 0.0)');
+
+        new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: days,
+                datasets: [
+                    {
+                        label: 'ยอดขายที่ทำได้ (Actual)',
+                        data: actualData,
+                        borderColor: '#ef4444', // Red-500
+                        backgroundColor: gradientActual,
+                        borderWidth: 2,
+                        pointBackgroundColor: '#ef4444',
+                        pointRadius: 3,
+                        pointHoverRadius: 6,
+                        fill: true,
+                        spanGaps: true // connect lines over nulls
+                    },
+                    {
+                        label: 'เป้าหมายรายวัน (Target)',
+                        data: targetData,
+                        borderColor: '#3b82f6', // Blue-500
+                        borderWidth: 2,
+                        borderDash: [5, 5], // Dashed line for target
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        fill: false,
+                        spanGaps: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { usePointStyle: true, boxWidth: 8 }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        titleColor: '#1e293b',
+                        bodyColor: '#1e293b',
+                        borderColor: '#e2e8f0',
+                        borderWidth: 1,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('th-TH').format(context.parsed.y) + ' บาท';
+                                }
+                                return label;
+                            },
+                            title: function(context) {
+                                return 'วันที่ ' + context[0].label + ' มิถุนายน';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        title: { display: true, text: 'วันที่' }
+                    },
+                    y: {
+                        grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                        min: 0,
+                        max: 600000,
+                        ticks: {
+                            callback: function(value) {
+                                return value / 1000 + 'k';
+                            }
+                        },
+                        title: { display: true, text: 'ยอดขาย (บาท)' }
+                    }
+                }
+            }
+        });
+
+        // 2. Doughnut Chart: Total Progress
+        const ctxProgress = document.getElementById('progressChart').getContext('2d');
+        const achieved = 7133637;
+        const totalTarget = 11900000;
+        const remaining = totalTarget - achieved;
+
+        new Chart(ctxProgress, {
+            type: 'doughnut',
+            data: {
+                labels: ['ยอดที่ทำได้', 'ยอดที่ขาดหาย'],
+                datasets: [{
+                    data: [achieved, remaining],
+                    backgroundColor: [
+                        '#f97316', // Orange-500
+                        '#f1f5f9'  // Slate-100 (Empty area)
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '80%', // Make it thin
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                label += new Intl.NumberFormat('th-TH').format(context.parsed) + ' บาท';
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+<a href="nksales.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (PTN sale) ➜
+</body>
+</html>
