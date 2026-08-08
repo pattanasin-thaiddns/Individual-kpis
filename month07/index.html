@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard ติดตามผลการดำเนินงานรายบุคคล 2026 - เดือนกรกฎาคม</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f3f4f6; /* Gray-100 */
+        }
+        
+        /* Custom scrollbar for table container */
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Status Colors based on achieving target (A >= T for positive metrics, A <= T for negative metrics) */
+        .status-good { color: #15803d; font-weight: 600; } /* Green-700 */
+        .status-bad { color: #b91c1c; font-weight: 600; } /* Red-700 */
+        
+        .progress-bar-bg { background-color: #e2e8f0; border-radius: 9999px; overflow: hidden; height: 8px; }
+        .progress-bar-fill { height: 100%; border-radius: 9999px; transition: width 0.5s ease-in-out; }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+    </style>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e3a8a', /* Blue-900 */
+                        secondary: '#f97316', /* Orange-500 */
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <!-- Placeholder Logo from Image -->
+                <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-2xl shadow-inner">
+                    <span class="text-white">P</span>
+                    <span class="text-secondary ml-[-4px]">T</span>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-900 leading-tight">ระบบติดตามผลการดำเนินงานรายบุคคล</h1>
+                    <p class="text-sm text-gray-500">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</p>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-3">
+                <div class="text-right">
+                    <p class="text-sm font-semibold text-gray-700">ปี 2026</p>
+                    <p class="text-xs text-gray-500">ข้อมูลล่าสุด: กรกฎาคม</p>
+                </div>
+                <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center border-2 border-primary overflow-hidden">
+                    <i class="fas fa-user text-gray-500"></i>
+                </div>
+            </div>
+            
+            <!-- Mobile menu button -->
+            <div class="md:hidden flex items-center">
+                <button class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        
+        <!-- Navigation & Context Bar -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <nav class="flex text-sm text-gray-500 mb-2" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                        <li class="inline-flex items-center">
+                            <a href="../index.html" class="inline-flex items-center hover:text-primary transition-colors">
+                                <i class="fas fa-home mr-2 text-xs"></i>
+                                หน้าแรก (Dashboard)
+                            </a>
+                        </li>
+                        <li>
+                            <div class="flex items-center">
+                                <i class="fas fa-chevron-right mx-2 text-xs text-gray-400"></i>
+                                <span class="text-gray-700 font-medium">ภาพรวม กรกฎาคม 2026</span>
+                            </div>
+                        </li>
+                    </ol>
+                </nav>
+                <h2 class="text-3xl font-bold text-gray-800">Dashboard ประจำเดือน กรกฎาคม</h2>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Card 1: ยอดขายออนไลน์ -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 card-hover relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">ยอดขายออนไลน์ (ก.ค.)</p>
+                        <h3 class="text-2xl font-bold text-gray-900">335,096 <span class="text-sm font-normal text-gray-500">บาท</span></h3>
+                    </div>
+                    <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
+                        <i class="fas fa-globe text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-gray-500">เป้าหมาย: 500,000</span>
+                        <span class="text-red-500 font-semibold">67%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill bg-red-500" style="width: 67%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: ยอดขายส่ง -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 card-hover relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">ยอดขายส่ง (ก.ค.)</p>
+                        <h3 class="text-2xl font-bold text-gray-900">6,100,376 <span class="text-sm font-normal text-gray-500">บาท</span></h3>
+                    </div>
+                    <div class="p-2 bg-green-50 rounded-lg text-green-600">
+                        <i class="fas fa-truck-loading text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-gray-500">เป้าหมาย: 5,950,000</span>
+                        <span class="text-green-600 font-semibold">102%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill bg-green-500" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: ยอดขายปลีก -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 card-hover relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-orange-500"></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">ยอดขายปลีกหน้าร้าน (ก.ค.)</p>
+                        <h3 class="text-2xl font-bold text-gray-900">432,854 <span class="text-sm font-normal text-gray-500">บาท</span></h3>
+                    </div>
+                    <div class="p-2 bg-orange-50 rounded-lg text-orange-600">
+                        <i class="fas fa-store text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-gray-500">เป้าหมาย: 500,000</span>
+                        <span class="text-red-500 font-semibold">86%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill bg-orange-400" style="width: 86%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: สินค้าคงคลังถูกต้อง -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 card-hover relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-1 h-full bg-purple-500"></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">สินค้าคงคลัง-หนองคาย (ก.ค.)</p>
+                        <h3 class="text-2xl font-bold text-gray-900">86.00 <span class="text-sm font-normal text-gray-500">%</span></h3>
+                    </div>
+                    <div class="p-2 bg-purple-50 rounded-lg text-purple-600">
+                        <i class="fas fa-boxes text-xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-gray-500">เป้าหมาย: > 95%</span>
+                        <span class="text-red-500 font-semibold">ต่ำกว่าเป้า</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill bg-red-400" style="width: 86%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+            <div class="px-6 py-5 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4 bg-gray-50">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center">
+                    <i class="fas fa-table text-primary mr-2"></i>
+                    รายละเอียดผลการดำเนินงานตาม KPI (เฉพาะเดือนกรกฎาคม)
+                </h3>
+                
+                <div class="flex gap-2">
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="ค้นหาตัวชี้วัด / ผู้รับผิดชอบ..." class="pl-9 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-primary focus:border-primary block w-full sm:w-64">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                    </div>
+                    <button class="px-3 py-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100" title="ตัวกรอง">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto table-container">
+                <table class="min-w-full divide-y divide-gray-200" id="kpiTable">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/3">
+                                ดัชนีชี้วัดผลการทำงาน (KPIs)
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/4">
+                                ผู้รับผิดชอบ
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
+                                เป้าหมาย<br>(กรกฎาคม)
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-24">
+                                ทำได้จริง<br>(กรกฎาคม)
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                สถานะ
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200" id="kpiTableBody">
+                        <!-- Data will be populated here via JS to allow for searching -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50 text-xs text-gray-500 flex justify-between">
+                <span>หมายเหตุ: ข้อมูลอ้างอิงจากรายงานสรุปเดือนกรกฎาคม 2026</span>
+                <div class="flex gap-4">
+                    <span class="flex items-center"><span class="w-3 h-3 bg-green-500 rounded-full mr-1"></span> บรรลุเป้าหมาย</span>
+                    <span class="flex items-center"><span class="w-3 h-3 bg-red-500 rounded-full mr-1"></span> ไม่บรรลุเป้าหมาย</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Mistakes Section -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                    <i class="fas fa-exclamation-triangle text-amber-500 mr-2"></i>
+                    ข้อผิดพลาดจากการสื่อสาร/จัดส่ง (ก.ค.)
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">หัวหน้าแผนกขาย</span>
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-bold">1 ครั้ง (เป้า: < 2)</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">พนักงานขายส่ง (เฉลี่ย)</span>
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-bold">0 ครั้ง (เป้า: < 2)</span>
+                    </div>
+                     <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">พนักงานจัดส่ง (ไชยา)</span>
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-bold">0 ครั้ง (เป้า: < 2)</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">พนักงานขับรถ (วิชัย)</span>
+                        <span class="px-2 py-1 bg-green-100 text-green-800 rounded text-xs font-bold">0 ครั้ง (เป้า: < 2)</span>
+                    </div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-gray-100 text-sm text-gray-500">
+                    <p>* ภาพรวมข้อผิดพลาดอยู่ในเกณฑ์ดีมาก (ต่ำกว่าเป้าหมายที่กำหนด)</p>
+                </div>
+            </div>
+
+            <!-- Fuel Efficiency Section -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2 flex items-center">
+                    <i class="fas fa-gas-pump text-gray-600 mr-2"></i>
+                    ประสิทธิภาพการใช้เชื้อเพลิง (ก.ค.)
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <div class="w-1/3 text-sm text-gray-600">บุญหนัก</div>
+                        <div class="w-2/3 flex items-center gap-2">
+                            <div class="progress-bar-bg flex-grow">
+                                <div class="progress-bar-fill bg-red-400" style="width: 85%"></div>
+                            </div>
+                            <span class="text-xs font-mono w-16 text-right status-bad">6.50 <span class="text-gray-400 text-[10px]">/ 7.00</span></span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="w-1/3 text-sm text-gray-600">ทำเงิน</div>
+                        <div class="w-2/3 flex items-center gap-2">
+                            <div class="progress-bar-bg flex-grow">
+                                <div class="progress-bar-fill bg-red-400" style="width: 90%"></div>
+                            </div>
+                            <span class="text-xs font-mono w-16 text-right status-bad">6.65 <span class="text-gray-400 text-[10px]">/ 6.80</span></span>
+                        </div>
+                    </div>
+                     <div class="flex justify-between items-center">
+                        <div class="w-1/3 text-sm text-gray-600">ดีหมาน</div>
+                        <div class="w-2/3 flex items-center gap-2">
+                            <div class="progress-bar-bg flex-grow">
+                                <div class="progress-bar-fill bg-red-400" style="width: 80%"></div>
+                            </div>
+                            <span class="text-xs font-mono w-16 text-right status-bad">7.51 <span class="text-gray-400 text-[10px]">/ 8.70</span></span>
+                        </div>
+                    </div>
+                     <div class="flex justify-between items-center">
+                        <div class="w-1/3 text-sm text-gray-600">นำโชค</div>
+                        <div class="w-2/3 flex items-center gap-2">
+                            <div class="progress-bar-bg flex-grow">
+                                <div class="progress-bar-fill bg-red-400" style="width: 88%"></div>
+                            </div>
+                            <span class="text-xs font-mono w-16 text-right status-bad">8.84 <span class="text-gray-400 text-[10px]">/ 9.50</span></span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="w-1/3 text-sm text-gray-600">ออมสิน</div>
+                        <div class="w-2/3 flex items-center gap-2">
+                            <div class="progress-bar-bg flex-grow">
+                                <div class="progress-bar-fill bg-red-400" style="width: 95%"></div>
+                            </div>
+                            <span class="text-xs font-mono w-16 text-right status-bad">11.29 <span class="text-gray-400 text-[10px]">/ 11.80</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-sm text-gray-500">
+                &copy; 2026 บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด. สงวนลิขสิทธิ์.
+                <br class="md:hidden">
+                <span class="hidden md:inline"> | </span> 51/3 หมู่ 1 ถ.อุดร-เชียงยืน ต.บ้านเลื่อม อ.เมือง อุดรธานี 41000
+            </div>
+            
+            <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors">
+                <i class="fas fa-arrow-up mr-2"></i> กลับขึ้นด้านบน
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        // Data extracted from the provided image, specifically focusing on Target (T) and July Actual (A)
+        const kpiData = [
+            {
+                kpi: 'ยอดขายของลูกค้าจากช่องทางออนไลน์ (บาท)',
+                condition: 'มากกว่า',
+                person: 'ผู้จัดการฝ่ายบริหาร',
+                target: '500,000',
+                targetNum: 500000,
+                actual: '335,096',
+                actualNum: 335096,
+                isPositiveGoal: true
+            },
+            {
+                kpi: 'ยอดขายของสินค้าในกลุ่มสินค้าใหม่ (บาท)',
+                condition: 'มากกว่า',
+                person: 'ผู้จัดการฝ่ายบริหาร / พนักงานจัดซื้อ',
+                target: '500,000',
+                targetNum: 500000,
+                actual: '135,971',
+                actualNum: 135971,
+                isPositiveGoal: true
+            },
+            {
+                kpi: 'ฝึกอบรมพนักงานให้มีความรู้-ทักษะ ตามตำแหน่ง (%)',
+                condition: 'มากกว่า',
+                person: 'ผู้จัดการฝ่ายบริหาร',
+                target: '90.00%',
+                targetNum: 90,
+                actual: '0.00%',
+                actualNum: 0,
+                isPositiveGoal: true
+            },
+            {
+                kpi: 'ยอดขายของลูกค้าใหม่เพิ่มขึ้น (บาท)',
+                condition: 'มากกว่า',
+                person: 'ผู้จัดการฝ่ายปฏิบัติการ',
+                target: '700,000',
+                targetNum: 700000,
+                actual: '12,718',
+                actualNum: 12718,
+                isPositiveGoal: true
+            },
+            {
+                kpi: 'การติดตามการชำระหนี้ของลูกค้าเกินตามกำหนด (%)',
+                condition: 'มากกว่า',
+                person: 'หัวหน้าแผนกบัญชี/การเงิน / พนักงานบัญชี',
+                target: '80.00%',
+                targetNum: 80,
+                actual: '86.35%',
+                actualNum: 86.35,
+                isPositiveGoal: true
+            },
+            {
+                kpi: 'ยอดขายปลีกหน้าร้าน (บาท)',
+                condition: 'มากกว่า',
+                person: 'หัวหน้าแผนกขาย / พนักงานขายปลีก',
+                target: '500,000',
+                targetNum: 500000,
+                actual: '432,854',
+                actualNum: 432854,
+                isPositiveGoal: true
+            },
+            {
+                kpi: 'สินค้าคงคลัง-หน้าร้านถูกต้อง (%)',
+                condition: 'มากกว่า',
+                person: 'พนักงานขายปลีก',
+                target: '90.00%',
+                targetNum: 90,
+                actual: '94.00%',
+                actualNum: 94,
+                isPositiveGoal: true
+            },
+            {
+                kpi: 'ยอดขายส่ง (บาท)',
+                condition: 'มากกว่า',
+                person: 'หัวหน้าแผนกขาย / พนักงานขายส่ง',
+                target: '5,950,000',
+                targetNum: 5950000,
+                actual: '6,100,376',
+                actualNum: 6100376,
+                isPositiveGoal: true
+            },
+             {
+                kpi: 'ยอดขาย-หนองคาย (บาท)',
+                condition: 'มากกว่า',
+                person: 'หัวหน้าแผนกขาย-หนองคาย / พนักงานขาย-หนองคาย',
+                target: '550,000',
+                targetNum: 550000,
+                actual: '637,144',
+                actualNum: 637144,
+                isPositiveGoal: true
+            },
+            {
+                kpi: 'สินค้าคงคลัง-หนองคายถูกต้อง (%)',
+                condition: 'มากกว่า',
+                person: 'หัวหน้าแผนกขาย-หนองคาย / พนักงานขาย-หนองคาย',
+                target: '95.00%',
+                targetNum: 95,
+                actual: '86.00%',
+                actualNum: 86,
+                isPositiveGoal: true
+            },
+             {
+                kpi: 'ประสิทธิภาพการใช้รถบรรทุกสินค้า (%)',
+                condition: 'มากกว่า',
+                person: 'หัวหน้าแผนกคลังสินค้า/จัดส่ง',
+                target: '85.00%',
+                targetNum: 85,
+                actual: '78.60%',
+                actualNum: 78.6,
+                isPositiveGoal: true
+            },
+             {
+                kpi: 'สินค้าคงคลัง-คลังสินค้าถูกต้อง (%)',
+                condition: 'มากกว่า',
+                person: 'หัวหน้าแผนกคลังสินค้า/จัดส่ง / พนักงานจัดส่ง',
+                target: '85.00%',
+                targetNum: 85,
+                actual: '77.00%',
+                actualNum: 77,
+                isPositiveGoal: true
+            },
+            {
+                kpi: 'ข้อผิดพลาดจากการสื่อสารในแต่ละเดือน (ครั้ง)',
+                condition: 'ไม่เกิน',
+                person: 'หัวหน้าแผนกขาย',
+                target: '2',
+                targetNum: 2,
+                actual: '1',
+                actualNum: 1,
+                isPositiveGoal: false // Lower is better
+            },
+             {
+                kpi: 'ข้อผิดพลาดจากการจัดส่งสินค้าในแต่ละเดือน - ไชยา (ครั้ง)',
+                condition: 'ไม่เกิน',
+                person: 'พนักงานจัดส่ง (ไชยา)',
+                target: '2',
+                targetNum: 2,
+                actual: '0',
+                actualNum: 0,
+                isPositiveGoal: false
+            },
+            {
+                kpi: 'ประสิทธิภาพการใช้เชื้อเพลิง - บุญหนัก (กม/ลิตร)',
+                condition: 'มากกว่า',
+                person: 'พนักงานขับรถ (บุญหนัก)',
+                target: '7.00',
+                targetNum: 7.00,
+                actual: '6.50',
+                actualNum: 6.50,
+                isPositiveGoal: true
+            },
+             {
+                kpi: 'ประสิทธิภาพการใช้เชื้อเพลิง - ออมสิน (กม/ลิตร)',
+                condition: 'มากกว่า',
+                person: 'พนักงานขับรถ (ออมสิน)',
+                target: '11.80',
+                targetNum: 11.80,
+                actual: '11.29',
+                actualNum: 11.29,
+                isPositiveGoal: true
+            }
+        ];
+
+        const tableBody = document.getElementById('kpiTableBody');
+        const searchInput = document.getElementById('searchInput');
+
+        // Function to render table rows
+        function renderTable(data) {
+            tableBody.innerHTML = ''; // Clear existing rows
+            
+            if(data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">ไม่พบข้อมูลที่ค้นหา</td></tr>`;
+                return;
+            }
+
+            data.forEach((item, index) => {
+                // Determine if target is met
+                let isTargetMet = false;
+                if (item.isPositiveGoal) {
+                    isTargetMet = item.actualNum >= item.targetNum;
+                } else {
+                    isTargetMet = item.actualNum <= item.targetNum;
+                }
+
+                // Styling based on status
+                const actualClass = isTargetMet ? 'status-good' : 'status-bad';
+                const statusIcon = isTargetMet 
+                    ? '<i class="fas fa-check-circle text-green-500 text-lg"></i>' 
+                    : '<i class="fas fa-times-circle text-red-500 text-lg"></i>';
+                
+                const bgClass = index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50';
+
+                const row = `
+                    <tr class="${bgClass} hover:bg-blue-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-normal text-sm text-gray-900">
+                            <div class="font-medium">${item.kpi}</div>
+                            <div class="text-xs text-gray-500 mt-1">เงื่อนไข: ${item.condition}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-normal text-sm text-gray-600">
+                            ${item.person}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-mono text-gray-700 bg-gray-50">
+                            ${item.target}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-mono ${actualClass}">
+                            ${item.actual}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center">
+                            <div class="flex justify-center" title="${isTargetMet ? 'บรรลุเป้าหมาย' : 'ไม่บรรลุเป้าหมาย'}">
+                                ${statusIcon}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+        }
+
+        // Initial render
+        renderTable(kpiData);
+
+        // Search functionality
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredData = kpiData.filter(item => 
+                item.kpi.toLowerCase().includes(searchTerm) || 
+                item.person.toLowerCase().includes(searchTerm)
+            );
+            renderTable(filteredData);
+        });
+    </script>
+</body>
+</html>

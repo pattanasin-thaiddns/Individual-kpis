@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปการตรวจนับสินค้าคงคลัง - สาขาหนองคาย</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* Custom progress bar styles */
+        .progress-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: conic-gradient(#ef4444 0% 86%, #e5e7eb 86% 100%);
+            position: relative;
+        }
+        .progress-circle::before {
+            content: "";
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 50%;
+        }
+        .progress-value {
+            position: relative;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ef4444;
+        }
+        
+        /* Table styles */
+        .table-container {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        /* Sticky header for table */
+        thead th {
+            position: sticky;
+            top: 0;
+            background-color: #f8fafc;
+            z-index: 1;
+        }
+        
+        /* Highlight rows */
+        .row-shortage { background-color: #fee2e2; } /* Light red */
+        .row-overage { background-color: #e0f2fe; } /* Light blue */
+    </style>
+</head>
+<body class="p-4 md:p-8 text-gray-800">
+
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-2xl p-6 mb-8 shadow-lg flex flex-col md:flex-row justify-between items-center">
+        <div>
+            <h1 class="text-3xl font-bold mb-2">สรุปการตรวจนับสินค้าคงคลัง</h1>
+            <p class="text-xl text-blue-100">บริษัท พัฒนาสิน (หนองคาย) จำกัด | สาขาหนองคาย</p>
+        </div>
+        <div class="mt-4 md:mt-0 text-right">
+            <p class="text-lg font-semibold bg-white/20 px-4 py-2 rounded-lg inline-block">ประจำเดือน: กรกฎาคม 2569</p>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        
+        <div class="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center justify-center border-t-4 border-red-500">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700 w-full text-center">ความถูกต้องของสต็อก</h2>
+            <div class="progress-circle shadow-inner mb-4">
+                <span class="progress-value">86%</span>
+            </div>
+            <div class="text-center w-full">
+                <p class="text-sm text-gray-500 mb-1">เป้าหมาย: 95%</p>
+                <div class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-semibold inline-block">
+                    ต่ำกว่าเป้าหมาย
+                </div>
+            </div>
+            <div class="mt-6 w-full border-t pt-4">
+                <div class="flex justify-between mb-2">
+                    <span class="text-gray-600">รายการที่ตรวจนับทั้งหมด:</span>
+                    <span class="font-bold">350 รายการ</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-600">รายการที่ถูกต้อง (ตรง):</span>
+                    <span class="font-bold text-green-600">300 รายการ</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md p-6 border-t-4 border-blue-500">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700"><i class="fas fa-boxes mr-2 text-blue-500"></i>ประเภทสินค้าที่ตรวจนับ</h2>
+            <div class="flex flex-wrap gap-2 mt-4">
+                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">ท่อพีวีซี</span>
+                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">ปุ๋ย</span>
+                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm">อาหารสัตว์</span>
+                <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">เมล็ดพันธุ์</span>
+                <span class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-sm">ปูน</span>
+                <span class="bg-gray-300 text-gray-800 px-3 py-1 rounded-full text-sm">เหล็ก</span>
+                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm">อุปกรณ์ประปา</span>
+            </div>
+            
+            <div class="mt-8 bg-yellow-50 p-4 rounded-xl border border-yellow-200">
+                <h3 class="font-semibold text-yellow-800 mb-2"><i class="fas fa-exclamation-triangle mr-2"></i>สรุปภาพรวม</h3>
+                <p class="text-sm text-gray-700">
+                    จำนวน 350 รายการที่ตรวจนับ จำนวนรายการที่ตรง 300 รายการ คิดเป็น 86% (เป้า 95%) 
+                    ถือว่าอยู่ในเกณฑ์ที่ต้องได้รับการปรับปรุงอย่างเร่งด่วน เนื่องจากความคลาดเคลื่อนมีผลต่อมูลค่าสินค้าและต้นทุนแฝง
+                </p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md p-6 border-t-4 border-purple-500">
+            <h2 class="text-xl font-semibold mb-4 text-gray-700"><i class="fas fa-chart-pie mr-2 text-purple-500"></i>สรุปผลต่าง (Variance)</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
+                        <tr>
+                            <th scope="col" class="px-4 py-3">หัวข้อ</th>
+                            <th scope="col" class="px-4 py-3 text-center">SKU</th>
+                            <th scope="col" class="px-4 py-3 text-center">ชิ้น (Qty)</th>
+                            <th scope="col" class="px-4 py-3 text-right">มูลค่ารวม (บาท)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-white border-b hover:bg-gray-50">
+                            <td class="px-4 py-3 font-medium text-red-600 flex items-center">
+                                <i class="fas fa-arrow-trend-down mr-2 bg-red-100 p-1 rounded"></i> สต็อกขาด (Shortage)
+                            </td>
+                            <td class="px-4 py-3 text-center font-bold text-red-600">36</td>
+                            <td class="px-4 py-3 text-center">289</td>
+                            <td class="px-4 py-3 text-right font-bold text-red-600">11,512.00</td>
+                        </tr>
+                        <tr class="bg-white border-b hover:bg-gray-50">
+                            <td class="px-4 py-3 font-medium text-blue-600 flex items-center">
+                                <i class="fas fa-arrow-trend-up mr-2 bg-blue-100 p-1 rounded"></i> สต็อกเกิน (Overage)
+                            </td>
+                            <td class="px-4 py-3 text-center font-bold text-blue-600">13</td>
+                            <td class="px-4 py-3 text-center">62</td>
+                            <td class="px-4 py-3 text-right font-bold text-blue-600">8,159.00</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="font-bold text-gray-900 bg-gray-100">
+                        <tr>
+                            <td class="px-4 py-3">รวมสุทธิ</td>
+                            <td class="px-4 py-3 text-center">49</td>
+                            <td class="px-4 py-3 text-center">351</td>
+                            <td class="px-4 py-3 text-right text-lg">19,671.00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="mt-4 text-xs text-gray-500">
+                * มูลค่ารวมสุทธิแสดงถึงผลรวมมูลค่าของสินค้าที่คลาดเคลื่อนทั้งขาดและเกิน
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Problem Analysis -->
+        <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-red-500">
+            <h2 class="text-xl font-semibold mb-4 text-red-700 flex items-center">
+                <i class="fas fa-search w-8 h-8 rounded-full bg-red-100 text-red-500 flex items-center justify-center mr-3"></i>
+                วิเคราะห์ปัญหา (Problem Analysis)
+            </h2>
+            <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start">
+                    <i class="fas fa-times-circle text-red-500 mt-1 mr-2"></i>
+                    <div>
+                        <span class="font-semibold">ความแม่นยำต่ำกว่าเกณฑ์:</span> สต็อกถูกต้องเพียง 86% ต่ำกว่าเป้าหมายที่ 95% บ่งบอกถึงปัญหาในกระบวนการทำงานประจำวัน
+                    </div>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-times-circle text-red-500 mt-1 mr-2"></i>
+                    <div>
+                        <span class="font-semibold">สัดส่วนสต็อกขาดสูง:</span> มีสินค้าขาดถึง 36 SKU (289 ชิ้น) มูลค่า 11,512 บาท มากกว่าสต็อกเกินอย่างเห็นได้ชัด อาจเกิดจากการสูญหาย, จ่ายสินค้าผิดพลาด หรือหยิบของแถมโดยไม่ได้ตัดสต็อก
+                    </div>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-times-circle text-red-500 mt-1 mr-2"></i>
+                    <div>
+                        <span class="font-semibold">ปัญหาอุปกรณ์ประปา/ข้อต่อ:</span> จากรายละเอียดพบว่ากลุ่ม "ก๊อกน้ำ/วาล์ว/สปริงเกอร์" มีความคลาดเคลื่อนสูงมาก ทั้งขาดและเกิน (เช่น L3-0109-01 ขาด 52 ตัว, L1-5003 ขาด 45 อัน) อาจเกิดจากการจัดเก็บที่ปะปนกัน หยิบผิดรุ่น/ขนาด เนื่องจากหน้าตาคล้ายกัน
+                    </div>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-times-circle text-red-500 mt-1 mr-2"></i>
+                    <div>
+                        <span class="font-semibold">ความหละหลวมในการรับ-จ่าย:</span> การมีทั้งสต็อกขาดและเกินในสินค้ากลุ่มเดียวกัน (เช่น บอลวาล์ว มีทั้งขาดและเกิน) ชี้ให้เห็นถึงการรับของเข้าหรือหยิบจ่ายสลับรุ่นกัน
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Solutions -->
+        <div class="bg-white rounded-2xl shadow-md p-6 border-l-4 border-green-500">
+            <h2 class="text-xl font-semibold mb-4 text-green-700 flex items-center">
+                <i class="fas fa-lightbulb w-8 h-8 rounded-full bg-green-100 text-green-500 flex items-center justify-center mr-3"></i>
+                แนวทางแก้ไขและป้องกัน (Solutions)
+            </h2>
+            <ul class="space-y-3 text-gray-700">
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                    <div>
+                        <span class="font-semibold">จัดระเบียบพื้นที่เก็บสินค้า (5ส):</span> โดยเฉพาะกลุ่มอุปกรณ์ชิ้นเล็ก (ข้อต่อ, วาล์ว) ควรแยกกล่อง/ชั้นวางให้ชัดเจน ติดป้ายรหัสสินค้าและรูปภาพให้เห็นเด่นชัด ห้ามวางปะปนกัน
+                    </div>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                    <div>
+                        <span class="font-semibold">ระบบ Double Check ก่อนส่งมอบ:</span> สำหรับการจ่ายสินค้า ให้มีพนักงานอีกคนช่วยตรวจสอบ (Cross-check) ว่ารหัสและจำนวนตรงกับบิลหรือไม่ ก่อนมอบให้ลูกค้า
+                    </div>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                    <div>
+                        <span class="font-semibold">เพิ่มความถี่ในการ Cycle Count:</span> ตรวจนับสินค้าย่อยกลุ่มที่มีปัญหาบ่อยๆ (เช่น ก๊อกน้ำ, วาล์ว) ทุกสัปดาห์ แทนการรอตรวจนับใหญ่รายเดือน เพื่อให้เจอและแก้ปัญหาได้เร็วขึ้น
+                    </div>
+                </li>
+                <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                    <div>
+                        <span class="font-semibold">ทบทวนกระบวนการรับเข้า (Receiving):</span> เข้มงวดการตรวจรับสินค้าจาก Supplier หรือสาขาอื่น ต้องนับจำนวนและแยกประเภทให้ถูกต้อง 100% ก่อนจัดเก็บเข้าที่
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-md p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-700"><i class="fas fa-list mr-2 text-gray-500"></i>รายละเอียดรายการสินค้าคลาดเคลื่อน (บางส่วน)</h2>
+            <button class="bg-blue-50 text-blue-600 px-4 py-2 rounded hover:bg-blue-100 transition text-sm font-medium border border-blue-200">
+                <i class="fas fa-download mr-1"></i> Export เต็มรูปแบบ
+            </button>
+        </div>
+        
+        <div class="table-container border rounded-lg">
+            <table class="w-full text-sm text-left whitespace-nowrap">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-100 border-b">
+                    <tr>
+                        <th class="px-4 py-3">รหัสสินค้า</th>
+                        <th class="px-4 py-3 w-1/3">ชื่อสินค้า</th>
+                        <th class="px-4 py-3 text-center">พื้นที่เก็บ</th>
+                        <th class="px-4 py-3 text-center">หน่วยนับ</th>
+                        <th class="px-4 py-3 text-right">จำนวนคงเหลือ (ระบบ)</th>
+                        <th class="px-4 py-3 text-right">ยอดที่ตรวจนับได้</th>
+                        <th class="px-4 py-3 text-center">สถานะ</th>
+                        <th class="px-4 py-3 text-right">ผลต่าง</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <!-- Sample Data Rows based on the image -->
+                    <tr class="hover:bg-gray-50 row-shortage">
+                        <td class="px-4 py-2 text-gray-600">B9-9001</td>
+                        <td class="px-4 py-2 font-medium">ปลอกเสา 10"x10"</td>
+                        <td class="px-4 py-2 text-center text-gray-500">S01</td>
+                        <td class="px-4 py-2 text-center text-gray-500">กิโลกรัม</td>
+                        <td class="px-4 py-2 text-right">14.28</td>
+                        <td class="px-4 py-2 text-right">14.27</td>
+                        <td class="px-4 py-2 text-center"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">ขาด</span></td>
+                        <td class="px-4 py-2 text-right text-red-600 font-medium">-0.01</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 row-overage">
+                        <td class="px-4 py-2 text-gray-600">B9-9002</td>
+                        <td class="px-4 py-2 font-medium">ปลอกเสา 15"x15"</td>
+                        <td class="px-4 py-2 text-center text-gray-500">S01</td>
+                        <td class="px-4 py-2 text-center text-gray-500">กิโลกรัม</td>
+                        <td class="px-4 py-2 text-right">18.73</td>
+                        <td class="px-4 py-2 text-right">18.75</td>
+                        <td class="px-4 py-2 text-center"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">เกิน</span></td>
+                        <td class="px-4 py-2 text-right text-blue-600 font-medium">0.02</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 row-overage">
+                        <td class="px-4 py-2 text-gray-600">L0-0017</td>
+                        <td class="px-4 py-2 font-medium">มินิบอลวาล์ว ซันวา 1/2" ผผ.(20)</td>
+                        <td class="px-4 py-2 text-center text-gray-500">S01</td>
+                        <td class="px-4 py-2 text-center text-gray-500">ตัว</td>
+                        <td class="px-4 py-2 text-right">14</td>
+                        <td class="px-4 py-2 text-right">15</td>
+                        <td class="px-4 py-2 text-center"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">เกิน</span></td>
+                        <td class="px-4 py-2 text-right text-blue-600 font-medium">1</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 row-shortage">
+                        <td class="px-4 py-2 text-gray-600">L0-0017-01</td>
+                        <td class="px-4 py-2 font-medium">มินิบอลวาล์ว ซันวา 1/2" ผม.(20)</td>
+                        <td class="px-4 py-2 text-center text-gray-500">S01</td>
+                        <td class="px-4 py-2 text-center text-gray-500">ตัว</td>
+                        <td class="px-4 py-2 text-right">13</td>
+                        <td class="px-4 py-2 text-right">12</td>
+                        <td class="px-4 py-2 text-center"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">ขาด</span></td>
+                        <td class="px-4 py-2 text-right text-red-600 font-medium">-1</td>
+                    </tr>
+                    <!-- Highlighting some significant variances based on the image -->
+                    <tr class="hover:bg-gray-50 row-shortage bg-red-50">
+                        <td class="px-4 py-2 text-gray-600">L1-5003</td>
+                        <td class="px-4 py-2 font-medium">ยางรองขามิเตอร์</td>
+                        <td class="px-4 py-2 text-center text-gray-500">S01</td>
+                        <td class="px-4 py-2 text-center text-gray-500">อัน</td>
+                        <td class="px-4 py-2 text-right">90</td>
+                        <td class="px-4 py-2 text-right">45</td>
+                        <td class="px-4 py-2 text-center"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">ขาด</span></td>
+                        <td class="px-4 py-2 text-right text-red-600 font-bold">-45</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 row-shortage bg-red-50">
+                        <td class="px-4 py-2 text-gray-600">L3-0107</td>
+                        <td class="px-4 py-2 font-medium">สปริงเกอร์แบบ เสา-สาย</td>
+                        <td class="px-4 py-2 text-center text-gray-500">S01</td>
+                        <td class="px-4 py-2 text-center text-gray-500">ชุด</td>
+                        <td class="px-4 py-2 text-right">44</td>
+                        <td class="px-4 py-2 text-right">4</td>
+                        <td class="px-4 py-2 text-center"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">ขาด</span></td>
+                        <td class="px-4 py-2 text-right text-red-600 font-bold">-40</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 row-shortage bg-red-50">
+                        <td class="px-4 py-2 text-gray-600">L3-0109-01</td>
+                        <td class="px-4 py-2 font-medium">สปริงเกอร์ใบพัดสแตนเลส หมุนรอบตัว มีวาล์วพีวีซี 1/2"</td>
+                        <td class="px-4 py-2 text-center text-gray-500">S01</td>
+                        <td class="px-4 py-2 text-center text-gray-500">ตัว</td>
+                        <td class="px-4 py-2 text-right">98</td>
+                        <td class="px-4 py-2 text-right">46</td>
+                        <td class="px-4 py-2 text-center"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">ขาด</span></td>
+                        <td class="px-4 py-2 text-right text-red-600 font-bold">-52</td>
+                    </tr>
+                    <tr class="hover:bg-gray-50 row-overage">
+                        <td class="px-4 py-2 text-gray-600">L0-0311</td>
+                        <td class="px-4 py-2 font-medium">ก๊อกบอล ซันวา 1/2" (10)</td>
+                        <td class="px-4 py-2 text-center text-gray-500">S01</td>
+                        <td class="px-4 py-2 text-center text-gray-500">ตัว</td>
+                        <td class="px-4 py-2 text-right">2</td>
+                        <td class="px-4 py-2 text-right">22</td>
+                        <td class="px-4 py-2 text-center"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">เกิน</span></td>
+                        <td class="px-4 py-2 text-right text-blue-600 font-medium">20</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="text-xs text-gray-400 mt-2 text-right">* ข้อมูลที่แสดงเป็นเพียงข้อมูลตัวอย่างบางส่วนจากรายการทั้งหมด</p>
+    </div>
+
+    <footer class="mt-8 text-center text-gray-500 text-sm">
+        <p>สร้างเมื่อ: วันนี้ | ระบบจัดการสินค้าคงคลัง บริษัท พัฒนาสิน (หนองคาย) จำกัด</p>
+    </footer>
+<a href="caruseefficiency.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (caruse efficiency) ➜
+
+</body>
+</html>

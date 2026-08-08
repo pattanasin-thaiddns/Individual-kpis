@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปผลยอดขายแผนกขายปลีก (POS) - สาขาอุดรธานี</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Load FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Inter & Kanit for Thai) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Kanit', 'Inter', sans-serif;
+            /* Light, clean background pattern */
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(210, 100%, 93%, 1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(204, 100%, 86%, 1) 0, transparent 50%), 
+                radial-gradient(at 100% 100%, hsla(215, 88%, 93%, 1) 0, transparent 50%), 
+                radial-gradient(at 0% 100%, hsla(220, 100%, 93%, 1) 0, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #1e293b;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border-radius: 1.25rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Status colors */
+        .status-danger {
+            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+            color: #991b1b;
+        }
+        
+        .status-success {
+            background: linear-gradient(135deg, #bbf7d0 0%, #86efac 100%);
+            color: #166534;
+        }
+
+        .status-warning {
+            background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
+            color: #854d0e;
+        }
+        
+        .status-info {
+            background: linear-gradient(135deg, #bfdbfe 0%, #93c5fd 100%);
+            color: #1e40af;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        /* Staggered animation delays */
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 text-slate-800">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header -->
+        <header class="glass-panel p-6 mb-8 animate-fade-in flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-blue-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-lg shadow-blue-200">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</h1>
+                    <p class="text-slate-500 font-medium mt-1">Dashboard สรุปผลยอดขาย แผนกขายปลีก (POS) - สาขาอุดรธานี</p>
+                </div>
+            </div>
+            <div class="bg-white/80 px-5 py-2.5 rounded-full border border-slate-200 shadow-sm flex items-center gap-3">
+                <i class="fa-regular fa-calendar-days text-blue-600"></i>
+                <span class="font-semibold text-slate-700">ประจำเดือน กรกฎาคม</span>
+            </div>
+        </header>
+
+        <!-- Key Metrics Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Actual Sales -->
+            <div class="glass-panel p-6 animate-fade-in delay-100 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100 rounded-full blur-2xl -mr-10 -mt-10 opacity-60"></div>
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <p class="text-slate-500 text-sm font-medium mb-1">ยอดขายจริง (บาท)</p>
+                        <h2 class="text-3xl font-bold text-slate-800">432,854<span class="text-xl text-slate-500">.07</span></h2>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 mt-4">
+                    <span class="text-xs font-medium px-2.5 py-1 rounded-full status-danger flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-down"></i> 13.4%
+                    </span>
+                    <span class="text-slate-400 text-xs">เทียบกับเป้าหมาย</span>
+                </div>
+            </div>
+
+            <!-- Target Sales -->
+            <div class="glass-panel p-6 animate-fade-in delay-200 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-100 rounded-full blur-2xl -mr-10 -mt-10 opacity-60"></div>
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <p class="text-slate-500 text-sm font-medium mb-1">เป้าหมาย (บาท)</p>
+                        <h2 class="text-3xl font-bold text-slate-800">500,000<span class="text-xl text-slate-500">.00</span></h2>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                </div>
+                <div class="w-full bg-slate-200 rounded-full h-2 mt-6 overflow-hidden">
+                    <div class="bg-gradient-to-r from-blue-500 to-indigo-500 h-2 rounded-full" style="width: 86.6%"></div>
+                </div>
+                <p class="text-right text-xs text-slate-500 mt-2 font-medium">สำเร็จ 86.6%</p>
+            </div>
+
+            <!-- Total Bills -->
+            <div class="glass-panel p-6 animate-fade-in delay-300 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-100 rounded-full blur-2xl -mr-10 -mt-10 opacity-60"></div>
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <p class="text-slate-500 text-sm font-medium mb-1">จำนวนบิล (ใบเสร็จ)</p>
+                        <h2 class="text-3xl font-bold text-slate-800">2,274</h2>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-file-invoice"></i>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 mt-4">
+                    <span class="text-xs font-medium px-2.5 py-1 rounded-full status-success flex items-center gap-1">
+                        <i class="fa-solid fa-arrow-up"></i> สูง
+                    </span>
+                    <span class="text-slate-400 text-xs">ปริมาณลูกค้าเข้าร้านมาก</span>
+                </div>
+            </div>
+
+            <!-- Average per Bill -->
+            <div class="glass-panel p-6 animate-fade-in delay-400 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-rose-100 rounded-full blur-2xl -mr-10 -mt-10 opacity-60"></div>
+                <div class="flex justify-between items-start mb-4 relative z-10">
+                    <div>
+                        <p class="text-slate-500 text-sm font-medium mb-1">ยอดเฉลี่ยต่อบิล (บาท)</p>
+                        <h2 class="text-3xl font-bold text-slate-800">190<span class="text-xl text-slate-500">.35</span></h2>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 mt-4">
+                    <span class="text-xs font-medium px-2.5 py-1 rounded-full status-danger flex items-center gap-1">
+                        <i class="fa-solid fa-circle-exclamation"></i> ต่ำ
+                    </span>
+                    <span class="text-slate-400 text-xs">ต้องปรับปรุง (จุดอ่อนหลัก)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+            
+            <!-- Left Column: Charts -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Main Progress Chart -->
+                <div class="glass-panel p-6 animate-fade-in delay-200">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-blue-500"></i> เปรียบเทียบยอดขายและเป้าหมาย
+                        </h3>
+                        <div class="text-sm font-semibold text-rose-500 bg-rose-50 px-3 py-1 rounded-lg border border-rose-100">
+                            ผลต่าง: -67,145.93 บาท
+                        </div>
+                    </div>
+                    <div class="relative h-64 w-full">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Secondary Chart: Metrics Comparison -->
+                <div class="glass-panel p-6 animate-fade-in delay-300">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2 mb-6">
+                        <i class="fa-solid fa-scale-balanced text-indigo-500"></i> สัดส่วน จำนวนบิล vs มูลค่าเฉลี่ย
+                    </h3>
+                    <div class="relative h-48 w-full">
+                        <canvas id="metricsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Analysis & SWOT -->
+            <div class="space-y-6">
+                <!-- Summary Alert -->
+                <div class="glass-panel p-6 animate-fade-in delay-100 border-l-4 border-l-rose-500">
+                    <h3 class="text-lg font-bold text-slate-800 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass-chart text-slate-600"></i> สรุปผลการดำเนินงาน
+                    </h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        สาขาอุดรฯ (POS) เป็น <strong>แผนกเดียวที่ไม่ถึงเป้าหมาย</strong> โดยขาดเป้าไป 13.4% 
+                    </p>
+                    <div class="mt-4 bg-orange-50 rounded-xl p-4 border border-orange-100">
+                        <p class="text-sm text-orange-800">
+                            <i class="fa-solid fa-lightbulb text-orange-500 mr-1"></i>
+                            <strong>จุดที่น่าสังเกต:</strong> จำนวนบิลค่อนข้างสูง (2,274 บิล) แต่ยอดเฉลี่ยต่อบิลต่ำมากเพียง 190.35 บาท แสดงว่าลูกค้ามีการเข้าซื้อ แต่ซื้อสินค้าในมูลค่าต่อบิลต่ำ
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Strengths -->
+                <div class="glass-panel p-6 animate-fade-in delay-200">
+                    <h3 class="text-lg font-bold text-emerald-700 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-trend-up"></i> จุดแข็ง (Strengths)
+                    </h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3 text-sm text-slate-600">
+                            <div class="mt-1 bg-emerald-100 text-emerald-600 rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div>
+                            <span>มีฐานลูกค้าหน้าร้านจำนวนมาก</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-slate-600">
+                            <div class="mt-1 bg-emerald-100 text-emerald-600 rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-check text-xs"></i>
+                            </div>
+                            <span>มีความถี่ในการซื้อสูง (สะท้อนจากจำนวนบิลที่มาก)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Weaknesses & Opportunities -->
+                <div class="glass-panel p-6 animate-fade-in delay-300">
+                    <h3 class="text-lg font-bold text-rose-700 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-trend-down"></i> จุดอ่อน & โอกาสพัฒนา
+                    </h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-3 text-sm text-slate-600">
+                            <div class="mt-1 bg-rose-100 text-rose-600 rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-xmark text-xs"></i>
+                            </div>
+                            <span><strong>ยอดซื้อต่อบิลต่ำ:</strong> ลูกค้าซื้อของชิ้นเล็กหรือจำนวนน้อย</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-slate-600">
+                            <div class="mt-1 bg-blue-100 text-blue-600 rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-arrows-rotate text-xs"></i>
+                            </div>
+                            <span><strong>โอกาส:</strong> การขายพ่วง (Cross-selling) และการเสนอขายสินค้าเกี่ยวเนื่องยังมีโอกาสพัฒนาได้อีกมาก</span>
+                        </li>
+                        <li class="flex items-start gap-3 text-sm text-slate-600">
+                            <div class="mt-1 bg-amber-100 text-amber-600 rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">
+                                <i class="fa-solid fa-tag text-xs"></i>
+                            </div>
+                            <span><strong>โปรโมชั่น:</strong> ปัจจุบันอาจยังไม่ดึงดูดใจพอที่จะกระตุ้นการเพิ่มมูลค่าต่อบิล (Upselling) ควรพิจารณาโปรโมชั่นแบบ Bundle หรือซื้อครบรับส่วนลด</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="text-center text-slate-400 text-sm py-6 mt-4">
+            <p>&copy; 2026 บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด - Internal Confidential Document</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Set Chart.js defaults for aesthetics
+        Chart.defaults.font.family = "'Kanit', 'Inter', sans-serif";
+        Chart.defaults.color = '#64748b';
+        
+        // Ensure DOM is fully loaded before initializing charts
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 1. Sales vs Target Chart
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            
+            // Create gradients for bars
+            const actualGradient = salesCtx.createLinearGradient(0, 0, 0, 400);
+            actualGradient.addColorStop(0, '#3b82f6'); // blue-500
+            actualGradient.addColorStop(1, '#93c5fd'); // blue-300
+            
+            const targetGradient = salesCtx.createLinearGradient(0, 0, 0, 400);
+            targetGradient.addColorStop(0, '#6366f1'); // indigo-500
+            targetGradient.addColorStop(1, '#a5b4fc'); // indigo-300
+
+            new Chart(salesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['ผลประกอบการ กรกฎาคม'],
+                    datasets: [
+                        {
+                            label: 'ยอดขายจริง (บาท)',
+                            data: [432854.07],
+                            backgroundColor: actualGradient,
+                            borderRadius: 8,
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.8
+                        },
+                        {
+                            label: 'เป้าหมาย (บาท)',
+                            data: [500000.00],
+                            backgroundColor: '#e2e8f0', // slate-200 for target background
+                            borderWidth: 2,
+                            borderColor: '#94a3b8',
+                            borderDash: [5, 5],
+                            borderRadius: 8,
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: {
+                                    size: 13,
+                                    weight: '500'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#1e293b',
+                            bodyColor: '#334155',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 12,
+                            boxPadding: 6,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 600000,
+                            grid: {
+                                color: '#f1f5f9',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value / 1000 + 'k';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 2. Metrics Chart (Visualizing the paradox: High bills, Low average)
+            const metricsCtx = document.getElementById('metricsChart').getContext('2d');
+            
+            new Chart(metricsCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['จำนวนบิล (ปริมาณ)', 'ยอดเฉลี่ย/บิล (มูลค่า)'],
+                    datasets: [{
+                        label: 'ระดับเชิงเปรียบเทียบ',
+                        data: [90, 25], // Normalized data just for visual representation of "High" vs "Low"
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.8)', // emerald-500
+                            'rgba(244, 63, 94, 0.8)'   // rose-500
+                        ],
+                        borderRadius: 6,
+                        borderWidth: 0,
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const index = context.dataIndex;
+                                    if(index === 0) return ' 2,274 บิล (อยู่ในเกณฑ์สูง)';
+                                    return ' 190.35 บาท (อยู่ในเกณฑ์ต่ำ)';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            display: false,
+                            max: 100
+                        },
+                        y: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 13,
+                                    weight: '500'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+<a href="wholesales.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (whole sale) ➜
+</body>
+</html>

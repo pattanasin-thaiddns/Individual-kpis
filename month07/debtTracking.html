@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปผลติดตามการชำระหนี้ - พัฒนาสิน ไทยเทรดดิ้ง</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="bg-white rounded-xl shadow-md p-6 mb-6 flex flex-col md:flex-row justify-between items-center border-t-4 border-green-600">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Dashboard สรุปผลติดตามการชำระหนี้</h1>
+                <h2 class="text-lg text-gray-600 mt-1">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</h2>
+            </div>
+            <div class="mt-4 md:mt-0 bg-green-100 text-green-800 px-4 py-2 rounded-lg font-semibold">
+                ประจำเดือน กรกฎาคม 2026
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+            <!-- Card 1: บิลขายทั้งหมด -->
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+                <p class="text-sm text-gray-500 font-medium mb-1">บิลขายทั้งหมด</p>
+                <div class="flex items-end gap-2">
+                    <p class="text-3xl font-bold text-gray-800">520</p>
+                    <p class="text-gray-500 mb-1">บิล</p>
+                </div>
+            </div>
+
+            <!-- Card 2: บิลรับชำระทั้งหมด -->
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-indigo-500">
+                <p class="text-sm text-gray-500 font-medium mb-1">บิลรับชำระทั้งหมด</p>
+                <div class="flex items-end gap-2">
+                    <p class="text-3xl font-bold text-gray-800">522</p>
+                    <p class="text-gray-500 mb-1">บิล</p>
+                </div>
+            </div>
+
+            <!-- Card 3: บิลที่รับชำระทันกำหนด -->
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+                <p class="text-sm text-gray-500 font-medium mb-1">รับชำระทันกำหนด</p>
+                <div class="flex items-end gap-2">
+                    <p class="text-3xl font-bold text-green-600">448</p>
+                    <p class="text-gray-500 mb-1">บิล</p>
+                </div>
+            </div>
+
+            <!-- Card 4: บิลที่ชำระไม่ทันกำหนด -->
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500">
+                <p class="text-sm text-gray-500 font-medium mb-1">ชำระไม่ทันกำหนด</p>
+                <div class="flex items-end gap-2">
+                    <p class="text-3xl font-bold text-red-600">73</p>
+                    <p class="text-gray-500 mb-1">บิล</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">ผลการดำเนินงานเทียบเป้าหมาย (ก.ค. 2026)</h3>
+            <div class="flex flex-col md:flex-row items-center justify-around">
+                
+                <div class="flex flex-col items-center mb-6 md:mb-0">
+                    <div class="relative w-48 h-48">
+                        <canvas id="gaugeChart"></canvas>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-3xl font-bold text-green-600 mt-8">86.34%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center md:text-left space-y-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-600 mb-1">สูตรคำนวณ:</p>
+                        <div class="flex items-center text-sm">
+                            <div class="text-center mr-2">
+                                <span class="block border-b border-gray-400 px-2">จำนวนบิลที่ชำระทันกำหนด (448)</span>
+                                <span class="block px-2">จำนวนบิลขายทั้งหมด (520)</span>
+                            </div>
+                            <span> x 100 = <strong class="text-green-600 text-lg">86.34%</strong></span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 text-lg">
+                        <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg">
+                            <span class="font-medium">เป้าที่ตั้งไว้:</span> <strong>80%</strong>
+                        </div>
+                        <div class="bg-green-100 text-green-800 px-4 py-2 rounded-lg">
+                            <span class="font-medium">ทำได้จริง:</span> <strong>86.34%</strong>
+                        </div>
+                    </div>
+                    <p class="text-green-600 font-medium flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        บรรลุเป้าหมาย
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">แนวโน้มการรับชำระหนี้ทันกำหนด ประจำปี 2026</h3>
+            <div class="w-full h-80">
+                <canvas id="trendChart"></canvas>
+            </div>
+            
+            <div class="overflow-x-auto mt-6">
+                <table class="min-w-full text-sm text-left text-gray-500">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 rounded-tl-lg">เดือน</th>
+                            <th scope="col" class="px-6 py-3 text-center">ม.ค.</th>
+                            <th scope="col" class="px-6 py-3 text-center">ก.พ.</th>
+                            <th scope="col" class="px-6 py-3 text-center">มี.ค.</th>
+                            <th scope="col" class="px-6 py-3 text-center">เม.ย.</th>
+                            <th scope="col" class="px-6 py-3 text-center">พ.ค.</th>
+                            <th scope="col" class="px-6 py-3 text-center">มิ.ย.</th>
+                            <th scope="col" class="px-6 py-3 text-center bg-green-50">ก.ค.</th>
+                            <th scope="col" class="px-6 py-3 text-center rounded-tr-lg bg-gray-200 font-bold">รวม</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-white border-b">
+                            <td class="px-6 py-4 font-medium text-gray-900">บิลที่ชำระทันกำหนด</td>
+                            <td class="px-6 py-4 text-center">665</td>
+                            <td class="px-6 py-4 text-center">587</td>
+                            <td class="px-6 py-4 text-center">655</td>
+                            <td class="px-6 py-4 text-center">577</td>
+                            <td class="px-6 py-4 text-center">574</td>
+                            <td class="px-6 py-4 text-center">510</td>
+                            <td class="px-6 py-4 text-center bg-green-50 font-semibold text-green-700">448</td>
+                            <td class="px-6 py-4 text-center font-bold bg-gray-100">4,016</td>
+                        </tr>
+                        <tr class="bg-gray-50 border-b">
+                            <td class="px-6 py-4 font-medium text-gray-900">บิลขายทั้งหมด</td>
+                            <td class="px-6 py-4 text-center">863</td>
+                            <td class="px-6 py-4 text-center">734</td>
+                            <td class="px-6 py-4 text-center">773</td>
+                            <td class="px-6 py-4 text-center">662</td>
+                            <td class="px-6 py-4 text-center">651</td>
+                            <td class="px-6 py-4 text-center">600</td>
+                            <td class="px-6 py-4 text-center bg-green-50 font-semibold text-green-700">520</td>
+                            <td class="px-6 py-4 text-center font-bold bg-gray-100">4,803</td>
+                        </tr>
+                        <tr class="bg-white font-semibold">
+                            <td class="px-6 py-4 text-gray-900">ยอดสุทธิ (%)</td>
+                            <td class="px-6 py-4 text-center text-red-500">77.06%</td>
+                            <td class="px-6 py-4 text-center text-red-500">79.97%</td>
+                            <td class="px-6 py-4 text-center text-green-600">84.73%</td>
+                            <td class="px-6 py-4 text-center text-green-600">87.16%</td>
+                            <td class="px-6 py-4 text-center text-green-600">88.17%</td>
+                            <td class="px-6 py-4 text-center text-green-600">85.00%</td>
+                            <td class="px-6 py-4 text-center bg-green-100 text-green-700">86.15%</td>
+                            <td class="px-6 py-4 text-center bg-gray-200 text-gray-800">83.61%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Overdue by Days -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                    </svg>
+                    ลูกค้าค้างชำระนานเกินกำหนด (เรียงตามวัน)
+                </h3>
+                <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+                    
+                    <!-- Item 1 -->
+                    <div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-red-600">1. ร้านภัทรรุ่งเรืองค้าไม้</h4>
+                            <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-medium">เกิน 16 วัน</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-1"><strong>สาเหตุ:</strong> ลูกค้าให้ไปเก็บเงินสดที่ร้าน และรอรอบผ่านไปเส้นทางร้านลูกค้า</p>
+                        <p class="text-sm text-gray-600"><strong>วิธีแก้ไข:</strong> หากมีรอบผ่านและใกล้ถึงกำหนดให้บัญชีวางบิลและแจ้งลูกค้าไปเก็บเงินสดที่ร้าน</p>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-orange-600">2. หจก.จิตเจริญค้าไม้</h4>
+                            <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full font-medium">เกิน 7 วัน</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-1"><strong>สาเหตุ:</strong> ลูกค้าจะเขียนเช็คไว้ให้แล้วแจ้งไปรับเช็คที่ร้าน และรอรอบผ่านไปเส้นทางร้านลูกค้า</p>
+                        <p class="text-sm text-gray-600"><strong>วิธีแก้ไข:</strong> แจ้งให้ลูกค้าเขียนเช็คไว้ให้ก่อนถึงกำหนดชำระ และเช็ครอบจัดส่งที่ผ่านร้านลูกค้าเพื่อไปรับเช็ค</p>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-orange-600">3. หจก.ตระกูลเลิศก่อสร้าง</h4>
+                            <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full font-medium">เกิน 6 วัน</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-1"><strong>สาเหตุ:</strong> วางบิลทางไลน์ และ โทรแจ้งเตือน 3 ครั้ง แต่ลูกค้าไม่ได้โอนตามวันครบกำหนด</p>
+                        <p class="text-sm text-gray-600"><strong>วิธีแก้ไข:</strong> โทรแจ้งเตือนลูกค้าก่อนวันครบกำหนดประมาณ 5 วัน</p>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-red-600">4. ร้านวิเศษบาดาล</h4>
+                            <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-medium">เกิน 14 วัน</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-1"><strong>สาเหตุ:</strong> ลูกค้าจ่ายชำระล่าช้าเนื่องจากโทรมาแจ้งว่าขายของไม่ดี ทยอยจ่ายมา 2 รอบ</p>
+                        <p class="text-sm text-gray-600"><strong>วิธีแก้ไข:</strong> แจ้งให้ลูกค้าทยอยจ่ายมาก่อน และสอบถามวันนัดชำระ</p>
+                    </div>
+                    
+                    <!-- Item 5 -->
+                    <div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-orange-500">5. เงินสด*ป.ทวีค้าวัสดุ</h4>
+                            <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full font-medium">เกิน 9 วัน</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-1"><strong>สาเหตุ:</strong> แจ้งวางบิลและแจ้งเตือนลูกค้าทางไลน์ แต่ลูกค้าไม่ได้โอนตามวันครบกำหนดชำระ</p>
+                        <p class="text-sm text-gray-600"><strong>วิธีแก้ไข:</strong> โทรแจ้งลูกค้าก่อนใกล้ถึงวันครบกำหนด และสอบถามวันนัดชำระ</p>
+                    </div>
+                    
+                    <!-- Item 6 -->
+                    <div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 transition">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold text-orange-500">6. ร้านบ้านฝางการไฟฟ้า</h4>
+                            <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full font-medium">เกิน 8 วัน</span>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-1"><strong>สาเหตุ:</strong> วางบิลทางไลน์ไปลูกค้าแจ้งว่ารอเงินจากลูกค้าที่ค้างจ่ายอยู่</p>
+                        <p class="text-sm text-gray-600"><strong>วิธีแก้ไข:</strong> วางบิลแจ้งเตือนลูกค้าก่อนถึงวันครบกำหนด และนัดวันชำระ</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Overdue by Amount -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                    </svg>
+                    ลูกค้าค้างชำระนานเกินกำหนด (เรียงตามยอดเงิน)
+                </h3>
+                <div class="space-y-4">
+                    
+                    <!-- Top 1 -->
+                    <div class="flex items-center p-3 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
+                        <div class="flex-shrink-0 mr-4">
+                            <div class="w-10 h-10 bg-red-200 text-red-700 rounded-full flex items-center justify-center font-bold text-lg">1</div>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800">หจก.ศิริมงคลโฮมเซ็นเตอร์</h4>
+                            <p class="text-sm text-gray-500">เกินกำหนด 3 วัน</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-red-600">52,453</p>
+                            <p class="text-xs text-gray-500">บาท</p>
+                        </div>
+                    </div>
+
+                    <!-- Top 2 -->
+                    <div class="flex items-center p-3 bg-orange-50 border-l-4 border-orange-500 rounded-r-lg">
+                        <div class="flex-shrink-0 mr-4">
+                            <div class="w-10 h-10 bg-orange-200 text-orange-700 rounded-full flex items-center justify-center font-bold text-lg">2</div>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800">ห้างหุ้นส่วนจำกัด จิตเจริญค้าไม้</h4>
+                            <p class="text-sm text-gray-500">เกินกำหนด 7 วัน</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-orange-600">43,351</p>
+                            <p class="text-xs text-gray-500">บาท</p>
+                        </div>
+                    </div>
+
+                    <!-- Top 3 -->
+                    <div class="flex items-center p-3 bg-yellow-50 border-l-4 border-yellow-500 rounded-r-lg">
+                        <div class="flex-shrink-0 mr-4">
+                            <div class="w-10 h-10 bg-yellow-200 text-yellow-700 rounded-full flex items-center justify-center font-bold text-lg">3</div>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-800">บริษัท นวัตธาวิน จำกัด</h4>
+                            <p class="text-sm text-gray-500">เกินกำหนด 3 วัน</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold text-yellow-600">31,190.70</p>
+                            <p class="text-xs text-gray-500">บาท</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gauge Chart for Target
+            const gaugeCtx = document.getElementById('gaugeChart').getContext('2d');
+            new Chart(gaugeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['ทำได้', 'เป้าหมาย', 'ส่วนที่ขาด'],
+                    datasets: [{
+                        data: [86.34, 0, 13.66], // Target is 80%, achieved 86.34%. Visualizing filled portion vs remaining to 100%
+                        backgroundColor: [
+                            '#10B981', // Green for achieved
+                            '#F3F4F6', // Empty space
+                        ],
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    },
+                    animation: {
+                        animateRotate: true,
+                        animateScale: false
+                    }
+                },
+                plugins: [{
+                    id: 'gaugeTargetLine',
+                    afterDraw: (chart) => {
+                        const {ctx, chartArea: {top, bottom, left, right, width, height}} = chart;
+                        ctx.save();
+                        
+                        // Draw target line at 80%
+                        const targetPercent = 80;
+                        const angle = Math.PI + (Math.PI * (targetPercent / 100));
+                        
+                        const cx = left + width / 2;
+                        const cy = top + height; // Bottom center for semi-circle
+                        const radius = chart.innerRadius + (chart.outerRadius - chart.innerRadius) / 2;
+                        
+                        const x = cx + radius * Math.cos(angle);
+                        const y = cy + radius * Math.sin(angle);
+                        
+                        // Draw line
+                        ctx.beginPath();
+                        ctx.moveTo(cx, cy);
+                        ctx.lineTo(x, y);
+                        ctx.lineWidth = 2;
+                        ctx.strokeStyle = '#EF4444'; // Red line for target
+                        ctx.stroke();
+                        
+                        // Draw label for target line
+                        const labelX = cx + (radius + 20) * Math.cos(angle);
+                        const labelY = cy + (radius + 20) * Math.sin(angle);
+                        ctx.fillStyle = '#EF4444';
+                        ctx.font = 'bold 12px sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText('เป้า 80%', labelX, labelY);
+                        
+                        ctx.restore();
+                    }
+                }]
+            });
+
+            // Trend Chart for Yearly Data
+            const trendCtx = document.getElementById('trendChart').getContext('2d');
+            new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.'],
+                    datasets: [
+                        {
+                            label: 'เป้าหมาย (%)',
+                            data: [80, 80, 80, 80, 80, 80, 80],
+                            borderColor: '#EF4444',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            fill: false,
+                            tension: 0
+                        },
+                        {
+                            label: 'ยอดสุทธิ (%)',
+                            data: [77.06, 79.97, 84.73, 87.16, 88.17, 85.00, 86.15],
+                            borderColor: '#3B82F6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#3B82F6',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#3B82F6',
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            min: 60,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            grid: {
+                                color: '#e5e7eb',
+                                drawBorder: false
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                }
+            });
+        });
+    </script>
+<a href="retailsales.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (retail sales) ➜
+</body>
+</html>

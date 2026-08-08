@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายงานยอดขาย เดือนกรกฎาคม - บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</title>
+    <!-- โหลด Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- โหลด Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- โหลดฟอนต์ Noto Sans Thai -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans Thai', sans-serif;
+            background-color: #f3f4f6; /* โทนเทาอ่อนสบายตา */
+            background-image: radial-gradient(circle at 100% 0%, #e0e7ff 0%, transparent 25%),
+                              radial-gradient(circle at 0% 100%, #fce7f3 0%, transparent 25%);
+            background-attachment: fixed;
+            color: #334155;
+            min-height: 100vh;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+            border-radius: 1.25rem;
+        }
+        .highlight-panel {
+            background: linear-gradient(135deg, #4c1d95 0%, #7e22ce 100%);
+            box-shadow: 0 20px 40px -10px rgba(126, 34, 206, 0.4);
+            color: white;
+            border-radius: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .highlight-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            transform: rotate(30deg);
+            pointer-events: none;
+        }
+        /* Animations */
+        .fade-in-up {
+            animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="p-4 md:p-6 lg:p-8">
+
+<div class="max-w-7xl mx-auto space-y-6">
+    
+    <!-- ส่วนหัว (Header) -->
+    <header class="fade-in-up flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
+        <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-violet-100 text-violet-700 rounded-full text-xs font-bold tracking-wider uppercase mb-3 shadow-sm border border-violet-200">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-violet-500"></span>
+                </span>
+                ข้อมูลล่าสุด: กรกฎาคม
+            </div>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 tracking-tight">รายงานยอดขายออนไลน์</h1>
+            <p class="text-slate-500 mt-2 font-medium">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | อัปเดตประจำเดือน กรกฎาคม</p>
+        </div>
+        <div class="glass-panel px-5 py-2.5 flex items-center shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span class="text-sm font-semibold text-slate-600">วันทำงาน: <span class="text-violet-600 font-bold" id="headerWorkDays">26 วัน</span></span>
+        </div>
+    </header>
+
+    <!-- ไฮไลท์หลัก: เดือนกรกฎาคม -->
+    <div class="highlight-panel p-6 md:p-8 fade-in-up delay-100 grid grid-cols-1 lg:grid-cols-3 gap-8 items-center border border-violet-500/30">
+        
+        <!-- ซ้าย: ยอดขายรวม -->
+        <div class="lg:col-span-1 flex flex-col justify-center text-center lg:text-left relative z-10">
+            <p class="text-violet-200 font-medium mb-1 uppercase tracking-wide text-sm">ยอดขายทำได้จริง (กรกฎาคม)</p>
+            <div class="text-5xl lg:text-6xl font-black text-white mb-3 drop-shadow-md" id="julSales">฿0</div>
+            
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 mt-2">
+                <span class="bg-rose-500 text-white text-sm px-3 py-1.5 rounded-lg font-bold shadow-sm flex items-center gap-1 border border-rose-400" id="julStatusBadge">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                    </svg>
+                    ต่ำกว่าเป้า
+                </span>
+                <span class="text-violet-100 text-sm font-medium">จากเป้าหมาย: <span id="julTarget" class="text-white font-bold">฿0</span></span>
+            </div>
+        </div>
+        
+        <!-- ขวา: ข้อมูลย่อย & Progress -->
+        <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+            <!-- ยอดเฉลี่ยต่อวัน -->
+            <div class="bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/20">
+                <div class="flex justify-between items-start mb-2">
+                    <p class="text-violet-200 text-sm font-medium">ยอดสะสมเป้า/วัน</p>
+                    <div class="p-1.5 bg-white/20 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-2xl font-bold text-white" id="julTargetPerDay">฿0</p>
+                <p class="text-xs text-violet-300 mt-2">เฉลี่ยต่อวันทำงาน (26 วัน)</p>
+            </div>
+
+            <!-- ความสำเร็จ (Progress) -->
+            <div class="bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/20 flex flex-col justify-center">
+                <div class="flex justify-between items-end mb-2">
+                    <p class="text-violet-200 text-sm font-medium">อัตราความสำเร็จ</p>
+                    <p class="text-3xl font-bold text-white" id="julAchieveRate">0%</p>
+                </div>
+                <div class="w-full bg-black/20 rounded-full h-3 mt-2 overflow-hidden border border-white/10">
+                    <div class="bg-gradient-to-r from-fuchsia-400 to-rose-400 h-full rounded-full relative transition-all duration-1500 ease-out" style="width: 0%" id="julProgressBar">
+                        <div class="absolute inset-0 bg-white/30 animate-pulse"></div>
+                    </div>
+                </div>
+                <p class="text-xs text-violet-300 mt-2 text-right">ขาดอีก <span id="julMissing" class="text-white font-semibold">฿0</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- แถวกราฟ และ สถิติเปรียบเทียบ -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-in-up delay-200">
+        
+        <!-- กราฟเปรียบเทียบ 7 เดือน -->
+        <div class="glass-panel p-6 lg:col-span-2">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                    </svg>
+                    แนวโน้มยอดขาย (ม.ค. - ก.ค.)
+                </h2>
+                <span class="text-xs font-semibold text-slate-500 bg-slate-200/70 px-2 py-1 rounded-md">อัปเดตล่าสุด: ก.ค.</span>
+            </div>
+            <div class="relative w-full h-[300px]">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- การ์ดสถิติย่อย -->
+        <div class="flex flex-col gap-6">
+            <!-- การ์ดเปรียบเทียบเดือนก่อนหน้า -->
+            <div class="glass-panel p-6 flex-1 border-t-4 border-t-blue-500">
+                <h3 class="text-sm font-bold text-slate-500 uppercase mb-4">เทียบกับเดือนก่อนหน้า (มิ.ย.)</h3>
+                
+                <div class="flex justify-between items-end mb-2">
+                    <div>
+                        <p class="text-3xl font-black text-slate-800">338,096</p>
+                        <p class="text-xs font-medium text-slate-400 mt-1">ยอดเดือน ก.ค.</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="inline-flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md text-sm font-bold">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                            </svg>
+                            +9.4%
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="border-t border-slate-200 mt-4 pt-4 flex justify-between">
+                    <span class="text-sm text-slate-500">ยอดเดือน มิ.ย.</span>
+                    <span class="text-sm font-bold text-slate-700">309,011 บาท</span>
+                </div>
+            </div>
+            
+            <!-- การ์ดเป้าหมายรวม 7 เดือน -->
+            <div class="glass-panel p-6 flex-1 border-t-4 border-t-indigo-500">
+                <h3 class="text-sm font-bold text-slate-500 uppercase mb-4">สถานะเป้าหมายสะสม 7 เดือน</h3>
+                <div class="flex justify-between items-end mb-2">
+                    <div>
+                        <p class="text-2xl font-black text-slate-800">102.2%</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-indigo-600 font-bold text-sm">เกินเป้าสะสม</span>
+                    </div>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2 mt-2">
+                    <div class="bg-indigo-500 h-2 rounded-full" style="width: 100%"></div>
+                </div>
+                <p class="text-xs text-slate-400 mt-3 text-center">แม้ ก.ค. จะไม่ถึงเป้า แต่ยอดรวม 7 เดือนยังเกินเป้าหมายอยู่</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ส่วนตารางข้อมูล -->
+    <div class="glass-panel overflow-hidden fade-in-up delay-300 mb-8">
+        <div class="px-6 py-5 border-b border-slate-200 flex justify-between items-center bg-white/50">
+            <h2 class="text-lg font-bold text-slate-800">ข้อมูลสถิติรายเดือน (มกราคม - กรกฎาคม)</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left whitespace-nowrap">
+                <thead>
+                    <tr class="bg-slate-50/80 text-slate-500 text-xs uppercase tracking-wider">
+                        <th class="px-6 py-4 font-bold border-b border-slate-200">เดือน</th>
+                        <th class="px-6 py-4 font-bold border-b border-slate-200 text-center">วันทำงาน</th>
+                        <th class="px-6 py-4 font-bold border-b border-slate-200 text-right">ทำได้จริง (บาท)</th>
+                        <th class="px-6 py-4 font-bold border-b border-slate-200 text-right">เป้าหมาย (บาท)</th>
+                        <th class="px-6 py-4 font-bold border-b border-slate-200 text-right">ยอดเป้า/วัน (บาท)</th>
+                        <th class="px-6 py-4 font-bold border-b border-slate-200 text-center">สถานะ</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm divide-y divide-slate-100" id="tableBody">
+                    <!-- ข้อมูลถูกสร้างผ่าน JS -->
+                </tbody>
+                <tfoot>
+                    <tr class="bg-violet-50/50 font-bold text-slate-800 border-t-2 border-slate-200">
+                        <td class="px-6 py-4">รวม 7 เดือน</td>
+                        <td class="px-6 py-4 text-center" id="sumDays">-</td>
+                        <td class="px-6 py-4 text-right text-violet-700 text-base" id="sumSales">-</td>
+                        <td class="px-6 py-4 text-right" id="sumTarget">-</td>
+                        <td class="px-6 py-4 text-right text-slate-400 text-xs font-normal">N/A</td>
+                        <td class="px-6 py-4 text-center"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- ส่วนข้อเสนอแนะและแนวทางเชิงกลยุทธ์ -->
+    <div class="glass-panel p-6 lg:p-8 fade-in-up delay-400 mb-8 bg-gradient-to-br from-white/80 to-violet-50/50">
+        <div class="flex items-center gap-3 mb-6 border-b border-violet-100 pb-4">
+            <div class="p-2 bg-violet-600 rounded-lg text-white shadow-md">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            <div>
+                <h2 class="text-xl font-extrabold text-slate-800">ข้อเสนอแนะและแนวทางกระตุ้นยอดขาย (Action Plan)</h2>
+                <p class="text-sm text-slate-500 font-medium">กลยุทธ์สำหรับปรับใช้ในช่วงครึ่งปีหลัง เพื่อรักษาเสถียรภาพและเพิ่มยอดขาย</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- กลยุทธ์ด้านลูกค้า -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-16 h-16 bg-blue-50 rounded-bl-full -z-10"></div>
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="p-1.5 bg-blue-100 text-blue-600 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg></div>
+                    <h3 class="font-bold text-slate-800">1. กลยุทธ์ด้านลูกค้า (Customer)</h3>
+                </div>
+                <ul class="space-y-2 text-sm text-slate-600 ml-1">
+                    <li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5">•</span> <b>ทำ CRM ลูกค้าใหม่:</b> ติดตามลูกค้าใหม่ (เช่น หจก.นวัตกรรมฯ) เสนอโปรฯ ซื้อซ้ำใน 30-60 วัน</li>
+                    <li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5">•</span> <b>B2B (องค์กร):</b> เสนอขายแบบ Bundle ยกลัง หรือสัญญาล่วงหน้า การันตียอดรายเดือน</li>
+                    <li class="flex items-start gap-2"><span class="text-blue-500 mt-0.5">•</span> <b>B2C (รายย่อย):</b> จัด Flash Sale สิ้นเดือน หรือ "ซื้อ 3 ชิ้นถูกกว่า" เพื่อเติมยอดรายวัน</li>
+                </ul>
+            </div>
+
+            <!-- กลยุทธ์ด้านสินค้าและโปรโมชั่น -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-16 h-16 bg-rose-50 rounded-bl-full -z-10"></div>
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="p-1.5 bg-rose-100 text-rose-600 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" /></svg></div>
+                    <h3 class="font-bold text-slate-800">2. กลยุทธ์สินค้าและโปรโมชั่น</h3>
+                </div>
+                <ul class="space-y-2 text-sm text-slate-600 ml-1">
+                    <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">•</span> <b>ถอดบทเรียน Success Case:</b> วิเคราะห์เดือน มี.ค. (ยอดพุ่ง 1.19 ล้าน) ว่าสินค้าใด/แคมเปญใดขายดี และนำมาทำซ้ำ</li>
+                    <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">•</span> <b>โปรโมชั่น Low Season:</b> มอบของแถม/ส่งฟรี กระตุ้นการซื้อในช่วงหน้าฝน หรือตลาดซบเซา</li>
+                    <li class="flex items-start gap-2"><span class="text-rose-500 mt-0.5">•</span> <b>ระบายสต็อก (Clearance):</b> ลดราคาสินค้าที่เคลื่อนไหวช้า เพื่อเปลี่ยนเป็นกระแสเงินสด</li>
+                </ul>
+            </div>
+
+            <!-- กลยุทธ์ช่องทางออนไลน์ -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-16 h-16 bg-emerald-50 rounded-bl-full -z-10"></div>
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="p-1.5 bg-emerald-100 text-emerald-600 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg></div>
+                    <h3 class="font-bold text-slate-800">3. ช่องทางออนไลน์ (Online)</h3>
+                </div>
+                <ul class="space-y-2 text-sm text-slate-600 ml-1">
+                    <li class="flex items-start gap-2"><span class="text-emerald-500 mt-0.5">•</span> <b>เพิ่มการมองเห็น (Visibility):</b> เพิ่มความถี่คอนเทนต์, Live สด, วิดีโอสั้น เพื่อรักษา Engagement</li>
+                    <li class="flex items-start gap-2"><span class="text-emerald-500 mt-0.5">•</span> <b>Remarketing Ads:</b> ยิงโฆษณาซ้ำไปหาคนที่เคยทักแชทแต่ยังไม่ซื้อ พร้อมเสนอส่วนลดพิเศษเฉพาะกลุ่ม (Personalized Offer)</li>
+                </ul>
+            </div>
+
+            <!-- กลยุทธ์การบริหารจัดการ -->
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-16 h-16 bg-amber-50 rounded-bl-full -z-10"></div>
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="p-1.5 bg-amber-100 text-amber-600 rounded-md"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg></div>
+                    <h3 class="font-bold text-slate-800">4. การบริหารจัดการภายใน</h3>
+                </div>
+                <ul class="space-y-2 text-sm text-slate-600 ml-1">
+                    <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">•</span> <b>เป้าหมายรายสัปดาห์ (Weekly Target):</b> สรุปยอด/วางแผนทุกสัปดาห์ หากสัปดาห์แรกยอดไม่ถึงเป้า ต้องรีบปล่อยโปรฯ ทันที</li>
+                    <li class="flex items-start gap-2"><span class="text-amber-500 mt-0.5">•</span> <b>ทบทวน KPI & Incentive:</b> สร้างแรงจูงใจให้ทีมเซลส์ โดยเพิ่มคอมมิชชั่นแบบขั้นบันไดหากปิดลูกค้ารายใหม่ หรือทำยอดถึงเป้ารายสัปดาห์</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="mt-6 bg-slate-100/70 p-3 rounded-lg border border-slate-200 text-xs text-slate-500 text-center flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            คำแนะนำ: หากยอดขายตกลงอย่างมีนัยสำคัญ (ลดลงเกิน 30% ติดต่อกัน 2 เดือน) ควรพิจารณาทบทวนกลยุทธ์ด้านช่องทางการขายแบบเร่งด่วน
+        </div>
+    </div>
+</div>
+
+<script>
+    // ข้อมูลตั้งแต่ ม.ค. - ก.ค. (รวมข้อมูลใหม่จากภาพ)
+    const rawData = [
+        { month: 'มกราคม', workDays: 26, actual: 668691, target: 600000, targetPerDay: 23077 },
+        { month: 'กุมภาพันธ์', workDays: 24, actual: 402238, target: 600000, targetPerDay: 23077 },
+        { month: 'มีนาคม', workDays: 26, actual: 1191760, target: 600000, targetPerDay: 23077 },
+        { month: 'เมษายน', workDays: 22, actual: 403079, target: 500000, targetPerDay: 22727 },
+        { month: 'พฤษภาคม', workDays: 25, actual: 672185, target: 600000, targetPerDay: 24000 },
+        { month: 'มิถุนายน', workDays: 26, actual: 309011, target: 500000, targetPerDay: 19231 },
+        { month: 'กรกฎาคม', workDays: 26, actual: 338096, target: 500000, targetPerDay: 19231 } // ข้อมูลล่าสุด
+    ];
+
+    // Helpers
+    const formatCurrency = (num) => new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0 }).format(num);
+    const formatNumber = (num) => new Intl.NumberFormat('th-TH').format(num);
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- 1. อัปเดตข้อมูล Highlight กรกฎาคม ---
+        const julyData = rawData.find(d => d.month === 'กรกฎาคม');
+        const isJulySuccess = julyData.actual >= julyData.target;
+        const julyAchieveRate = ((julyData.actual / julyData.target) * 100).toFixed(1);
+        const missingAmount = julyData.target - julyData.actual;
+
+        document.getElementById('julSales').textContent = formatCurrency(julyData.actual);
+        document.getElementById('julTarget').textContent = formatCurrency(julyData.target);
+        document.getElementById('julTargetPerDay').textContent = formatCurrency(julyData.targetPerDay);
+        document.getElementById('julAchieveRate').textContent = `${julyAchieveRate}%`;
+        document.getElementById('julMissing').textContent = missingAmount > 0 ? formatCurrency(missingAmount) : '฿0';
+
+        // Animate Progress Bar
+        setTimeout(() => {
+            document.getElementById('julProgressBar').style.width = `${Math.min(julyAchieveRate, 100)}%`;
+        }, 400);
+
+        // --- 2. สร้างข้อมูลตาราง ---
+        let totalSales = 0, totalTarget = 0, totalWorkDays = 0;
+        const tableBody = document.getElementById('tableBody');
+
+        rawData.forEach((row, index) => {
+            totalSales += row.actual;
+            totalTarget += row.target;
+            totalWorkDays += row.workDays;
+
+            const isCurrentMonth = row.month === 'กรกฎาคม';
+            const isMetTarget = row.actual >= row.target;
+            
+            const tr = document.createElement('tr');
+            // ไฮไลท์แถวของเดือนกรกฎาคม
+            tr.className = isCurrentMonth 
+                ? 'bg-violet-50/60 border-l-4 border-violet-500 shadow-sm relative z-10' 
+                : 'hover:bg-slate-50 transition-colors border-l-4 border-transparent';
+
+            const actualColorClass = isMetTarget ? 'text-emerald-600' : 'text-rose-500';
+            
+            // Icon สถานะ
+            const statusIcon = isMetTarget 
+                ? `<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 shadow-sm"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg></span>`
+                : `<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-rose-100 text-rose-500 shadow-sm"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></span>`;
+
+            // เพิ่ม Tag เดือนล่าสุด
+            const monthText = isCurrentMonth 
+                ? `<span class="font-bold text-violet-800">${row.month}</span> <span class="ml-2 text-[10px] bg-violet-600 text-white px-2 py-0.5 rounded-full uppercase font-bold tracking-wider">ล่าสุด</span>` 
+                : `<span class="font-medium text-slate-700">${row.month}</span>`;
+
+            tr.innerHTML = `
+                <td class="px-6 py-4">${monthText}</td>
+                <td class="px-6 py-4 text-center text-slate-500">${row.workDays}</td>
+                <td class="px-6 py-4 text-right font-bold ${actualColorClass}">${formatNumber(row.actual)}</td>
+                <td class="px-6 py-4 text-right text-slate-600">${formatNumber(row.target)}</td>
+                <td class="px-6 py-4 text-right text-slate-500">${formatNumber(row.targetPerDay)}</td>
+                <td class="px-6 py-4 text-center">${statusIcon}</td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+        // อัปเดตผลรวมตาราง
+        document.getElementById('sumDays').textContent = totalWorkDays;
+        document.getElementById('sumSales').textContent = formatCurrency(totalSales);
+        document.getElementById('sumTarget').textContent = formatCurrency(totalTarget);
+
+        // --- 3. ตั้งค่า Chart.js ---
+        Chart.defaults.font.family = "'Noto Sans Thai', sans-serif";
+        const ctx = document.getElementById('trendChart').getContext('2d');
+
+        // ตกแต่งสีกราฟ: แยกสีเดือนล่าสุดให้เด่นชัด
+        const actualColors = rawData.map(d => {
+            const isLatest = d.month === 'กรกฎาคม';
+            if (isLatest) {
+                return 'rgba(139, 92, 246, 0.9)'; // Violet สำหรับ ก.ค.
+            }
+            return d.actual >= d.target ? 'rgba(16, 185, 129, 0.3)' : 'rgba(244, 63, 94, 0.3)'; // เขียว/แดง อ่อนๆ สำหรับเดือนเก่า
+        });
+
+        const actualBorderColors = rawData.map(d => {
+            const isLatest = d.month === 'กรกฎาคม';
+            if (isLatest) return 'rgb(109, 40, 217)';
+            return d.actual >= d.target ? 'rgb(16, 185, 129)' : 'rgb(244, 63, 94)';
+        });
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: rawData.map(d => d.month),
+                datasets: [
+                    {
+                        label: 'ยอดขายทำได้จริง',
+                        data: rawData.map(d => d.actual),
+                        backgroundColor: actualColors,
+                        borderColor: actualBorderColors,
+                        borderWidth: 1.5,
+                        borderRadius: 6,
+                        order: 2,
+                        barPercentage: 0.6
+                    },
+                    {
+                        label: 'เป้าหมาย',
+                        data: rawData.map(d => d.target),
+                        type: 'line',
+                        borderColor: 'rgba(71, 85, 105, 0.6)', // Slate แบบขรึมๆ
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointBackgroundColor: 'white',
+                        pointBorderColor: 'rgb(71, 85, 105)',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        order: 1,
+                        tension: 0.1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { usePointStyle: true, padding: 20, font: { size: 13 } }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleFont: { size: 14, family: "'Noto Sans Thai'" },
+                        bodyFont: { size: 13, family: "'Noto Sans Thai'" },
+                        padding: 12,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) label += ': ';
+                                if (context.parsed.y !== null) label += formatCurrency(context.parsed.y);
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,0,0,0.03)', drawBorder: false },
+                        ticks: {
+                            callback: function(value) {
+                                if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
+                                if (value >= 1000) return (value / 1000) + 'k';
+                                return value;
+                            }
+                        }
+                    },
+                    x: {
+                        grid: { display: false, drawBorder: false }
+                    }
+                },
+                animation: { duration: 1500, easing: 'easeOutQuart' }
+            }
+        });
+    });
+</script>
+<a href="newproduct.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;   หน้าถัดไป (new product) ➜
+
+</body>
+</html>

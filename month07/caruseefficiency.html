@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard ประสิทธิภาพการใช้รถบรรทุก - พัฒนาสิน ไทยเทรดดิ้ง</title>
+    <!-- Import Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Import Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Import Google Fonts (Kanit for Thai text) -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#4F46E5', // Indigo 600
+                        secondary: '#10B981', // Emerald 500
+                        danger: '#EF4444', // Red 500
+                        warning: '#F59E0B', // Amber 500
+                        info: '#3B82F6', // Blue 500
+                        dark: '#1E293B', // Slate 800
+                        light: '#F8FAFC', // Slate 50
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f1f5f9;
+            color: #334155;
+        }
+        .card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-gradient-primary {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+        }
+        .bg-gradient-success {
+            background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+        }
+        .bg-gradient-warning {
+            background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+        }
+        .bg-gradient-danger {
+            background: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
+        }
+        
+        /* Custom Table Styles */
+        .custom-table th {
+            background-color: #f8fafc;
+            color: #475569;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .custom-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+        }
+        .custom-table tr:last-child td {
+            border-bottom: none;
+        }
+        .custom-table tr:hover td {
+            background-color: #f1f5f9;
+        }
+        
+        /* Progress bar animation */
+        @keyframes fillProgress {
+            from { width: 0; }
+        }
+        .progress-bar-fill {
+            animation: fillProgress 1.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased p-4 md:p-8">
+
+<div class="max-w-7xl mx-auto space-y-6">
+    
+    <!-- Header Section -->
+    <header class="flex flex-col md:flex-row justify-between items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-8">
+        <div class="flex items-center gap-4 mb-4 md:mb-0">
+            <div class="w-16 h-16 rounded-xl bg-gradient-primary flex items-center justify-center text-white text-2xl shadow-lg">
+                <i class="fa-solid fa-truck-fast"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-dark tracking-tight">รายงานผลประสิทธิภาพการใช้รถบรรทุก</h1>
+                <p class="text-lg text-slate-500 font-medium">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="bg-indigo-50 px-5 py-3 rounded-xl border border-indigo-100 flex items-center gap-3">
+                <i class="fa-regular fa-calendar text-indigo-500 text-xl"></i>
+                <div>
+                    <p class="text-xs text-indigo-400 font-semibold uppercase">ประจำเดือน</p>
+                    <p class="text-lg font-bold text-indigo-700">กรกฎาคม 2569</p>
+                </div>
+            </div>
+            <div class="bg-emerald-50 px-5 py-3 rounded-xl border border-emerald-100 flex items-center gap-3">
+                <i class="fa-solid fa-bullseye text-emerald-500 text-xl"></i>
+                <div>
+                    <p class="text-xs text-emerald-500 font-semibold uppercase">เป้าหมายประสิทธิภาพ</p>
+                    <p class="text-lg font-bold text-emerald-700">> 85.00%</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Summary KPIs -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- KPI 1: Average Load -->
+        <div class="card p-6 border-l-4 border-primary relative overflow-hidden">
+            <div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/10 rounded-full blur-xl"></div>
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-sm font-medium text-slate-500 mb-1">การบรรทุกเฉลี่ยรวม</p>
+                    <h2 class="text-4xl font-bold text-dark">78.60<span class="text-2xl text-slate-400">%</span></h2>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl">
+                    <i class="fa-solid fa-percent"></i>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="flex justify-between text-xs mb-1">
+                    <span class="text-danger font-medium"><i class="fa-solid fa-arrow-down mr-1"></i>ต่ำกว่าเป้าหมาย 6.40%</span>
+                    <span class="text-slate-400">เป้า: 85%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2.5">
+                    <div class="bg-gradient-to-r from-orange-400 to-red-500 h-2.5 rounded-full progress-bar-fill" style="width: 78.6%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI 2: Total Trips -->
+        <div class="card p-6 border-l-4 border-info relative overflow-hidden">
+             <div class="absolute -right-4 -top-4 w-24 h-24 bg-info/10 rounded-full blur-xl"></div>
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-sm font-medium text-slate-500 mb-1">รวมเที่ยวทั้งหมด</p>
+                    <h2 class="text-4xl font-bold text-dark">50<span class="text-lg text-slate-400 font-normal ml-1">เที่ยว</span></h2>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-info/10 flex items-center justify-center text-info text-xl">
+                    <i class="fa-solid fa-route"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-sm text-slate-500">
+                <i class="fa-solid fa-truck mr-2"></i> รถที่ใช้งาน: 5 คัน
+            </div>
+        </div>
+
+        <!-- KPI 3: Total Weight -->
+        <div class="card p-6 border-l-4 border-warning relative overflow-hidden">
+             <div class="absolute -right-4 -top-4 w-24 h-24 bg-warning/10 rounded-full blur-xl"></div>
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-sm font-medium text-slate-500 mb-1">น้ำหนักรวมทั้งหมด</p>
+                    <h2 class="text-4xl font-bold text-dark">303.35<span class="text-lg text-slate-400 font-normal ml-1">ตัน</span></h2>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-warning/10 flex items-center justify-center text-warning text-xl">
+                    <i class="fa-solid fa-weight-scale"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-sm text-slate-500">
+                <i class="fa-solid fa-scale-balanced mr-2"></i> เฉลี่ย 6.06 ตัน/เที่ยว
+            </div>
+        </div>
+
+        <!-- KPI 4: Full/Not Full Status -->
+        <div class="card p-6 border-l-4 border-secondary relative overflow-hidden">
+             <div class="absolute -right-4 -top-4 w-24 h-24 bg-secondary/10 rounded-full blur-xl"></div>
+            <div class="flex justify-between items-start mb-2">
+                <div>
+                    <p class="text-sm font-medium text-slate-500 mb-1">สถานะการบรรทุก (ทั้งวัน)</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center text-secondary text-xl">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4 mt-2">
+                <div class="text-center p-2 bg-emerald-50 rounded-lg">
+                    <p class="text-xs text-emerald-600 font-semibold mb-1">เต็มคัน</p>
+                    <p class="text-2xl font-bold text-emerald-700">23</p>
+                </div>
+                <div class="text-center p-2 bg-rose-50 rounded-lg">
+                    <p class="text-xs text-rose-600 font-semibold mb-1">ไม่เต็มคัน</p>
+                    <p class="text-2xl font-bold text-rose-700">21</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        
+        <!-- Chart Section -->
+        <div class="xl:col-span-1 flex flex-col gap-6">
+            <div class="card p-6 flex-1">
+                <h3 class="text-lg font-bold text-dark border-b pb-4 mb-4 flex items-center">
+                    <i class="fa-solid fa-chart-column text-primary mr-2"></i> % การบรรทุกเฉลี่ยรายคัน
+                </h3>
+                <div class="relative h-64 w-full">
+                    <canvas id="efficiencyChart"></canvas>
+                </div>
+                <div class="mt-4 p-4 bg-slate-50 rounded-lg border border-slate-100 text-sm">
+                    <p class="font-semibold text-slate-700 mb-2"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> ข้อสังเกต:</p>
+                    <ul class="list-disc pl-5 space-y-1 text-slate-600">
+                        <li>มีรถ <span class="font-bold text-emerald-600">2 คัน</span> ที่ทำผลงานได้ตามเป้า (>85%) คือ พี่หมาน และ นำโชค</li>
+                        <li>รถ "มารวย" ยังไม่มีผลงานในเดือนนี้ (0 เที่ยว)</li>
+                    </ul>
+                </div>
+            </div>
+            
+             <div class="card p-6">
+                <h3 class="text-lg font-bold text-dark border-b pb-4 mb-4 flex items-center">
+                    <i class="fa-solid fa-chart-pie text-info mr-2"></i> สัดส่วนจำนวนเที่ยวรายคัน
+                </h3>
+                <div class="relative h-48 w-full flex justify-center">
+                    <canvas id="tripsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table Section -->
+        <div class="xl:col-span-2 card p-0 overflow-hidden flex flex-col">
+            <div class="p-6 border-b border-slate-100 flex justify-between items-center bg-white">
+                <h3 class="text-lg font-bold text-dark flex items-center">
+                    <i class="fa-solid fa-table-list text-primary mr-2"></i> รายละเอียดการใช้รถบรรทุก
+                </h3>
+                <button class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 px-4 rounded-lg font-medium transition-colors" onclick="window.print()">
+                    <i class="fa-solid fa-print mr-1"></i> พิมพ์รายงาน
+                </button>
+            </div>
+            
+            <div class="overflow-x-auto p-4">
+                <table class="w-full text-left border-collapse custom-table whitespace-nowrap">
+                    <thead>
+                        <tr>
+                            <th class="text-center rounded-tl-lg">ลำดับ</th>
+                            <th>เลขทะเบียน</th>
+                            <th>ชื่อรถ</th>
+                            <th>ผู้ขับ</th>
+                            <th class="text-right">จำนวนเที่ยว</th>
+                            <th class="text-right">% การบรรทุกเฉลี่ย</th>
+                            <th class="text-right">น้ำหนัก/ตัน</th>
+                            <th class="text-center bg-emerald-50 text-emerald-700 border-b-emerald-200">เต็มคัน/ทั้งวัน</th>
+                            <th class="text-center bg-rose-50 text-rose-700 border-b-rose-200">ไม่เต็ม/ทั้งวัน</th>
+                            <th class="text-center bg-rose-50 text-rose-700 border-b-rose-200 rounded-tr-lg">ไม่เต็ม/ระหว่างวัน</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Row 1 -->
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="text-center text-slate-500">1</td>
+                            <td class="font-medium">84-5551 อด</td>
+                            <td>บุญหนัก</td>
+                            <td>วิชัย</td>
+                            <td class="text-right font-semibold">1</td>
+                            <td class="text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <span class="text-rose-600 font-medium">60.00%</span>
+                                    <div class="w-16 bg-slate-200 rounded-full h-1.5"><div class="bg-rose-500 h-1.5 rounded-full" style="width: 60%"></div></div>
+                                </div>
+                            </td>
+                            <td class="text-right">8.61</td>
+                            <td class="text-center bg-emerald-50/50">-</td>
+                            <td class="text-center bg-rose-50/50 font-medium">1</td>
+                            <td class="text-center bg-rose-50/50">-</td>
+                        </tr>
+                        <!-- Row 2 -->
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="text-center text-slate-500">2</td>
+                            <td class="font-medium">84-3178 อด</td>
+                            <td>ทำเงิน</td>
+                            <td>บูรพา</td>
+                            <td class="text-right font-semibold">4</td>
+                            <td class="text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <span class="text-orange-500 font-medium">72.50%</span>
+                                    <div class="w-16 bg-slate-200 rounded-full h-1.5"><div class="bg-orange-400 h-1.5 rounded-full" style="width: 72.5%"></div></div>
+                                </div>
+                            </td>
+                            <td class="text-right">40.21</td>
+                            <td class="text-center bg-emerald-50/50 font-medium">1</td>
+                            <td class="text-center bg-rose-50/50 font-medium">3</td>
+                            <td class="text-center bg-rose-50/50">-</td>
+                        </tr>
+                        <!-- Row 3 -->
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="text-center text-slate-500">3</td>
+                            <td class="font-medium">83-9195 อด</td>
+                            <td class="text-primary font-semibold">พี่หมาน</td>
+                            <td>เรืองยศ</td>
+                            <td class="text-right font-semibold">16</td>
+                            <td class="text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <span class="text-emerald-600 font-bold">88.75%</span>
+                                    <i class="fa-solid fa-circle-check text-emerald-500 text-xs"></i>
+                                </div>
+                            </td>
+                            <td class="text-right">117.32</td>
+                            <td class="text-center bg-emerald-50/50 font-bold text-emerald-700">11</td>
+                            <td class="text-center bg-rose-50/50 font-medium">3</td>
+                            <td class="text-center bg-rose-50/50 font-medium">2</td>
+                        </tr>
+                        <!-- Row 4 -->
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="text-center text-slate-500">4</td>
+                            <td class="font-medium">84-1902 อด</td>
+                            <td class="text-primary font-semibold">นำโชค</td>
+                            <td>นาวี</td>
+                            <td class="text-right font-semibold">11</td>
+                            <td class="text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <span class="text-emerald-600 font-bold">86.36%</span>
+                                     <i class="fa-solid fa-circle-check text-emerald-500 text-xs"></i>
+                                </div>
+                            </td>
+                            <td class="text-right">71.78</td>
+                            <td class="text-center bg-emerald-50/50 font-bold text-emerald-700">6</td>
+                            <td class="text-center bg-rose-50/50 font-medium">5</td>
+                            <td class="text-center bg-rose-50/50">-</td>
+                        </tr>
+                        <!-- Row 5 -->
+                        <tr class="hover:bg-slate-50 transition-colors">
+                            <td class="text-center text-slate-500">5</td>
+                            <td class="font-medium">2ฒป 2585 กทม.</td>
+                            <td>ออมสิน</td>
+                            <td class="text-slate-400">-</td>
+                            <td class="text-right font-semibold">18</td>
+                            <td class="text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <span class="text-rose-600 font-medium">67.22%</span>
+                                    <div class="w-16 bg-slate-200 rounded-full h-1.5"><div class="bg-rose-500 h-1.5 rounded-full" style="width: 67.22%"></div></div>
+                                </div>
+                            </td>
+                            <td class="text-right">65.43</td>
+                            <td class="text-center bg-emerald-50/50 font-medium">5</td>
+                            <td class="text-center bg-rose-50/50 font-bold text-rose-700">9</td>
+                            <td class="text-center bg-rose-50/50 font-medium">4</td>
+                        </tr>
+                         <!-- Row 6 -->
+                        <tr class="hover:bg-slate-50 transition-colors text-slate-400">
+                            <td class="text-center">6</td>
+                            <td>3ฒฬ 6702</td>
+                            <td>มารวย</td>
+                            <td>-</td>
+                            <td class="text-right">0</td>
+                            <td class="text-right">0.00%</td>
+                            <td class="text-right">0.00</td>
+                            <td class="text-center bg-emerald-50/30">0</td>
+                            <td class="text-center bg-rose-50/30">0</td>
+                            <td class="text-center bg-rose-50/30">0</td>
+                        </tr>
+                    </tbody>
+                    <tfoot class="bg-slate-50 border-t-2 border-slate-200 font-bold">
+                        <tr>
+                            <td colspan="4" class="text-right py-4 px-4 text-slate-700">รวมทั้งหมด:</td>
+                            <td class="text-right py-4 px-4 text-lg text-primary">50</td>
+                            <td class="text-right py-4 px-4 text-lg text-orange-500">78.60%</td>
+                            <td class="text-right py-4 px-4 text-lg text-slate-800">303.35</td>
+                            <td class="text-center py-4 px-4 text-lg text-emerald-600 bg-emerald-100/50">23</td>
+                            <td class="text-center py-4 px-4 text-lg text-rose-600 bg-rose-100/50">21</td>
+                            <td class="text-center py-4 px-4 text-lg text-rose-600 bg-rose-100/50">6</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            
+            <div class="bg-slate-50 p-4 border-t border-slate-100 text-sm text-slate-500 text-center mt-auto">
+                ข้อมูลอ้างอิง ณ สิ้นเดือนกรกฎาคม
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Data from the image
+        const truckNames = ['บุญหนัก', 'ทำเงิน', 'พี่หมาน', 'นำโชค', 'ออมสิน', 'มารวย'];
+        const efficiencies = [60.00, 72.50, 88.75, 86.36, 67.22, 0];
+        const trips = [1, 4, 16, 11, 18, 0];
+        const target = 85;
+
+        // Chart 1: Efficiency Bar Chart
+        const ctxEfficiency = document.getElementById('efficiencyChart').getContext('2d');
+        
+        // Dynamic colors based on target
+        const barColors = efficiencies.map(value => {
+            if (value === 0) return '#cbd5e1'; // slate-300
+            if (value >= target) return '#10B981'; // emerald-500 (met target)
+            if (value >= 70) return '#F59E0B'; // amber-500
+            return '#EF4444'; // red-500 (below 70%)
+        });
+
+        new Chart(ctxEfficiency, {
+            type: 'bar',
+            data: {
+                labels: truckNames,
+                datasets: [{
+                    label: '% การบรรทุกเฉลี่ย',
+                    data: efficiencies,
+                    backgroundColor: barColors,
+                    borderRadius: 6,
+                    borderWidth: 0,
+                    barThickness: 'flex',
+                    maxBarThickness: 40
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.parsed.y + '%';
+                            }
+                        },
+                        backgroundColor: '#1E293B',
+                        padding: 12,
+                        titleFont: { family: 'Kanit', size: 14 },
+                        bodyFont: { family: 'Kanit', size: 14 }
+                    },
+                    annotation: { // Conceptual line for target
+                        annotations: {
+                            line1: {
+                                type: 'line',
+                                yMin: target,
+                                yMax: target,
+                                borderColor: 'rgba(16, 185, 129, 0.5)',
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                label: {
+                                    content: 'เป้าหมาย 85%',
+                                    enabled: true,
+                                    position: 'end'
+                                }
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: '#f1f5f9',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: { family: 'Kanit' },
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: { family: 'Kanit', size: 12 }
+                        }
+                    }
+                },
+                animation: {
+                    duration: 2000,
+                    easing: 'easeOutQuart'
+                }
+            },
+            // Custom plugin to draw target line since chartjs-plugin-annotation isn't loaded by default via CDN in this setup
+             plugins: [{
+                id: 'targetLine',
+                beforeDraw: chart => {
+                    const ctx = chart.ctx;
+                    const yAxis = chart.scales.y;
+                    const xAxis = chart.scales.x;
+                    const yPixel = yAxis.getPixelForValue(target);
+
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.setLineDash([5, 5]);
+                    ctx.moveTo(xAxis.left, yPixel);
+                    ctx.lineTo(xAxis.right, yPixel);
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = '#10B981'; // Emerald
+                    ctx.stroke();
+                    ctx.restore();
+                    
+                    // Text
+                    ctx.fillStyle = '#10B981';
+                    ctx.font = '10px Kanit';
+                    ctx.fillText('เป้าหมาย 85%', xAxis.right - 60, yPixel - 5);
+                }
+            }]
+        });
+
+        // Chart 2: Trips Doughnut Chart
+        const ctxTrips = document.getElementById('tripsChart').getContext('2d');
+        
+        // Filter out zero trips for cleaner pie chart
+        const activeTruckNames = truckNames.filter((_, i) => trips[i] > 0);
+        const activeTrips = trips.filter(t => t > 0);
+        
+        const pieColors = [
+            '#4F46E5', // Indigo
+            '#3B82F6', // Blue
+            '#06B6D4', // Cyan
+            '#10B981', // Emerald
+            '#8B5CF6'  // Violet
+        ];
+
+        new Chart(ctxTrips, {
+            type: 'doughnut',
+            data: {
+                labels: activeTruckNames,
+                datasets: [{
+                    data: activeTrips,
+                    backgroundColor: pieColors,
+                    borderWidth: 2,
+                    borderColor: '#ffffff',
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            font: { family: 'Kanit', size: 12 },
+                            usePointStyle: true,
+                            padding: 15
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed !== null) {
+                                    label += context.parsed + ' เที่ยว';
+                                }
+                                return label;
+                            }
+                        },
+                        titleFont: { family: 'Kanit' },
+                        bodyFont: { family: 'Kanit' }
+                    }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true,
+                    duration: 1500
+                }
+            }
+        });
+    });
+</script>
+<a href="communication.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (communication) ➜
+
+</body>
+</html>

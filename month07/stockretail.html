@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปการตรวจนับสินค้าคงคลัง - พัฒนาสิน ไทยเทรดดิ้ง</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Prompt for Thai language support -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        .card-hover {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-800 pb-12">
+
+    <header class="bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-700 text-white pb-16 pt-8 px-6 lg:px-12 rounded-b-[3rem] shadow-lg relative overflow-hidden">
+        <!-- Decorative background circles -->
+        <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-white opacity-10 blur-2xl"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-blue-400 opacity-20 blur-3xl"></div>
+        
+        <div class="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <div class="text-sm font-light text-blue-200 mb-1 tracking-wider uppercase"><i class="fa-solid fa-building mr-2"></i>บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</div>
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">Dashboard สรุปการตรวจนับสินค้าคงคลัง</h1>
+                <p class="text-lg text-blue-100"><i class="fa-regular fa-calendar-check mr-2"></i>ประจำเดือนกรกฎาคม (หน้าร้าน - หมวดหมู่อุปกรณ์)</p>
+            </div>
+            <div class="mt-6 md:mt-0 text-center bg-white/20 backdrop-blur-sm rounded-2xl p-4 border border-white/30 shadow-inner">
+                <p class="text-sm text-blue-50 font-medium mb-1">เป้าหมายความแม่นยำ (Target)</p>
+                <div class="text-3xl font-bold text-green-300 drop-shadow-md">
+                    90% <i class="fa-solid fa-bullseye text-xl ml-1 text-white"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20">
+        
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Accuracy KPI -->
+            <div class="bg-white rounded-2xl p-6 shadow-md card-hover border-b-4 border-green-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-slate-500 font-medium">ความแม่นยำจริง (Actual)</p>
+                        <h3 class="text-3xl font-bold text-slate-800 mt-1">94%</h3>
+                        <p class="text-xs text-green-600 mt-2 font-medium bg-green-100 inline-block px-2 py-1 rounded-full"><i class="fa-solid fa-arrow-up mr-1"></i>สูงกว่าเป้าหมาย 4%</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full text-green-600">
+                        <i class="fa-solid fa-check-circle text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Items KPI -->
+            <div class="bg-white rounded-2xl p-6 shadow-md card-hover border-b-4 border-blue-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-slate-500 font-medium">รายการที่ตรง (Matched)</p>
+                        <h3 class="text-3xl font-bold text-slate-800 mt-1">391 <span class="text-base font-normal text-slate-500">/ 414</span></h3>
+                        <p class="text-xs text-slate-500 mt-2">รายการ</p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full text-blue-600">
+                        <i class="fa-solid fa-boxes-stacked text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Variance Count KPI -->
+            <div class="bg-white rounded-2xl p-6 shadow-md card-hover border-b-4 border-orange-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-slate-500 font-medium">รายการที่ไม่ตรง (Variance)</p>
+                        <h3 class="text-3xl font-bold text-slate-800 mt-1">23</h3>
+                        <p class="text-xs text-slate-500 mt-2">รวมทั้งหมด 2,027 ชิ้น</p>
+                    </div>
+                    <div class="bg-orange-100 p-3 rounded-full text-orange-600">
+                        <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Variance Value KPI -->
+            <div class="bg-white rounded-2xl p-6 shadow-md card-hover border-b-4 border-red-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-slate-500 font-medium">มูลค่าส่วนต่างรวม (Net Variance)</p>
+                        <h3 class="text-3xl font-bold text-slate-800 mt-1">2,169.<span class="text-xl">00</span></h3>
+                        <p class="text-xs text-slate-500 mt-2">บาท (THB)</p>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full text-red-600">
+                        <i class="fa-solid fa-baht-sign text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Section: Summary Table & Chart -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            
+            <!-- Summary Table (Based on Image 1) -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-md">
+                <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                    <i class="fa-solid fa-table-list text-blue-500 mr-3"></i>สรุปผลกระทบ (Variance Summary)
+                </h2>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-slate-500 text-sm border-b-2 border-slate-200">
+                                <th class="pb-3 font-semibold">รายการ</th>
+                                <th class="pb-3 font-semibold text-center">จำนวนรายการ</th>
+                                <th class="pb-3 font-semibold text-center">จำนวนชิ้น</th>
+                                <th class="pb-3 font-semibold text-right">มูลค่ารวม (บาท)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Shortage Row -->
+                            <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                <td class="py-4 text-red-600 font-medium flex items-center">
+                                    <div class="w-8 h-8 rounded-lg bg-red-100 flex items-center justify-center mr-3">
+                                        <i class="fa-solid fa-arrow-trend-down"></i>
+                                    </div>
+                                    สต๊อกขาด (Shortage)
+                                </td>
+                                <td class="py-4 text-center text-red-600 font-semibold">13</td>
+                                <td class="py-4 text-center text-red-600">1,283</td>
+                                <td class="py-4 text-right text-red-600 font-semibold">1,746.00</td>
+                            </tr>
+                            <!-- Overage Row -->
+                            <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                                <td class="py-4 text-blue-600 font-medium flex items-center">
+                                    <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center mr-3">
+                                        <i class="fa-solid fa-arrow-trend-up"></i>
+                                    </div>
+                                    สต๊อกเกิน (Overage)
+                                </td>
+                                <td class="py-4 text-center text-blue-600 font-semibold">10</td>
+                                <td class="py-4 text-center text-blue-600">744</td>
+                                <td class="py-4 text-right text-blue-600 font-semibold">423.00</td>
+                            </tr>
+                            <!-- Net Row -->
+                            <tr class="bg-slate-50 font-bold">
+                                <td class="py-4 px-2 rounded-l-lg text-slate-800">รวมสุทธิ (Net Variance)</td>
+                                <td class="py-4 text-center text-slate-800">23</td>
+                                <td class="py-4 text-center text-slate-800">2,027</td>
+                                <td class="py-4 text-right text-slate-800 rounded-r-lg text-lg">2,169.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Accuracy Chart -->
+            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-md flex flex-col items-center justify-center relative">
+                 <h2 class="text-xl font-bold text-slate-800 mb-2 self-start absolute top-6 left-8 flex items-center">
+                    <i class="fa-solid fa-chart-pie text-indigo-500 mr-3"></i>สัดส่วนความแม่นยำ
+                </h2>
+                <div class="w-full max-w-xs mt-10">
+                    <canvas id="accuracyChart"></canvas>
+                </div>
+                <div class="mt-4 flex gap-4 text-sm font-medium">
+                    <span class="flex items-center text-green-600"><span class="w-3 h-3 rounded-full bg-green-500 mr-2"></span>ตรงตามระบบ (94%)</span>
+                    <span class="flex items-center text-orange-500"><span class="w-3 h-3 rounded-full bg-orange-400 mr-2"></span>ไม่ตรงตามระบบ (6%)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Highlighted Problematic Items Table (Based on Image 2) -->
+        <div class="bg-white rounded-3xl p-6 md:p-8 shadow-md mb-8">
+            <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center">
+                <i class="fa-solid fa-magnifying-glass-chart text-red-500 mr-3"></i>รายการสินค้าที่มีผลต่างสูงสุด (Top Discrepancies)
+            </h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left whitespace-nowrap">
+                    <thead class="bg-slate-100 text-slate-600 text-sm">
+                        <tr>
+                            <th class="py-3 px-4 rounded-l-lg font-semibold">รหัสสินค้า</th>
+                            <th class="py-3 px-4 font-semibold">ชื่อสินค้า</th>
+                            <th class="py-3 px-4 text-center font-semibold">คงเหลือ(ระบบ)</th>
+                            <th class="py-3 px-4 text-center font-semibold">ยอดตรวจนับ</th>
+                            <th class="py-3 px-4 text-center font-semibold">สถานะ</th>
+                            <th class="py-3 px-4 text-right rounded-r-lg font-semibold">ผลต่าง (ชิ้น)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr class="border-b border-slate-100 hover:bg-slate-50">
+                            <td class="py-3 px-4">R2-3003</td>
+                            <td class="py-3 px-4">น็อตไม้สีรุ้ง #10x1 1/2" (200ตัว)</td>
+                            <td class="py-3 px-4 text-center">1000</td>
+                            <td class="py-3 px-4 text-center">300</td>
+                            <td class="py-3 px-4 text-center"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">ขาด</span></td>
+                            <td class="py-3 px-4 text-right text-red-600 font-bold">-700</td>
+                        </tr>
+                        <tr class="border-b border-slate-100 hover:bg-slate-50">
+                            <td class="py-3 px-4">R2-0006</td>
+                            <td class="py-3 px-4">สกรูปลายสว่าน หัว F สลัก #7x 1 1/2"(500ตัว)</td>
+                            <td class="py-3 px-4 text-center">1100</td>
+                            <td class="py-3 px-4 text-center">700</td>
+                            <td class="py-3 px-4 text-center"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">ขาด</span></td>
+                            <td class="py-3 px-4 text-right text-red-600 font-bold">-400</td>
+                        </tr>
+                        <tr class="border-b border-slate-100 hover:bg-slate-50">
+                            <td class="py-3 px-4">R2-9004</td>
+                            <td class="py-3 px-4">น็อตหัว P #10x1/2"</td>
+                            <td class="py-3 px-4 text-center">600</td>
+                            <td class="py-3 px-4 text-center">900</td>
+                            <td class="py-3 px-4 text-center"><span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs font-bold">เกิน</span></td>
+                            <td class="py-3 px-4 text-right text-blue-600 font-bold">+300</td>
+                        </tr>
+                        <tr class="border-b border-slate-100 bg-yellow-50 hover:bg-yellow-100 transition-colors">
+                            <td class="py-3 px-4 font-semibold text-yellow-800">O5-0551</td>
+                            <td class="py-3 px-4 font-semibold text-yellow-800">หูสายยู ตราช้าง (6 โหลคู่) <i class="fa-solid fa-star text-yellow-500 ml-1 text-xs" title="รายการที่ถูกไฮไลท์"></i></td>
+                            <td class="py-3 px-4 text-center font-semibold">226</td>
+                            <td class="py-3 px-4 text-center font-semibold">112</td>
+                            <td class="py-3 px-4 text-center"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">ขาด</span></td>
+                            <td class="py-3 px-4 text-right text-red-600 font-bold">-114</td>
+                        </tr>
+                         <tr class="hover:bg-slate-50">
+                            <td class="py-3 px-4">O5-0501</td>
+                            <td class="py-3 px-4">บานพับ 3" บรอนซ์ (โหลคู่)</td>
+                            <td class="py-3 px-4 text-center">64</td>
+                            <td class="py-3 px-4 text-center">33</td>
+                            <td class="py-3 px-4 text-center"><span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">ขาด</span></td>
+                            <td class="py-3 px-4 text-right text-red-600 font-bold">-31</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analysis: Problems and Solutions -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Problem Box -->
+            <div class="bg-red-50 border-l-4 border-red-500 rounded-r-3xl p-6 md:p-8 shadow-sm">
+                <div class="flex items-center mb-4">
+                    <div class="bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center mr-4 shadow-md">
+                        <i class="fa-solid fa-circle-exclamation text-xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-red-800">วิเคราะห์ปัญหาที่พบ (Problems)</h2>
+                </div>
+                <ul class="space-y-4 text-slate-700">
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-xmark text-red-500 mt-1 mr-3"></i>
+                        <div>
+                            <strong class="block text-slate-900">สินค้าชิ้นเล็กจำนวนมากคลาดเคลื่อนสูง:</strong> 
+                            กลุ่มสกรูและน็อต (รหัส R2) มีปริมาณสต๊อกขาดและเกินหลักร้อยชิ้น (-700, -400, +300) บ่งบอกถึงข้อผิดพลาดในการนับด้วยมือ หรือการขายเป็นกำโดยไม่ได้นับจำนวนที่แท้จริง
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-xmark text-red-500 mt-1 mr-3"></i>
+                        <div>
+                            <strong class="block text-slate-900">สินค้ากลุ่มฮาร์ดแวร์สูญหาย (หูสายยู/บานพับ):</strong> 
+                            รหัส O5-0551 หายไปถึง 114 ชิ้น (เกือบ 50% ของระบบ) อาจเกิดจากการหยิบผิดรุ่นให้กับลูกค้า, สินค้าสูญหายจากการขโมย, หรือลืมยิงบาร์โค้ดตัดสต๊อกหน้าเคาน์เตอร์
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-xmark text-red-500 mt-1 mr-3"></i>
+                        <div>
+                            <strong class="block text-slate-900">ปัญหาการ Cross-Location / หยิบผิดไซส์:</strong> 
+                            พบว่าบางรายการมีสต๊อกขาด แต่รายการที่คล้ายกันมีสต๊อกเกิน (เช่น สายยู) สะท้อนถึงการจัดเรียงสินค้าที่ปะปนกัน ทำให้พนักงานหยิบสลับกัน
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Solution Box -->
+            <div class="bg-green-50 border-l-4 border-green-500 rounded-r-3xl p-6 md:p-8 shadow-sm">
+                <div class="flex items-center mb-4">
+                    <div class="bg-green-500 text-white w-10 h-10 rounded-full flex items-center justify-center mr-4 shadow-md">
+                        <i class="fa-solid fa-lightbulb text-xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-green-800">แนวทางแก้ไข (Solutions)</h2>
+                </div>
+                <ul class="space-y-4 text-slate-700">
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-check text-green-600 mt-1 mr-3"></i>
+                        <div>
+                            <strong class="block text-slate-900">นำเครื่องชั่งดิจิทัล (Counting Scale) มาใช้:</strong> 
+                            สำหรับการนับสินค้ากลุ่มน็อต สกรู (รหัส R2) เพื่อลดความผิดพลาดจาก Human Error ในการนับทีละชิ้น และเพิ่มความรวดเร็วในการตรวจเช็ค
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-check text-green-600 mt-1 mr-3"></i>
+                        <div>
+                            <strong class="block text-slate-900">ทำ Cycle Count กลุ่มฮาร์ดแวร์รายสัปดาห์:</strong> 
+                            สินค้ารหัส O5 ที่มีความคลาดเคลื่อนสูง ควรจัดตารางนับย่อยทุกสัปดาห์ เพื่อหาจุดรั่วไหลได้ทันท่วงที ไม่ต้องรอสิ้นเดือน
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-check text-green-600 mt-1 mr-3"></i>
+                        <div>
+                            <strong class="block text-slate-900">จัดระเบียบชั้นวาง (Visual Management):</strong> 
+                            ทำป้ายแบ่งสี (Color Code) หรือกั้นช่อง (Bin) ให้ชัดเจนสำหรับสินค้าที่มีลักษณะคล้ายกันแต่ต่างไซส์ เพื่อป้องกันพนักงานหน้าร้านหยิบผิด
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-check text-green-600 mt-1 mr-3"></i>
+                        <div>
+                            <strong class="block text-slate-900">อบรมย้ำเตือนพนักงานขายหน้าร้าน (POS):</strong> 
+                            ต้องยิงบาร์โค้ดสินค้าทุกชิ้น ห้ามใช้การกะปริมาณ หรือคีย์ตัวเลขรวมหากเป็นสินค้าต่างรหัสกันเด็ดขาด
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center text-slate-400 text-sm mt-12 pb-4">
+        &copy; 2026 บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | Generated Report System
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup Accuracy Doughnut Chart
+            const ctx = document.getElementById('accuracyChart').getContext('2d');
+            const accuracyChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['รายการที่ตรง (Matched)', 'รายการที่ไม่ตรง (Variance)'],
+                    datasets: [{
+                        data: [391, 23], // Based on total 414
+                        backgroundColor: [
+                            '#10b981', // green-500
+                            '#fb923c'  // orange-400
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    cutout: '75%',
+                    plugins: {
+                        legend: {
+                            display: false // We use custom HTML legend below
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== null) {
+                                        let percentage = Math.round((context.parsed / 414) * 100);
+                                        label += context.parsed + ' รายการ (' + percentage + '%)';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'textCenter',
+                    beforeDraw: function(chart) {
+                        var width = chart.width,
+                            height = chart.height,
+                            ctx = chart.ctx;
+
+                        ctx.restore();
+                        var fontSize = (height / 114).toFixed(2);
+                        ctx.font = "bold " + fontSize + "em Prompt";
+                        ctx.textBaseline = "middle";
+                        ctx.fillStyle = "#1e293b"; // slate-800
+
+                        var text = "94%",
+                            textX = Math.round((width - ctx.measureText(text).width) / 2),
+                            textY = height / 2;
+
+                        ctx.fillText(text, textX, textY);
+                        ctx.save();
+                    }
+                }]
+            });
+        });
+    </script>
+<a href="stockwarehouse.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (stock warehouse) ➜
+</body>
+</html>

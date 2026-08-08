@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปผลข้อผิดพลาดจากการจัดส่ง</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: #334155;
+            min-height: 100vh;
+        }
+
+        /* Glassmorphism Classes for Light Theme */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border-radius: 1.25rem;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            border-radius: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Custom Scrollbar for tables if needed */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .text-gradient {
+            background: linear-gradient(to right, #0ea5e9, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .badge-success {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        .badge-warning {
+            background-color: #fef08a;
+            color: #854d0e;
+        }
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Highlight July Effect */
+        @keyframes pulse-success {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+        .july-focus {
+            animation: pulse-success 2.5s infinite;
+            border: 2px solid #4ade80 !important;
+            background: linear-gradient(135deg, #f0fdf4 0%, rgba(255, 255, 255, 0.95) 100%) !important;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header -->
+        <header class="glass-panel p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800 tracking-tight">รายงานข้อผิดพลาดจากการจัดส่ง</h1>
+                <p class="text-gray-500 mt-1">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | <span class="font-medium text-blue-600">ประจำเดือน กรกฎาคม</span></p>
+            </div>
+            <div class="flex gap-4">
+                <div class="glass-card px-6 py-3 text-center">
+                    <p class="text-xs text-gray-500 uppercase font-semibold">เป้าหมายสูงสุด</p>
+                    <p class="text-xl font-bold text-gray-800">2 ครั้ง/คน</p>
+                </div>
+                <div class="glass-card px-6 py-3 text-center july-focus">
+                    <p class="text-xs text-green-700 uppercase font-bold">สถานะภาพรวม (ก.ค.)</p>
+                    <p class="text-xl font-bold text-green-600 flex items-center justify-center gap-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        ยอดเยี่ยม (0 ครั้ง)
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="glass-card p-6 border-l-4 border-l-green-500 relative overflow-hidden bg-green-50/30">
+                <div class="absolute top-0 right-0 px-3 py-1 bg-green-500 text-white text-[10px] font-bold rounded-bl-lg tracking-wider">ล่าสุด (ก.ค.)</div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-green-700 font-bold">รวมข้อผิดพลาด (ก.ค.)</p>
+                        <h3 class="text-3xl font-bold text-green-600 mt-2">0 <span class="text-base font-normal text-green-600/70">ครั้ง</span></h3>
+                    </div>
+                    <div class="p-2 bg-green-100 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                </div>
+                <p class="text-xs text-green-700 mt-4 flex items-center gap-1 font-semibold bg-green-100/60 p-2 rounded-md inline-flex border border-green-200/50">
+                    <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    ไม่มีข้อผิดพลาดเลย 100%
+                </p>
+            </div>
+
+            <div class="glass-card p-6 border-l-4 border-l-blue-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">รวมข้อผิดพลาดสะสม (ม.ค.-ก.ค.)</p>
+                        <h3 class="text-3xl font-bold text-gray-800 mt-2">16 <span class="text-base font-normal text-gray-500">ครั้ง</span></h3>
+                    </div>
+                    <div class="p-2 bg-blue-100 rounded-lg">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 border-l-4 border-l-yellow-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">เดือนที่ผิดพลาดสูงสุด</p>
+                        <h3 class="text-3xl font-bold text-gray-800 mt-2">ก.พ. <span class="text-base font-normal text-gray-500">(5 ครั้ง)</span></h3>
+                    </div>
+                    <div class="p-2 bg-yellow-100 rounded-lg">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card p-6 border-l-4 border-l-red-500">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm text-gray-500 font-medium">บุคคลที่ถึงเกณฑ์เฝ้าระวัง (สะสม)</p>
+                        <h3 class="text-3xl font-bold text-gray-800 mt-2 text-red-500">เจ, โจ</h3>
+                    </div>
+                    <div class="p-2 bg-red-100 rounded-lg">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    </div>
+                </div>
+                <p class="text-xs text-red-500 mt-4 font-medium">เกินเป้าหมายในเดือน ก.พ. (2 ครั้ง)</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left Column: Charts -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Trend Chart -->
+                <div class="glass-panel p-6 h-[400px]">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                        แนวโน้มข้อผิดพลาดรายเดือน (ม.ค. - ก.ค.)
+                    </h2>
+                    <div class="relative h-[300px] w-full">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Analysis Section -->
+                <div class="glass-panel p-6">
+                    <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+                        วิเคราะห์สาเหตุและข้อเสนอแนะ (สรุปจากข้อมูล)
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white/50 p-4 rounded-xl border border-white/60">
+                            <h4 class="font-bold text-gray-700 flex items-center gap-2 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-green-500"></span> จุดเด่นประจำเดือน ก.ค.
+                            </h4>
+                            <p class="text-sm text-gray-600">ในเดือนกรกฎาคม <strong>ไม่มีพนักงานคนใดเกิดข้อผิดพลาดในการจัดส่งเลย (0 ครั้ง)</strong> ถือเป็นพัฒนาการที่ยอดเยี่ยมเมื่อเทียบกับเดือนก่อนหน้า และเป็นไปตามเป้าหมายของบริษัท (ไม่เกิน 2 ครั้ง)</p>
+                        </div>
+                        
+                        <div class="bg-white/50 p-4 rounded-xl border border-white/60">
+                            <h4 class="font-bold text-gray-700 flex items-center gap-2 mb-2">
+                                <span class="w-2 h-2 rounded-full bg-yellow-500"></span> ข้อสังเกตย้อนหลัง
+                            </h4>
+                            <ul class="text-sm text-gray-600 list-disc list-inside space-y-1">
+                                <li><strong>เดือนกุมภาพันธ์</strong> มียอดความผิดพลาดรวมสูงสุด (5 ครั้ง) โดยเกิดจาก 'เจ' และ 'โจ' คนละ 2 ครั้ง ซึ่งแตะขีดจำกัดเป้าหมายพอดี ควรมีการตรวจสอบหาสาเหตุในช่วงเวลานั้น (เช่น ปริมาณงานเยอะผิดปกติ หรือปัญหาระบบ)</li>
+                                <li><strong>ปอนด์</strong> มีแนวโน้มการผิดพลาดกระจายตัว (ก.พ., มี.ค., พ.ค.) แม้ไม่เกินเกณฑ์ต่อเดือน แต่สะสมแล้วบ่อยที่สุด (4 ครั้ง) ควรมีการทบทวนกระบวนการทำงาน</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 p-4 bg-blue-50/50 rounded-xl border border-blue-100">
+                         <h4 class="font-bold text-blue-800 text-sm mb-1">ข้อเสนอแนะเชิงป้องกัน:</h4>
+                         <p class="text-sm text-blue-700">ควรรักษามาตรฐานการทำงานของเดือนกรกฎาคมไว้ และอาจมีการนำแนวปฏิบัติที่ดี (Best Practices) ของเดือนนี้มาทำเป็นมาตรฐาน (SOP) ในการทำงานเดือนต่อๆ ไป นอกจากนี้ควรมีการจัดอบรมทบทวนให้พนักงานที่มีสถิติสะสมสูง</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Data Table -->
+            <div class="glass-panel p-0 overflow-hidden flex flex-col h-full">
+                <div class="p-6 border-b border-gray-100/50 flex justify-between items-center bg-white/30">
+                    <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        ข้อมูลรายละเอียด (คน/เดือน)
+                    </h2>
+                </div>
+                <div class="flex-1 overflow-auto p-4">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs text-gray-600 uppercase bg-gray-50/50 rounded-lg">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 rounded-l-lg font-semibold">พนักงาน</th>
+                                <th scope="col" class="px-3 py-3 text-center font-semibold">สะสม<br>(ม.ค.-ก.ค.)</th>
+                                <th scope="col" class="px-4 py-3 text-center rounded-r-lg font-bold text-white bg-gradient-to-r from-green-500 to-emerald-500 shadow-sm shadow-green-200/50">ก.ค. (ล่าสุด)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" class="divide-y divide-gray-100/50">
+                            <!-- Data rows will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-4 bg-gray-50/50 text-xs text-gray-500 text-center border-t border-gray-100/50">
+                    * เป้าหมาย: ไม่เกิน 2 ครั้ง/เดือน/คน
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Data extracted from the image
+        const rawData = [
+            { id: 1, name: 'ปอนด์', jan: 0, feb: 1, mar: 1, apr: 0, may: 2, jun: 0, jul: 0 },
+            { id: 2, name: 'ทราย', jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0 },
+            { id: 3, name: 'หนุ่ย', jan: 1, feb: 0, mar: 0, apr: 1, may: 0, jun: 0, jul: 0 },
+            { id: 4, name: 'นัย', jan: 0, feb: 0, mar: 1, apr: 0, may: 0, jun: 1, jul: 0 },
+            { id: 5, name: 'เจ', jan: 1, feb: 2, mar: 0, apr: 0, may: 1, jun: 0, jul: 0 },
+            { id: 6, name: 'โจ', jan: 1, feb: 2, mar: 0, apr: 0, may: 1, jun: 0, jul: 0 },
+            { id: 7, name: 'แร่', jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 1, jul: 0 },
+            { id: 8, name: 'ใย', jan: 0, feb: 0, mar: 1, apr: 0, may: 0, jun: 0, jul: 0 },
+            { id: 9, name: 'โต้', jan: 0, feb: 0, mar: 1, apr: 0, may: 1, jun: 0, jul: 0 },
+        ];
+
+        // Process data for the table and summary
+        const processedData = rawData.map(person => {
+            const total = person.jan + person.feb + person.mar + person.apr + person.may + person.jun + person.jul;
+            return { ...person, total };
+        });
+
+        // Calculate monthly totals for the chart
+        const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.'];
+        const monthlyTotals = [
+            rawData.reduce((sum, p) => sum + p.jan, 0),
+            rawData.reduce((sum, p) => sum + p.feb, 0),
+            rawData.reduce((sum, p) => sum + p.mar, 0),
+            rawData.reduce((sum, p) => sum + p.apr, 0),
+            rawData.reduce((sum, p) => sum + p.may, 0),
+            rawData.reduce((sum, p) => sum + p.jun, 0),
+            rawData.reduce((sum, p) => sum + p.jul, 0)
+        ];
+
+        // Populate Table
+        const tableBody = document.getElementById('tableBody');
+        // Sort by total descending to show top error makers first
+        const sortedData = [...processedData].sort((a, b) => b.total - a.total);
+        
+        sortedData.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-white/40 transition-colors";
+            
+            // Highlight rule
+            let totalClass = "text-gray-700 font-medium";
+            if (row.total > 2) totalClass = "text-orange-500 font-bold";
+            if (row.total === 0) totalClass = "text-green-500";
+
+            let julClass = "text-gray-600";
+            let julBg = "bg-green-50/40 border-l border-green-100/50";
+            if(row.jul === 0) {
+                julClass = "text-green-600 font-extrabold text-base";
+                julBg = "bg-green-100/40 border-l border-green-200";
+            } else if (row.jul >= 2) {
+                 julClass = "text-red-600 font-bold";
+                 julBg = "bg-red-50";
+            }
+
+            tr.innerHTML = `
+                <td class="px-4 py-3 font-medium text-gray-800 flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-blue-700 font-bold text-xs">
+                        ${row.name.substring(0, 1)}
+                    </div>
+                    ${row.name}
+                </td>
+                <td class="px-3 py-3 text-center ${totalClass}">${row.total}</td>
+                <td class="px-4 py-3 text-center ${julBg} ${julClass}">
+                    ${row.jul === 0 ? `<span class="inline-flex items-center justify-center bg-white rounded-full w-7 h-7 shadow-sm border border-green-100">${row.jul}</span>` : row.jul}
+                </td>
+            `;
+            tableBody.appendChild(tr);
+        });
+
+        // Render Chart
+        const ctx = document.getElementById('trendChart').getContext('2d');
+        
+        // Gradient for line
+        const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+        gradient.addColorStop(0, 'rgba(59, 130, 246, 0.5)'); // Blue 500
+        gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'จำนวนข้อผิดพลาดรวม (ครั้ง)',
+                    data: monthlyTotals,
+                    borderColor: '#3b82f6', // Tailwind blue-500
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    pointBackgroundColor: (context) => context.dataIndex === 6 ? '#22c55e' : '#ffffff',
+                    pointBorderColor: (context) => context.dataIndex === 6 ? '#15803d' : '#3b82f6',
+                    pointBorderWidth: (context) => context.dataIndex === 6 ? 3 : 2,
+                    pointRadius: (context) => context.dataIndex === 6 ? 7 : 5,
+                    pointHoverRadius: (context) => context.dataIndex === 6 ? 9 : 7,
+                    fill: true,
+                    tension: 0.4 // Smooth curves
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false // Hide legend to save space, title already explains it
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                        titleColor: '#1f2937',
+                        bodyColor: '#4b5563',
+                        borderColor: '#e5e7eb',
+                        borderWidth: 1,
+                        padding: 10,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return `จำนวน: ${context.parsed.y} ครั้ง`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 6, // Adjusted based on data max (5) to give some headroom
+                        ticks: {
+                            stepSize: 1,
+                            color: '#94a3b8'
+                        },
+                        grid: {
+                            color: 'rgba(226, 232, 240, 0.5)',
+                            borderDash: [5, 5]
+                        },
+                        border: {
+                            display: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#64748b',
+                            font: {
+                                family: "'Sarabun', sans-serif"
+                            }
+                        },
+                        grid: {
+                            display: false
+                        },
+                        border: {
+                            display: false
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index',
+                },
+            }
+        });
+    </script>
+<a href="fuelefficiency.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;     หน้าถัดไป (fuel efficiency) ➜
+</body>
+</html>

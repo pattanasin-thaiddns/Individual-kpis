@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปยอดขาย แผนกขายส่ง (Invoice) - เดือนกรกฎาคม</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Prompt for Thai Language Support) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary: #3b82f6; /* Blue 500 */
+            --success: #10b981; /* Emerald 500 */
+            --warning: #f59e0b; /* Amber 500 */
+            --danger: #ef4444; /* Red 500 */
+            --bg-color: #f0fdf4; /* Light Green/Blue tint background */
+        }
+
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #e0eafc; /* Fallback */
+            background-image: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            min-height: 100vh;
+            color: #1f2937;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+            border-radius: 1.5rem;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.05);
+            border-radius: 1rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2); 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3); 
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #2563eb, #0ea5e9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+
+        <header class="glass-panel p-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-200">
+                        <i class="ph ph-buildings text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl md:text-2xl font-bold text-gray-800">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</h1>
+                        <p class="text-sm text-gray-500 font-medium">สาขาอุดรธานี - แผนกขายส่ง (Invoice)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="bg-white/80 px-4 py-2 rounded-full border border-white/50 shadow-sm flex items-center gap-2">
+                    <i class="ph ph-calendar-blank text-blue-600 text-lg"></i>
+                    <span class="font-semibold text-gray-700">ประจำเดือน กรกฎาคม</span>
+                </div>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-full shadow-md transition-colors" onclick="window.print()" title="พิมพ์รายงาน">
+                    <i class="ph ph-printer text-xl"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- KPI 1: ยอดขายจริง -->
+            <div class="glass-card p-6 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="ph-fill ph-coins text-6xl text-blue-600"></i>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-sm font-semibold text-gray-500 mb-1 flex items-center gap-2">
+                        <i class="ph ph-money text-blue-500"></i> ยอดขายจริง (Actual)
+                    </p>
+                    <h3 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">฿ 6,100,376.25</h3>
+                    <div class="mt-2 text-xs font-medium bg-blue-100 text-blue-800 inline-block px-2 py-1 rounded-md">
+                        คิดเป็น 85.1% ของยอดรวมบริษัท
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI 2: เป้าหมาย -->
+            <div class="glass-card p-6 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="ph-fill ph-target text-6xl text-gray-600"></i>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-sm font-semibold text-gray-500 mb-1 flex items-center gap-2">
+                        <i class="ph ph-flag text-gray-500"></i> เป้าหมาย (Target)
+                    </p>
+                    <h3 class="text-2xl md:text-3xl font-bold text-gray-700 tracking-tight">฿ 5,950,000.00</h3>
+                    
+                    <!-- Progress Bar -->
+                    <div class="mt-4 flex items-center justify-between text-sm">
+                        <span class="font-bold text-emerald-600">102.5%</span>
+                        <span class="text-emerald-600 flex items-center"><i class="ph-bold ph-trend-up mr-1"></i> +฿150,376.25</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                        <div class="bg-gradient-to-r from-emerald-400 to-emerald-600 h-2 rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI 3: จำนวนบิล -->
+            <div class="glass-card p-6 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="ph-fill ph-receipt text-6xl text-purple-600"></i>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-sm font-semibold text-gray-500 mb-1 flex items-center gap-2">
+                        <i class="ph ph-receipt text-purple-500"></i> จำนวนบิล (Invoices)
+                    </p>
+                    <h3 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">520 <span class="text-lg font-normal text-gray-500">บิล</span></h3>
+                    <p class="mt-2 text-sm text-gray-600">สะท้อนฐานลูกค้าที่แข็งแกร่ง</p>
+                </div>
+            </div>
+
+            <!-- KPI 4: ยอดเฉลี่ยต่อบิล -->
+            <div class="glass-card p-6 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <i class="ph-fill ph-chart-bar text-6xl text-amber-600"></i>
+                </div>
+                <div class="relative z-10">
+                    <p class="text-sm font-semibold text-gray-500 mb-1 flex items-center gap-2">
+                        <i class="ph ph-calculator text-amber-500"></i> ยอดเฉลี่ยต่อบิล (Avg. Ticket)
+                    </p>
+                    <h3 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">฿ 11,731.49</h3>
+                    <p class="mt-2 text-sm text-amber-600 font-medium flex items-center">
+                        <i class="ph-fill ph-star mr-1"></i> มูลค่าการซื้อต่อบิลสูงมาก
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Left Column: Text Analysis (2/3 width on large screens) -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- Summary Card -->
+                <div class="glass-panel p-6 border-l-4 border-l-blue-500">
+                    <h2 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i class="ph-fill ph-info text-blue-500"></i> บทวิเคราะห์ภาพรวม
+                    </h2>
+                    <p class="text-gray-700 leading-relaxed">
+                        แผนกขายส่ง (Invoice) เป็น <strong class="text-blue-700">แหล่งรายได้หลักของบริษัท</strong> คิดเป็นสัดส่วนสูงถึง <strong class="bg-blue-100 px-1 rounded">85.1%</strong> ของยอดขายรวม 
+                        แม้ว่าจำนวนบิลจะมีเพียง 520 บิล แต่สามารถสร้างยอดขายได้ทะลุเป้าหมายกว่า 6.1 ล้านบาท 
+                        สิ่งนี้แสดงให้เห็นถึง <strong class="text-emerald-600">คุณภาพของลูกค้าชั้นดี</strong> และ <strong class="text-emerald-600">มูลค่าการสั่งซื้อที่สูงมาก (High-ticket size)</strong> ของฐานลูกค้าปัจจุบัน
+                    </p>
+                </div>
+
+                <!-- SWOT-like Analysis Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Strengths -->
+                    <div class="glass-card p-5 border-t-4 border-t-emerald-500">
+                        <h3 class="font-bold text-emerald-700 mb-4 flex items-center gap-2">
+                            <i class="ph-fill ph-thumbs-up text-xl"></i> จุดแข็ง (Strengths)
+                        </h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2">
+                                <i class="ph-bold ph-check-circle text-emerald-500 mt-1 flex-shrink-0"></i>
+                                <span class="text-gray-700">ทำยอดขายสุทธิ <strong class="text-gray-900">เกินเป้าหมาย (102.5%)</strong></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="ph-bold ph-check-circle text-emerald-500 mt-1 flex-shrink-0"></i>
+                                <span class="text-gray-700">มียอดเฉลี่ยต่อบิลสูงมาก (฿11,731/บิล) แสดงถึงอำนาจการซื้อ</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="ph-bold ph-check-circle text-emerald-500 mt-1 flex-shrink-0"></i>
+                                <span class="text-gray-700">มีฐานลูกค้ากลุ่มธุรกิจ (B2B) และลูกค้าประจำที่แข็งแรง</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Points to Monitor -->
+                    <div class="glass-card p-5 border-t-4 border-t-amber-500">
+                        <h3 class="font-bold text-amber-700 mb-4 flex items-center gap-2">
+                            <i class="ph-fill ph-warning-circle text-xl"></i> จุดที่ควรติดตาม (Monitor)
+                        </h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-2">
+                                <i class="ph-bold ph-eye text-amber-500 mt-1 flex-shrink-0"></i>
+                                <span class="text-gray-700">การรักษาฐานลูกค้าหลัก (Key Accounts) ให้อยู่กับบริษัทต่อเนื่อง</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="ph-bold ph-eye text-amber-500 mt-1 flex-shrink-0"></i>
+                                <span class="text-gray-700">การวางกลยุทธ์เพื่อหาลูกค้าใหม่เพิ่มเติม</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="ph-bold ph-eye text-amber-500 mt-1 flex-shrink-0"></i>
+                                <span class="text-gray-700">การกระจายความเสี่ยง ไม่พึ่งพายอดขายจากลูกค้ารายใหญ่เพียงไม่กี่รายมากเกินไป</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="space-y-6">
+                
+                <!-- Simple Visual Chart (Mockup representation of revenue split) -->
+                <div class="glass-panel p-5">
+                     <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2 text-sm">
+                        <i class="ph-fill ph-pie-chart text-blue-500"></i> สัดส่วนยอดขายบริษัท
+                    </h3>
+                    <div class="relative h-48 w-full flex items-center justify-center">
+                        <canvas id="revenuePieChart"></canvas>
+                        <!-- Center text for Doughnut chart -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-2">
+                            <span class="text-2xl font-bold text-gray-800">85%</span>
+                            <span class="text-xs text-gray-500">แผนกขายส่ง</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations Action Box -->
+                <div class="glass-card p-5 bg-gradient-to-br from-white/60 to-blue-50/60 border-l-4 border-l-purple-500">
+                    <h3 class="font-bold text-purple-700 mb-3 flex items-center gap-2">
+                        <i class="ph-fill ph-lightbulb text-xl text-yellow-500"></i> ข้อเสนอแนะเชิงรุก
+                    </h3>
+                    
+                    <ul class="space-y-2 mb-4 text-sm text-gray-700">
+                        <li class="flex items-start gap-2">
+                            <i class="ph-bold ph-caret-right text-purple-500 mt-0.5"></i>
+                            <span>ขยายฐานลูกค้าโครงการ และร้านค้าตัวแทน</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph-bold ph-caret-right text-purple-500 mt-0.5"></i>
+                            <span>เพิ่มการติดตาม (Follow-up) ลูกค้าเก่าที่หายไป</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="ph-bold ph-caret-right text-purple-500 mt-0.5"></i>
+                            <span>ผลักดันสินค้าที่มีอัตรากำไร (Margin) สูงในทุกบิล</span>
+                        </li>
+                    </ul>
+
+                    <!-- Simulation Box -->
+                    <div class="mt-4 bg-white/80 p-3 rounded-lg border border-purple-100 shadow-sm">
+                        <p class="text-xs font-semibold text-gray-500 mb-1">Projection (หากเพิ่มได้ 20 บิล/เดือน)</p>
+                        <div class="flex items-end justify-between">
+                            <div>
+                                <span class="text-lg font-bold text-purple-700">+ ฿234,630</span>
+                                <span class="text-xs text-gray-500">/ เดือน</span>
+                            </div>
+                            <i class="ph-fill ph-rocket-launch text-2xl text-purple-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <footer class="text-center py-6 text-sm text-gray-500">
+            <p>รายงานสร้างเมื่อ: <span id="currentDate"></span> | Dashboard for Pattanasin Thai Trading Co.,Ltd.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Set current date in footer
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('th-TH', options);
+
+        // Initialize Chart.js Doughnut Chart
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('revenuePieChart').getContext('2d');
+            
+            // Configuring the Doughnut chart
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['แผนกขายส่ง (Invoice)', 'แผนกอื่นๆ (ปลีก/อื่นๆ)'],
+                    datasets: [{
+                        data: [85.1, 14.9],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.9)', // Blue 500
+                            'rgba(209, 213, 219, 0.6)'  // Gray 300
+                        ],
+                        borderColor: [
+                            'rgba(255, 255, 255, 1)',
+                            'rgba(255, 255, 255, 1)'
+                        ],
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%', // Make it thin
+                    plugins: {
+                        legend: {
+                            display: false // Hide default legend to keep it clean
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': ' + context.parsed + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+<a href="nksales.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (PTN sale) ➜
+</body>
+</html>

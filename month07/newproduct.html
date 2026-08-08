@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปยอดขายสินค้าใหม่ - บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Inter & Sarabun for Thai language support -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom configuration for Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Sarabun', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6', // Blue 500
+                        secondary: '#10b981', // Emerald 500
+                        accent: '#f59e0b', // Amber 500
+                        background: '#f3f4f6', // Gray 100
+                        surface: 'rgba(255, 255, 255, 0.7)',
+                        glassBorder: 'rgba(255, 255, 255, 0.5)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS for Glassmorphism effects and animations -->
+    <style>
+        body {
+            /* Subtle animated background gradient */
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 50%, #dcfce7 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glassmorphism utility classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            border-radius: 1.5rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .glass-panel:hover {
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.12);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        /* Scrollbar styling for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Staggered animation delays */
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased font-sans p-4 md:p-6 lg:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header Section -->
+        <header class="glass-panel p-6 flex flex-col md:flex-row justify-between items-start md:items-center fade-in">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-blue-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-blue-500">
+                    <i class="fa-solid fa-chart-line mr-2"></i>Dashboard สรุปผลยอดขายสินค้าใหม่
+                </h1>
+                <p class="text-gray-600 mt-1 text-sm md:text-base">
+                    บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | ประจำเดือน <span class="font-semibold text-blue-800">กรกฎาคม 2026</span>
+                </p>
+                <p class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>สาขาอุดรธานี - หนองคาย</p>
+            </div>
+            
+            <div class="mt-4 md:mt-0 flex gap-3">
+                <div class="glass-card px-4 py-2 flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="text-sm font-medium">อัปเดตล่าสุด: สิ้นเดือน ก.ค.</span>
+                </div>
+                <button onclick="window.print()" class="bg-white hover:bg-gray-50 text-gray-700 border border-gray-200 shadow-sm px-4 py-2 rounded-xl text-sm font-medium transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-print"></i> พิมพ์ / PDF
+                </button>
+            </div>
+        </header>
+
+        <!-- Key Performance Indicators (KPIs) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 fade-in delay-100">
+            
+            <!-- KPI 1: Total Sales July -->
+            <div class="glass-panel p-5 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-blue-100 rounded-full opacity-50 group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="flex justify-between items-start relative z-10">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">ยอดขายจริง (กรกฎาคม)</p>
+                        <h2 class="text-3xl font-bold text-blue-600">฿135,970.66</h2>
+                        <div class="mt-2 flex items-center text-sm">
+                            <span class="text-green-600 bg-green-100 px-2 py-0.5 rounded-full font-medium flex items-center">
+                                <i class="fa-solid fa-arrow-trend-up mr-1 text-xs"></i> +85.1%
+                            </span>
+                            <span class="text-gray-400 ml-2">เทียบกับ มิ.ย. (฿73,448)</span>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-blue-50 rounded-xl text-blue-500 shadow-sm border border-blue-100">
+                        <i class="fa-solid fa-coins fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI 2: Target Sales -->
+            <div class="glass-panel p-5 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-indigo-100 rounded-full opacity-50 group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="flex justify-between items-start relative z-10">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">เป้าหมายต่อเดือน</p>
+                        <h2 class="text-3xl font-bold text-gray-800">฿600,000.00</h2>
+                        <div class="mt-2 w-full bg-gray-200 rounded-full h-2.5">
+                            <div class="bg-indigo-500 h-2.5 rounded-full" style="width: 22.6%"></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1 text-right">บรรลุเป้าหมาย 22.66%</p>
+                    </div>
+                    <div class="p-3 bg-indigo-50 rounded-xl text-indigo-500 shadow-sm border border-indigo-100">
+                        <i class="fa-solid fa-bullseye fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI 3: Branch Performance Udon -->
+            <div class="glass-panel p-5 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-orange-100 rounded-full opacity-50 group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="flex justify-between items-start relative z-10">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">ยอดขาย สาขาอุดรธานี (ก.ค.)</p>
+                        <h2 class="text-3xl font-bold text-orange-500">฿54,998.66</h2>
+                        <div class="mt-2 flex items-center text-sm">
+                            <span class="text-red-500 bg-red-100 px-2 py-0.5 rounded-full font-medium flex items-center">
+                                <i class="fa-solid fa-arrow-trend-down mr-1 text-xs"></i> -10.6%
+                            </span>
+                            <span class="text-gray-400 ml-2">เทียบกับ มิ.ย. (฿61,511)</span>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-orange-50 rounded-xl text-orange-500 shadow-sm border border-orange-100">
+                        <i class="fa-solid fa-store fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI 4: Branch Performance Nong Khai -->
+            <div class="glass-panel p-5 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-emerald-100 rounded-full opacity-50 group-hover:scale-110 transition-transform duration-500"></div>
+                <div class="flex justify-between items-start relative z-10">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">ยอดขาย สาขาหนองคาย (ก.ค.)</p>
+                        <h2 class="text-3xl font-bold text-emerald-600">฿80,972.00</h2>
+                        <div class="mt-2 flex items-center text-sm">
+                            <span class="text-green-600 bg-green-100 px-2 py-0.5 rounded-full font-medium flex items-center">
+                                <i class="fa-solid fa-arrow-trend-up mr-1 text-xs"></i> +578%
+                            </span>
+                            <span class="text-gray-400 ml-2">ก้าวกระโดดจาก มิ.ย. (฿11,937)</span>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-emerald-50 rounded-xl text-emerald-500 shadow-sm border border-emerald-100">
+                        <i class="fa-solid fa-shop fa-lg"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts and Analysis Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-in delay-200">
+            
+            <!-- Main Trend Chart -->
+            <div class="lg:col-span-2 glass-panel p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800"><i class="fa-solid fa-chart-area mr-2 text-blue-500"></i>แนวโน้มยอดขายสินค้าใหม่ (ม.ค. - ก.ค. 2026)</h3>
+                    <div class="text-xs font-medium bg-gray-100 px-3 py-1 rounded-full text-gray-600 border border-gray-200">รายเดือน</div>
+                </div>
+                <div class="relative h-[300px] w-full">
+                    <canvas id="salesTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Branch Comparison Chart -->
+            <div class="glass-panel p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800"><i class="fa-solid fa-chart-pie mr-2 text-indigo-500"></i>สัดส่วนยอดขายตามสาขา</h3>
+                </div>
+                <div class="relative h-[220px] w-full flex justify-center mt-4">
+                    <canvas id="branchPieChart"></canvas>
+                </div>
+                <div class="mt-4 grid grid-cols-2 gap-2 text-center text-sm">
+                    <div class="p-2 glass-card border-b-2 border-orange-400">
+                        <p class="text-gray-500 text-xs">อุดรธานี (รวม 7 ด.)</p>
+                        <p class="font-bold text-gray-800">฿191,745.19</p>
+                    </div>
+                    <div class="p-2 glass-card border-b-2 border-emerald-400">
+                        <p class="text-gray-500 text-xs">หนองคาย (รวม 7 ด.)</p>
+                        <p class="font-bold text-gray-800">฿135,334.00</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Data Table and Product Highlights -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-in delay-300">
+            
+            <!-- Analysis Text Box -->
+            <div class="glass-panel p-6 lg:col-span-1 flex flex-col justify-between relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 text-9xl text-blue-50 opacity-[0.03] z-0"><i class="fa-solid fa-lightbulb"></i></div>
+                <div class="relative z-10">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2 border-gray-200">
+                        <i class="fa-solid fa-magnifying-glass-chart mr-2 text-amber-500"></i>วิเคราะห์สาเหตุการเติบโตเดือน ก.ค.
+                    </h3>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3 mt-1 shadow-sm">
+                                1
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800 text-sm">การจัดหาสินค้าใหม่อย่างต่อเนื่อง</p>
+                                <p class="text-xs text-gray-600 mt-1 leading-relaxed">ฝ่ายจัดซื้อได้นำเข้าสินค้าใหม่ที่ตอบโจทย์ตลาดเพิ่มเข้ามาเรื่อยๆ ตลอดเดือน ทำให้มีตัวเลือกที่ตรงใจลูกค้ามากขึ้น</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3 mt-1 shadow-sm">
+                                2
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800 text-sm">แคมเปญประชาสัมพันธ์ภายในและภายนอก</p>
+                                <p class="text-xs text-gray-600 mt-1 leading-relaxed">การสื่อสารที่มีประสิทธิภาพ พนักงานมีความรู้ความเข้าใจในตัวสินค้าใหม่ และลูกค้าได้รับข่าวสารอย่างทั่วถึง กระตุ้นความสนใจได้อย่างดี</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mr-3 mt-1 shadow-sm">
+                                3
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800 text-sm">สาขาหนองคายทำยอดพุ่งสูง</p>
+                                <p class="text-xs text-gray-600 mt-1 leading-relaxed">เป็นจุดสังเกตสำคัญ สาขาหนองคายมียอดขายเติบโตแบบก้าวกระโดดจากเดือนก่อนหน้าอย่างมาก (จาก 11,937 เป็น 80,972) ช่วยดันยอดรวมให้สูงขึ้นชัดเจน</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="mt-6 pt-4 border-t border-gray-200 relative z-10">
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-3 rounded-xl border border-blue-100">
+                        <p class="text-xs font-semibold text-blue-800 mb-1"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i>ข้อเสนอแนะ</p>
+                        <p class="text-xs text-gray-700">ควรรักษาความถี่ในการนำเสนอสินค้าใหม่ และศึกษากลยุทธ์ความสำเร็จของสาขาหนองคายในเดือนนี้เพื่อปรับใช้กับสาขาอื่น</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Showcase -->
+            <div class="glass-panel p-6 lg:col-span-2">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4 flex justify-between items-center">
+                    <span><i class="fa-solid fa-box-open mr-2 text-green-500"></i>ตัวอย่างกลุ่มสินค้าใหม่</span>
+                    <span class="text-xs font-normal text-gray-500 bg-gray-100 px-2 py-1 rounded">ภาพประกอบอ้างอิง</span>
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Product 1 -->
+                    <div class="glass-card overflow-hidden group">
+                        <div class="h-40 overflow-hidden bg-white flex items-center justify-center p-2 relative">
+                            <!-- In a real app, use the actual image path. Using placeholder with text if image fails to load -->
+                            <img src="01.jfif" alt="รถเข็นอเนกประสงค์" class="h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://placehold.co/400x300/e2e8f0/475569?text=รถเข็น'">
+                        </div>
+                        <div class="p-3 border-t border-gray-100">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-blue-500 bg-blue-50 px-2 py-1 rounded-sm">อุปกรณ์ช่าง/โลจิสติกส์</span>
+                            <h4 class="font-medium text-sm text-gray-800 mt-2 truncate">รถเข็นโครงเหล็กสีน้ำเงิน</h4>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 2 -->
+                    <div class="glass-card overflow-hidden group">
+                        <div class="h-40 overflow-hidden bg-white flex items-center justify-center p-2">
+                            <img src="02.jfif" alt="บล็อกลอยกันน้ำ" class="h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://placehold.co/400x300/e2e8f0/475569?text=บล็อกลอยกันน้ำ'">
+                        </div>
+                        <div class="p-3 border-t border-gray-100">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 bg-gray-100 px-2 py-1 rounded-sm">อุปกรณ์ไฟฟ้า</span>
+                            <h4 class="font-medium text-sm text-gray-800 mt-2 truncate">ตู้/กล่องพลาสติกกันน้ำ</h4>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 3 -->
+                    <div class="glass-card overflow-hidden group">
+                        <div class="h-40 overflow-hidden bg-white flex items-center justify-center p-2">
+                            <img src="03.jfif" alt="สว่านไร้สาย" class="h-full object-contain group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://placehold.co/400x300/e2e8f0/475569?text=เครื่องมือช่าง'">
+                        </div>
+                        <div class="p-3 border-t border-gray-100">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-green-600 bg-green-50 px-2 py-1 rounded-sm">เครื่องมือไฟฟ้า</span>
+                            <h4 class="font-medium text-sm text-gray-800 mt-2 truncate">สว่านไร้สาย PUMPKIN พร้อมกล่องชุด</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Detailed Data Table Section -->
+        <div class="glass-panel p-6 fade-in delay-400">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4"><i class="fa-solid fa-table mr-2 text-gray-500"></i>ตารางสรุปยอดขายรายเดือน ปี 2026</h3>
+            <div class="overflow-x-auto rounded-xl border border-gray-200">
+                <table class="w-full text-sm text-left">
+                    <thead class="text-xs text-gray-700 bg-gray-50 uppercase border-b border-gray-200">
+                        <tr>
+                            <th scope="col" class="px-4 py-3 font-semibold w-16 text-center border-r">ลำดับ</th>
+                            <th scope="col" class="px-4 py-3 font-semibold border-r">รายการ</th>
+                            <th scope="col" class="px-4 py-3 font-semibold text-right border-r">Jan-26</th>
+                            <th scope="col" class="px-4 py-3 font-semibold text-right border-r">Feb-26</th>
+                            <th scope="col" class="px-4 py-3 font-semibold text-right border-r">Mar-26</th>
+                            <th scope="col" class="px-4 py-3 font-semibold text-right border-r">Apr-26</th>
+                            <th scope="col" class="px-4 py-3 font-semibold text-right border-r">May-26</th>
+                            <th scope="col" class="px-4 py-3 font-semibold text-right border-r">Jun-26</th>
+                            <th scope="col" class="px-4 py-3 font-bold text-blue-700 bg-blue-50 text-right">Jul-26</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-white border-b hover:bg-gray-50 transition-colors">
+                            <td class="px-4 py-3 text-center border-r">1</td>
+                            <td class="px-4 py-3 font-medium text-gray-900 border-r">เป้าหมาย</td>
+                            <td class="px-4 py-3 text-right text-gray-500 border-r">600,000.00</td>
+                            <td class="px-4 py-3 text-right text-gray-500 border-r">600,000.00</td>
+                            <td class="px-4 py-3 text-right text-gray-500 border-r">600,000.00</td>
+                            <td class="px-4 py-3 text-right text-gray-500 border-r">600,000.00</td>
+                            <td class="px-4 py-3 text-right text-gray-500 border-r">600,000.00</td>
+                            <td class="px-4 py-3 text-right text-gray-500 border-r">600,000.00</td>
+                            <td class="px-4 py-3 text-right font-bold text-gray-800 bg-blue-50/50">600,000.00</td>
+                        </tr>
+                        <tr class="bg-blue-50/30 border-b hover:bg-blue-50/70 transition-colors">
+                            <td class="px-4 py-3 text-center border-r">2</td>
+                            <td class="px-4 py-3 font-medium text-blue-900 border-r">ยอดขายจริงทำได้</td>
+                            <td class="px-4 py-3 text-right border-r">2,943.00</td>
+                            <td class="px-4 py-3 text-right border-r">26,596.60</td>
+                            <td class="px-4 py-3 text-right border-r">100,610.41</td>
+                            <td class="px-4 py-3 text-right border-r">69,290.36</td>
+                            <td class="px-4 py-3 text-right border-r">48,370.00</td>
+                            <td class="px-4 py-3 text-right border-r">73,448.03</td>
+                            <td class="px-4 py-3 text-right font-bold text-blue-700 bg-blue-100/50">135,970.66</td>
+                        </tr>
+                        <tr class="bg-amber-50/40 hover:bg-amber-50/80 transition-colors">
+                            <td class="px-4 py-3 text-center border-r">3</td>
+                            <td class="px-4 py-3 font-medium text-amber-900 border-r">ส่วนต่าง/ยอดรวม</td>
+                            <td class="px-4 py-3 text-right text-red-600 font-medium border-r">2,943.00</td>
+                            <td class="px-4 py-3 text-right text-red-600 font-medium border-r">29,539.60</td>
+                            <td class="px-4 py-3 text-right text-red-600 font-medium border-r">130,150.01</td>
+                            <td class="px-4 py-3 text-right text-red-600 font-medium border-r">199,440.37</td>
+                            <td class="px-4 py-3 text-right text-red-600 font-medium border-r">247,810.37</td>
+                            <td class="px-4 py-3 text-right text-red-600 font-medium border-r">321,258.40</td>
+                            <td class="px-4 py-3 text-right text-red-700 font-bold bg-amber-100/50">457,229.06</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <footer class="text-center text-xs text-gray-500 py-4">
+            <p>เอกสารใช้สำหรับภายในองค์กรเท่านั้น - ข้อมูล ณ สิ้นเดือน กรกฎาคม 2026</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // Ensure scripts run after DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Define data arrays based on provided image
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
+            const actualSales = [2943.00, 26596.60, 100610.41, 69290.36, 48370.00, 73448.03, 135970.66];
+            
+            // Calculate cumulative sales for context (optional, using line chart for actuals)
+            
+            // Common chart options for styling
+            Chart.defaults.font.family = "'Sarabun', 'Inter', sans-serif";
+            Chart.defaults.color = '#64748b';
+
+            // 1. Sales Trend Chart (Line & Bar combination)
+            const ctxTrend = document.getElementById('salesTrendChart').getContext('2d');
+            
+            // Create gradient for the area chart
+            let gradientBlue = ctxTrend.createLinearGradient(0, 0, 0, 400);
+            gradientBlue.addColorStop(0, 'rgba(59, 130, 246, 0.5)'); // Blue 500 semi-transparent
+            gradientBlue.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+
+            new Chart(ctxTrend, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'ยอดขายจริง (บาท)',
+                            data: actualSales,
+                            borderColor: '#3b82f6', // Blue 500
+                            backgroundColor: gradientBlue,
+                            borderWidth: 3,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#3b82f6',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            fill: true,
+                            tension: 0.4 // Smooth curves
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#1e293b',
+                            bodyColor: '#334155',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#f1f5f9',
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    if(value === 0) return '0';
+                                    return (value / 1000) + 'k';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false,
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 2. Branch Pie Chart
+            const ctxPie = document.getElementById('branchPieChart').getContext('2d');
+            
+            // Total calculated from the small text at bottom of image
+            const udonTotal = 33045.36 + 42190.14 + 61511.03 + 54998.66; // Approx total from visible data
+            const nongkhaiTotal = 36245 + 6180 + 11937 + 80972;
+
+            new Chart(ctxPie, {
+                type: 'doughnut',
+                data: {
+                    labels: ['อุดรธานี', 'หนองคาย'],
+                    datasets: [{
+                        data: [udonTotal, nongkhaiTotal],
+                        backgroundColor: [
+                            'rgba(249, 115, 22, 0.8)', // Orange 500
+                            'rgba(16, 185, 129, 0.8)'  // Emerald 500
+                        ],
+                        borderColor: [
+                            '#ffffff',
+                            '#ffffff'
+                        ],
+                        borderWidth: 2,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    const value = context.raw;
+                                    const total = context.chart._metasets[context.datasetIndex].total;
+                                    const percentage = Math.round((value / total) * 100) + '%';
+                                    label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(value) + ' (' + percentage + ')';
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'textCenter',
+                    beforeDraw: function(chart) {
+                        var width = chart.width,
+                            height = chart.height,
+                            ctx = chart.ctx;
+
+                        ctx.restore();
+                        var fontSize = (height / 114).toFixed(2);
+                        ctx.font = "bold " + fontSize + "em sans-serif";
+                        ctx.textBaseline = "middle";
+                        ctx.fillStyle = "#334155";
+
+                        var text = "ยอดรวม 7 ด.",
+                            textX = Math.round((width - ctx.measureText(text).width) / 2),
+                            textY = height / 2 - 10;
+
+                        ctx.fillText(text, textX, textY);
+                        
+                        ctx.font = "normal " + (fontSize*0.6).toFixed(2) + "em sans-serif";
+                        ctx.fillStyle = "#64748b";
+                        var text2 = "฿327K",
+                            text2X = Math.round((width - ctx.measureText(text2).width) / 2),
+                            text2Y = height / 2 + 15;
+                            
+                        ctx.fillText(text2, text2X, text2Y);
+                        ctx.save();
+                    }
+                }]
+            });
+        });
+    </script>
+<a href="trainingemployee.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;   หน้าถัดไป (training employee) ➜
+</body>
+</html>

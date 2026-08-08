@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปผลการฝึกอบรมพนักงาน - กรกฎาคม 2026</title>
+    <!-- Import Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Import Chart.js (Updated to UMD version for better browser compatibility) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Import Google Fonts (Kanit for Thai text) -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Import Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            /* Background gradient with soft, light colors */
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-attachment: fixed;
+            color: #334155; /* Slate-700 */
+        }
+
+        /* Glassmorphism effect classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.03);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(31, 38, 135, 0.08);
+        }
+
+        /* Chart container to ensure responsiveness */
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+
+        /* Custom Scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex justify-center items-center">
+
+    <div class="glass-panel w-full max-w-6xl rounded-3xl p-6 md:p-8 overflow-hidden relative">
+        
+        <!-- Decorative background shapes (subtle) -->
+        <div class="absolute top-[-100px] right-[-100px] w-64 h-64 bg-green-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 z-0 pointer-events-none"></div>
+        <div class="absolute bottom-[-100px] left-[-100px] w-80 h-80 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 z-0 pointer-events-none"></div>
+
+        <div class="relative z-10">
+            <!-- Header Section -->
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 pb-6 border-b border-gray-200/50">
+                <div class="mb-4 md:mb-0">
+                    <h1 class="text-3xl font-semibold text-gray-800 mb-1 flex items-center gap-2">
+                        <i class="ph-duotone ph-chalkboard-teacher text-blue-600 text-4xl"></i>
+                        สรุปผลการฝึกอบรมพนักงาน
+                    </h1>
+                    <p class="text-gray-500 text-lg">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</p>
+                </div>
+                
+                <!-- Period Selector / Indicator -->
+                <div class="glass-card px-5 py-2 rounded-full flex items-center gap-2 border border-gray-200">
+                    <i class="ph ph-calendar-blank text-gray-500"></i>
+                    <span class="font-medium text-gray-700">ประจำเดือน กรกฎาคม 2026</span>
+                    <span class="ml-2 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600">
+                        ไม่มีกำหนดการ
+                    </span>
+                </div>
+            </header>
+
+            <!-- Summary KPI Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                
+                <!-- Card 1: Actual Attendees (0 for July) -->
+                <div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+                    <div class="absolute right-[-20px] top-[-20px] opacity-5 group-hover:opacity-10 transition-opacity duration-300">
+                        <i class="ph-fill ph-users text-9xl text-gray-400"></i>
+                    </div>
+                    <div class="flex items-center gap-4 mb-4 relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-gray-100 text-gray-600 flex items-center justify-center text-2xl shadow-sm">
+                            <i class="ph-duotone ph-user-minus"></i>
+                        </div>
+                        <h3 class="text-gray-600 font-medium">เข้ารับการอบรมจริง</h3>
+                    </div>
+                    <div class="flex items-baseline gap-2 relative z-10">
+                        <span class="text-4xl font-bold text-gray-800" id="actual-attendees">0</span>
+                        <span class="text-gray-500">คน</span>
+                    </div>
+                </div>
+
+                <!-- Card 2: Planned Attendees (0 for July) -->
+                <div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+                     <div class="absolute right-[-20px] top-[-20px] opacity-5 group-hover:opacity-10 transition-opacity duration-300">
+                        <i class="ph-fill ph-clipboard-text text-9xl text-gray-400"></i>
+                    </div>
+                    <div class="flex items-center gap-4 mb-4 relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-gray-100 text-gray-600 flex items-center justify-center text-2xl shadow-sm">
+                            <i class="ph-duotone ph-list-dashes"></i>
+                        </div>
+                        <h3 class="text-gray-600 font-medium">ต้องเข้ารับการอบรมตามแผน</h3>
+                    </div>
+                    <div class="flex items-baseline gap-2 relative z-10">
+                        <span class="text-4xl font-bold text-gray-800" id="planned-attendees">0</span>
+                        <span class="text-gray-500">คน</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: Completion Percentage -->
+                <div class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+                    <div class="absolute right-[-20px] top-[-20px] opacity-5 group-hover:opacity-10 transition-opacity duration-300">
+                        <i class="ph-fill ph-chart-donut text-9xl text-gray-300"></i>
+                    </div>
+                    <div class="flex items-center gap-4 mb-4 relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-gray-100 text-gray-500 flex items-center justify-center text-2xl shadow-sm">
+                            <i class="ph-duotone ph-prohibit"></i>
+                        </div>
+                        <h3 class="text-gray-600 font-medium">อัตราการเข้าร่วม</h3>
+                    </div>
+                    <div class="flex items-baseline gap-2 relative z-10">
+                        <span class="text-4xl font-bold text-gray-400" id="completion-rate">-</span>
+                        <span class="text-xl font-semibold text-gray-400"></span>
+                    </div>
+                    
+                    <!-- Progress Bar (Empty) -->
+                    <div class="w-full bg-gray-100 rounded-full h-1.5 mt-4 relative z-10">
+                        <div class="bg-gray-300 h-1.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area: Chart and Details -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Chart Section -->
+                <div class="glass-card rounded-2xl p-6 lg:col-span-2 shadow-sm border border-gray-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                            <i class="ph-duotone ph-chart-bar text-gray-400"></i>
+                            แนวโน้มการเข้ารับการอบรม (ม.ค. - ก.ค. 2026)
+                        </h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="trainingChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Details/Note Section -->
+                <div class="flex flex-col gap-6 lg:col-span-1">
+                    
+                    <!-- Notice about July -->
+                    <div class="glass-card rounded-2xl p-6 border-l-4 border-l-gray-400 bg-gray-50/50">
+                        <div class="flex gap-4">
+                            <div class="text-gray-500 text-2xl mt-1">
+                                <i class="ph-fill ph-info"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-gray-800 font-semibold mb-2">ข้อมูลเดือนกรกฎาคม</h3>
+                                <p class="text-gray-600 text-sm leading-relaxed">
+                                    <span class="font-medium text-gray-800">กรกฎาคม (Jul-26):</span> <br>
+                                    ไม่มีการจัดการฝึกอบรม หรือ พนักงานไม่ต้องเข้ารับการอบรมตามแผนที่กำหนดไว้ (0 คน)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Year Overview Summary -->
+                    <div class="glass-card rounded-2xl p-6 flex-grow">
+                         <h3 class="text-gray-800 font-semibold mb-4 flex items-center gap-2">
+                            <i class="ph-duotone ph-file-text text-gray-400"></i>
+                            สรุปภาพรวมสะสม (Jan - Jul)
+                        </h3>
+                        <ul class="space-y-4">
+                            <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <span class="text-gray-600 text-sm">จำนวนผู้เข้ารับการอบรมสะสม</span>
+                                <span class="font-semibold text-gray-800">28 คน</span>
+                            </li>
+                            <li class="flex justify-between items-center border-b border-gray-100 pb-2">
+                                <span class="text-gray-600 text-sm">เป้าหมายตามแผนสะสม</span>
+                                <span class="font-semibold text-gray-800">29 คน</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-gray-600 text-sm">อัตราความสำเร็จเฉลี่ย</span>
+                                <span class="font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-md">96.5%</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-8 pt-4 border-t border-gray-200/50 text-center text-sm text-gray-400">
+                ข้อมูลอ้างอิงจากแผนการฝึกอบรมพนักงานให้มีความรู้-ทักษะ ตามตำแหน่ง พัฒนาสิน ไทยเทรดดิ้ง ประจำปี 2026
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            // Data from the provided image + Added July data (0)
+            const labels = ['Jan-26', 'Feb-26', 'Mar-26', 'Apr-26', 'May-26', 'Jun-26', 'Jul-26'];
+            
+            const actualAttendees = [4, 1, 1, 6, 6, 10, 0];
+            const plannedAttendees = [4, 1, 1, 6, 6, 11, 0];
+            
+            // Initializing the Chart
+            const ctx = document.getElementById('trainingChart').getContext('2d');
+            
+            const config = {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'เข้ารับการอบรมจริง',
+                            data: actualAttendees,
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)', // Blue-500
+                            borderRadius: 6,
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.8
+                        },
+                        {
+                            label: 'ตามแผน',
+                            data: plannedAttendees,
+                            backgroundColor: 'rgba(249, 115, 22, 0.3)', // Orange-500 light
+                            borderColor: 'rgba(249, 115, 22, 0.8)',
+                            borderWidth: 1,
+                            borderRadius: 6,
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'end',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8,
+                                font: {
+                                    family: "'Kanit', sans-serif",
+                                    size: 12
+                                },
+                                color: '#64748b'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            titleColor: '#1e293b',
+                            bodyColor: '#334155',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 12,
+                            boxPadding: 6,
+                            usePointStyle: true,
+                            titleFont: { family: "'Kanit', sans-serif", size: 14, weight: 'bold' },
+                            bodyFont: { family: "'Kanit', sans-serif", size: 13 },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + ' คน';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: "'Kanit', sans-serif"
+                                },
+                                color: '#64748b'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            max: 12, // Set slightly above max value (11) for padding
+                            grid: {
+                                color: 'rgba(226, 232, 240, 0.5)', // Slate-200
+                                borderDash: [5, 5],
+                                drawBorder: false
+                            },
+                            ticks: {
+                                stepSize: 2,
+                                font: {
+                                    family: "'Kanit', sans-serif"
+                                },
+                                color: '#64748b'
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Safety check: Render chart only if library loaded correctly
+            if(typeof Chart !== 'undefined') {
+                new Chart(ctx, config);
+            } else {
+                console.error("ไม่สามารถโหลดไลบรารีกราฟได้");
+            }
+
+            // Since July has 0 attendees, set the values safely
+            setTimeout(() => {
+                const actualEl = document.getElementById('actual-attendees');
+                const planEl = document.getElementById('planned-attendees');
+                if(actualEl && planEl) {
+                    actualEl.innerHTML = 0;
+                    planEl.innerHTML = 0;
+                }
+            }, 300);
+        });
+    </script>
+<a href="newcustomersale.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (new customer sale) ➜
+</body>
+</html>

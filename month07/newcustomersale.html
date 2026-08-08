@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Dashboard - July 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f3f4f6;
+        }
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="text-gray-800 font-sans antialiased">
+
+    <!-- Navigation/Header -->
+    <nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-brand-600 text-white p-2 rounded-lg">
+                        <i class="fa-solid fa-chart-line text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-900 leading-tight">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</h1>
+                        <p class="text-xs text-gray-500">รายงานสรุปยอดขายลูกค้าใหม่ ประจำปี 2569</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex flex-col text-right">
+                        <span class="text-sm font-medium text-gray-900">เดือน กรกฎาคม</span>
+                        <span class="text-xs text-gray-500">ข้อมูลล่าสุด: 5 ส.ค. 2569</span>
+                    </div>
+                    <!-- PowerPoint Button -->
+                    <a href="https://docs.google.com/presentation/d/1rljyWQuDlsjEcMPL7d7agL4sZsXn2NkxDWC6cRD3t7A/edit?usp=sharing" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-file-powerpoint"></i>
+                        <span class="hidden sm:inline">เปิด PowerPoint</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Summary Cards (KPIs) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Total Sales July -->
+            <div class="card p-6 border-l-4 border-brand-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">ยอดขายรวม (ก.ค. 2569)</p>
+                        <h3 class="text-3xl font-bold text-gray-900">12,718.29 <span class="text-lg font-normal text-gray-500">บาท</span></h3>
+                    </div>
+                    <div class="p-3 bg-brand-50 text-brand-600 rounded-full">
+                        <i class="fa-solid fa-coins text-2xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-sm">
+                    <span class="text-red-500 flex items-center font-medium">
+                        <i class="fa-solid fa-arrow-down mr-1"></i> 86%
+                    </span>
+                    <span class="text-gray-400 ml-2">เทียบกับเดือน มิ.ย. (91,694.10)</span>
+                </div>
+            </div>
+
+            <!-- YTD Sales -->
+            <div class="card p-6 border-l-4 border-blue-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">ยอดขายสะสมรวมทั้งปี (ม.ค.-ก.ค.)</p>
+                        <h3 class="text-3xl font-bold text-gray-900">442,677.77 <span class="text-lg font-normal text-gray-500">บาท</span></h3>
+                    </div>
+                    <div class="p-3 bg-blue-50 text-blue-600 rounded-full">
+                        <i class="fa-solid fa-chart-pie text-2xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-sm text-gray-500">
+                    <i class="fa-solid fa-circle-info mr-1 text-blue-400"></i> ยอดสะสมยังคงที่ ไม่เปลี่ยนแปลงมากนัก
+                </div>
+            </div>
+
+            <!-- Active vs Inactive -->
+            <div class="card p-6 border-l-4 border-orange-500">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-gray-500 mb-1">สถานะการซื้อของลูกค้า</p>
+                        <div class="flex items-baseline gap-2">
+                            <h3 class="text-3xl font-bold text-gray-900">4 <span class="text-sm font-normal text-gray-500">ราย ซื้อ</span></h3>
+                            <span class="text-gray-300">|</span>
+                            <h3 class="text-xl font-bold text-gray-500">5 <span class="text-sm font-normal text-gray-400">ราย ไม่ซื้อ</span></h3>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-orange-50 text-orange-600 rounded-full">
+                        <i class="fa-solid fa-users text-2xl"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-sm text-orange-600">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> ลูกค้ารายใหญ่ขาดหายไปในเดือนนี้
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            
+            <!-- Top Customers Chart -->
+            <div class="card p-6 lg:col-span-2">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-gray-800">ยอดซื้อลูกค้าใหม่ เดือน กรกฎาคม 2569</h2>
+                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">Top 4</span>
+                </div>
+                <div class="relative h-72 w-full">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top Customers Table -->
+            <div class="card p-6 flex flex-col">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">อันดับลูกค้ายอดซื้อ (ก.ค.)</h2>
+                <div class="flex-grow overflow-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-xs text-gray-500 uppercase bg-gray-50">
+                                <th class="px-4 py-2 rounded-tl-lg">อันดับ</th>
+                                <th class="px-4 py-2">ชื่อลูกค้า</th>
+                                <th class="px-4 py-2 text-right rounded-tr-lg">ยอดซื้อ (บาท)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100 text-sm">
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-4 py-3 font-medium text-brand-600">1</td>
+                                <td class="px-4 py-3 text-gray-800">หจก.วรรณฉัตรการค้า</td>
+                                <td class="px-4 py-3 text-right font-medium">3,564.31</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-4 py-3 font-medium text-gray-600">2</td>
+                                <td class="px-4 py-3 text-gray-800">ร้านยิ่งเจริญการค้า</td>
+                                <td class="px-4 py-3 text-right font-medium">3,279.90</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-4 py-3 font-medium text-gray-600">3</td>
+                                <td class="px-4 py-3 text-gray-800">คุณธีรพงศ์ จันเลียง</td>
+                                <td class="px-4 py-3 text-right font-medium">3,218.00</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-4 py-3 font-medium text-gray-600">4</td>
+                                <td class="px-4 py-3 text-gray-800">ร้านแดงเจริญการช่าง</td>
+                                <td class="px-4 py-3 text-right font-medium">2,656.08</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inactive Customers & Analysis -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Inactive Customers List -->
+            <div class="card p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                        <i class="fa-solid fa-user-xmark text-red-500"></i>
+                        ลูกค้าที่ไม่มีความเคลื่อนไหว (ก.ค.)
+                    </h2>
+                </div>
+                <ul class="space-y-3">
+                    <li class="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-500">
+                                <i class="fa-solid fa-store"></i>
+                            </div>
+                            <span class="text-gray-800 font-medium">ร้านปักกีอุปกรณ์</span>
+                        </div>
+                        <span class="text-xs text-red-600 bg-red-100 px-2 py-1 rounded-full">ไม่มียอดซื้อ</span>
+                    </li>
+                    <li class="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-500">
+                                <i class="fa-solid fa-store"></i>
+                            </div>
+                            <span class="text-gray-800 font-medium">ร้านโชคคำมี</span>
+                        </div>
+                        <span class="text-xs text-red-600 bg-red-100 px-2 py-1 rounded-full">ไม่มียอดซื้อ</span>
+                    </li>
+                    <li class="flex items-center justify-between p-3 bg-orange-50 rounded-lg border border-orange-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-500">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div>
+                                <span class="text-gray-800 font-medium block">คุณนิตย์ติยา ตัญลา</span>
+                                <span class="text-xs text-gray-500">เดือน มิ.ย. ยอดซื้อสูง (14,707 บ.)</span>
+                            </div>
+                        </div>
+                        <span class="text-xs text-orange-600 bg-orange-100 px-2 py-1 rounded-full">น่ากังวล</span>
+                    </li>
+                    <li class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                                <i class="fa-solid fa-store"></i>
+                            </div>
+                            <span class="text-gray-800 font-medium">ร้านศิริญากร</span>
+                        </div>
+                        <span class="text-xs text-gray-500">ซื้อล่าสุด มิ.ย.</span>
+                    </li>
+                    <li class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                                <i class="fa-solid fa-store"></i>
+                            </div>
+                            <span class="text-gray-800 font-medium">ร้าน ส.สัมพันธ์การค้า</span>
+                        </div>
+                        <span class="text-xs text-gray-500">ซื้อล่าสุด มิ.ย.</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Analysis and Recommendations -->
+            <div class="card p-6 bg-gradient-to-br from-white to-blue-50 border-t-4 border-blue-600">
+                <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass-chart text-blue-600"></i>
+                    บทวิเคราะห์และข้อเสนอแนะ
+                </h2>
+                
+                <div class="space-y-4">
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                        <h3 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-red-500"></i> 1. ยอดขายลดลงอย่างรุนแรง
+                        </h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            ยอดขายเดือน ก.ค. (12,718.29 บาท) <strong>ลดลงถึง 86%</strong> เมื่อเทียบกับเดือน มิ.ย. (91,694.10 บาท) ถือเป็นสัญญาณอันตรายที่ต้องหาสาเหตุเร่งด่วน ว่าเกิดจากปัจจัยฤดูกาล, ปัญหาเศรษฐกิจ, หรือปัญหาการบริการ/สินค้า
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+                        <h3 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-equals text-blue-500"></i> 2. ลักษณะการกระจายตัวของยอดขาย
+                        </h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            ไม่มีลูกค้ารายใดที่มียอดซื้อสูงโดดเด่นในเดือนนี้ (ยอดกระจุกตัวอยู่ที่ 2,600 - 3,600 บาทต่อราย) ต่างจากเดือนก่อนที่มีลูกค้ารายใหญ่ช่วยพยุงยอดรวม
+                        </p>
+                    </div>
+
+                    <div class="bg-white p-4 rounded-lg shadow-sm border border-orange-200">
+                        <h3 class="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-bullseye text-orange-500"></i> 3. ข้อเสนอแนะเชิงรุก (Action Plan)
+                        </h3>
+                        <ul class="text-sm text-gray-600 list-disc list-inside space-y-1">
+                            <li><strong>ติดต่อด่วน:</strong> เซลล์ควรโทรหา <span class="font-medium text-orange-600">คุณธีรพงศ์ จันเลียง</span> (ยอดตกจาก 44k เหลือ 3.2k) และ <span class="font-medium text-orange-600">คุณนิตย์ติยา ตัญลา</span> (ยอด 14k หายไปเลย) เพื่อสอบถามความพึงพอใจและปัญหา</li>
+                            <li><strong>จัดโปรโมชั่นกระตุ้นซ้ำ:</strong> สำหรับกลุ่มลูกค้าที่ซื้อในเดือน มิ.ย. แต่เงียบหายไปในเดือน ก.ค. (ร้านศิริญากร, ส.สัมพันธ์การค้า)</li>
+                            <li><strong>สำรวจสินค้าคงคลัง:</strong> ลูกค้าอาจจะซื้อตุนไปมากในเดือน มิ.ย. ทำให้ ก.ค. ไม่มีความต้องการซื้อเพิ่ม</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Chart Configuration
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            
+            // Gradient for bars
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(34, 197, 94, 0.8)'); // Brand-500
+            gradient.addColorStop(1, 'rgba(34, 197, 94, 0.2)');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['หจก.วรรณฉัตรการค้า', 'ร้านยิ่งเจริญการค้า', 'คุณธีรพงศ์ จันเลียง', 'ร้านแดงเจริญการช่าง'],
+                    datasets: [{
+                        label: 'ยอดซื้อ (บาท)',
+                        data: [3564.31, 3279.90, 3218.00, 2656.08],
+                        backgroundColor: gradient,
+                        borderColor: '#16a34a',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                            padding: 12,
+                            titleFont: {
+                                family: 'Kanit',
+                                size: 14
+                            },
+                            bodyFont: {
+                                family: 'Kanit',
+                                size: 14
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#f3f4f6',
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'Kanit'
+                                },
+                                callback: function(value) {
+                                    return value.toLocaleString('th-TH');
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'Kanit',
+                                    size: 11
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        });
+    </script>
+<a href="debtTracking.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (debt Tracking) ➜
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปผลข้อผิดพลาดจากการสื่อสาร - กรกฎาคม</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            /* Background gradient for a clean, light look */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .glass-panel {
+            /* Glassmorphism effect - Light version */
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border-radius: 1.5rem;
+        }
+
+        .metric-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto">
+        <header class="glass-panel p-6 mb-8 flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-semibold text-gray-800">รายงานสรุปข้อผิดพลาดจากการสื่อสาร</h1>
+                <p class="text-gray-600 mt-2 text-lg">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด | ประจำเดือน กรกฎาคม 2569</p>
+            </div>
+            <div class="mt-4 md:mt-0 px-6 py-3 bg-white bg-opacity-80 rounded-full shadow-sm border border-gray-200">
+                <span class="font-medium text-gray-600">ผู้รับผิดชอบ:</span> <span class="font-semibold text-blue-600 text-lg">ตั๊กกี้</span>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Goal Card -->
+            <div class="glass-panel metric-card p-6 text-center">
+                <h3 class="text-gray-500 font-medium mb-2 text-lg">เป้าหมาย (KPI)</h3>
+                <div class="text-4xl font-bold text-gray-800 mb-2">≤ 2 <span class="text-xl font-normal text-gray-500">ครั้ง/เดือน</span></div>
+                <p class="text-sm text-gray-500">เกณฑ์มาตรฐานที่ยอมรับได้</p>
+            </div>
+
+            <!-- Current Month (July) Card -->
+            <div class="glass-panel metric-card p-6 text-center">
+                <h3 class="text-gray-500 font-medium mb-2 text-lg">ผลงานเดือนนี้ (ก.ค.)</h3>
+                <div class="text-5xl font-bold text-green-500 mb-2">1 <span class="text-xl font-normal text-gray-500">ครั้ง</span></div>
+                <div class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    ผ่านเกณฑ์
+                </div>
+            </div>
+
+            <!-- YTD Total Card -->
+            <div class="glass-panel metric-card p-6 text-center">
+                <h3 class="text-gray-500 font-medium mb-2 text-lg">ยอดรวมสะสม (ม.ค. - ก.ค.)</h3>
+                <div class="text-4xl font-bold text-orange-500 mb-2">10 <span class="text-xl font-normal text-gray-500">ครั้ง</span></div>
+                <p class="text-sm text-gray-500">เฉลี่ย 1.43 ครั้ง/เดือน</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Line Chart: Monthly Trend -->
+            <div class="glass-panel p-6">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">แนวโน้มข้อผิดพลาดจากการสื่อสารรายเดือน</h3>
+                <div class="relative h-72">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Analysis & Recommendations -->
+            <div class="glass-panel p-6 flex flex-col">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4">วิเคราะห์สาเหตุและข้อเสนอแนะ</h3>
+                
+                <div class="flex-grow space-y-4 overflow-y-auto pr-2">
+                    <!-- Status Indicator -->
+                    <div class="p-4 bg-green-50 rounded-xl border border-green-100">
+                        <h4 class="font-semibold text-green-800 flex items-center">
+                            <span class="w-3 h-3 rounded-full bg-green-500 mr-2"></span>
+                            สถานะปัจจุบัน: ดีเยี่ยม
+                        </h4>
+                        <p class="text-gray-700 mt-2 text-sm">
+                            ในเดือนกรกฎาคม พบข้อผิดพลาดเพียง 1 ครั้ง ซึ่งต่ำกว่าเป้าหมายที่กำหนด (ไม่เกิน 2 ครั้ง) ถือเป็นการรักษามาตรฐานได้ดีเยี่ยมต่อเนื่องจากเดือนมิถุนายนที่ไม่มีข้อผิดพลาดเลย
+                        </p>
+                    </div>
+
+                    <!-- Analysis points -->
+                    <div class="p-4 bg-white bg-opacity-60 rounded-xl border border-gray-200">
+                        <h4 class="font-semibold text-gray-800 text-sm mb-2">วิเคราะห์ข้อมูลย้อนหลัง:</h4>
+                        <ul class="list-disc pl-5 text-sm text-gray-600 space-y-2">
+                            <li><strong>จุดวิกฤต (ม.ค. & พ.ค.):</strong> เคยเกิดข้อผิดพลาดสูงถึง 4 ครั้ง (ม.ค.) และ 3 ครั้ง (พ.ค.) ซึ่งเกินเป้าหมาย แสดงให้เห็นถึงช่วงเวลาที่มีความท้าทายในการสื่อสาร อาจเกิดจากปริมาณงานที่เพิ่มขึ้น หรือการเปลี่ยนแปลงกระบวนการทำงาน</li>
+                            <li><strong>การฟื้นตัวที่ชัดเจน:</strong> หลังจากเดือนพฤษภาคม (3 ครั้ง) ตัวเลขลดลงอย่างชัดเจนในเดือนมิถุนายน (0 ครั้ง) และกรกฎาคม (1 ครั้ง) บ่งชี้ว่ามาตรการแก้ไขปัญหาหรือการปรับปรุงกระบวนการสื่อสารที่นำมาใช้ (ถ้ามี) ได้ผลดี</li>
+                        </ul>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                        <h4 class="font-semibold text-blue-800 text-sm mb-2">ข้อเสนอแนะเพื่อรักษามาตรฐาน:</h4>
+                        <ol class="list-decimal pl-5 text-sm text-blue-900 space-y-2">
+                            <li><strong>ถอดบทเรียนจากเดือน พ.ค.:</strong> ควรวิเคราะห์หาสาเหตุที่แท้จริงของข้อผิดพลาด 3 ครั้งในเดือน พ.ค. เพื่อป้องกันไม่ให้เกิดซ้ำในอนาคต</li>
+                            <li><strong>รักษาแนวปฏิบัติที่ดี (Best Practices):</strong> ทบทวนว่าในเดือน มิ.ย. และ ก.ค. มีการใช้วิธีการสื่อสารแบบใดที่ทำให้ข้อผิดพลาดลดลง และผลักดันให้เป็นมาตรฐานการทำงานต่อไป</li>
+                            <li><strong>Cross-checking:</strong> แนะนำให้เพิ่มขั้นตอนการทบทวน (Review) หรือให้เพื่อนร่วมงานช่วยตรวจสอบ (Cross-check) ก่อนส่งผ่านข้อมูลสำคัญ เพื่อลด Human Error</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-panel p-6 overflow-hidden">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4">ตารางข้อมูลดิบ (ม.ค. - ก.ค.)</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 bg-opacity-50 text-gray-600 border-b border-gray-200">
+                            <th class="p-3 font-medium rounded-tl-lg">หัวข้อ</th>
+                            <th class="p-3 font-medium">ลำดับ</th>
+                            <th class="p-3 font-medium">ผู้รับผิดชอบ</th>
+                            <th class="p-3 font-medium">เป้าหมาย (ครั้ง)</th>
+                            <th class="p-3 font-medium text-center">ม.ค.</th>
+                            <th class="p-3 font-medium text-center">ก.พ.</th>
+                            <th class="p-3 font-medium text-center">มี.ค.</th>
+                            <th class="p-3 font-medium text-center">เม.ย.</th>
+                            <th class="p-3 font-medium text-center">พ.ค.</th>
+                            <th class="p-3 font-medium text-center">มิ.ย.</th>
+                            <th class="p-3 font-medium text-center rounded-tr-lg">ก.ค.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover:bg-white hover:bg-opacity-40 transition-colors border-b border-gray-100">
+                            <td class="p-3 text-gray-800 font-medium">ข้อผิดพลาดจากการสื่อสาร</td>
+                            <td class="p-3 text-gray-600">1</td>
+                            <td class="p-3 text-gray-600">ตั๊กกี้</td>
+                            <td class="p-3 text-gray-600">ไม่เกิน 2</td>
+                            <td class="p-3 text-center text-red-500 font-bold">4</td>
+                            <td class="p-3 text-center text-green-500 font-bold">0</td>
+                            <td class="p-3 text-center text-green-500 font-bold">1</td>
+                            <td class="p-3 text-center text-green-500 font-bold">1</td>
+                            <td class="p-3 text-center text-red-500 font-bold">3</td>
+                            <td class="p-3 text-center text-green-500 font-bold">0</td>
+                            <td class="p-3 text-center text-green-500 font-bold bg-blue-50 bg-opacity-50">1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Data from the provided image
+            const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.'];
+            const errorData = [4, 0, 1, 1, 3, 0, 1];
+            const targetLine = [2, 2, 2, 2, 2, 2, 2]; // Target is <= 2
+
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            
+            // Create gradient for the line chart
+            let gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); // Blue
+            gradient.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+
+            // Point colors based on target
+            const pointColors = errorData.map(val => val > 2 ? '#ef4444' : '#10b981'); // Red if over 2, Green if under/equal
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'จำนวนข้อผิดพลาด',
+                            data: errorData,
+                            borderColor: '#3b82f6', // Tailwind blue-500
+                            backgroundColor: gradient,
+                            borderWidth: 3,
+                            pointBackgroundColor: pointColors,
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            fill: true,
+                            tension: 0.4 // Smooth curves
+                        },
+                        {
+                            label: 'เป้าหมาย (สูงสุด)',
+                            data: targetLine,
+                            borderColor: '#f59e0b', // Tailwind amber-500
+                            borderWidth: 2,
+                            borderDash: [5, 5], // Dashed line
+                            pointRadius: 0,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    family: "'Kanit', sans-serif"
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#333',
+                            bodyColor: '#666',
+                            borderColor: '#e5e7eb',
+                            borderWidth: 1,
+                            titleFont: { family: "'Kanit', sans-serif", size: 14 },
+                            bodyFont: { family: "'Kanit', sans-serif", size: 13 },
+                            padding: 10,
+                            displayColors: true,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5, // Set max a bit higher than max data (4)
+                            ticks: {
+                                stepSize: 1,
+                                font: { family: "'Kanit', sans-serif" }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)',
+                                borderDash: [5, 5]
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: { family: "'Kanit', sans-serif" }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                }
+            });
+        });
+    </script>
+<a href="deliveryError.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (delivery Error) ➜
+</body>
+</html>

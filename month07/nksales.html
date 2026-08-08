@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard สรุปผลยอดขาย - สาขาหนองคาย</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for Data Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts (Prompt for Thai typography) -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            /* Animated gradient background for a soft, premium look */
+            background: linear-gradient(-45deg, #e0f2fe, #f3e8ff, #ecfdf5, #f8fafc);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            color: #334155;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Main Dashboard Glass Container */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 8px 32px 0 rgba(148, 163, 184, 0.2);
+            border-radius: 24px;
+        }
+
+        /* Inner Glass Cards for KPIs and Sections */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 16px 0 rgba(148, 163, 184, 0.15);
+            border-radius: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(148, 163, 184, 0.3);
+        }
+
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-image: linear-gradient(to right, #2563eb, #7c3aed);
+        }
+        
+        .success-text {
+            color: #059669;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex justify-center items-center">
+
+    <div class="glass-container w-full max-w-7xl mx-auto p-6 md:p-8">
+        
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-white/50 pb-6">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold text-gradient mb-2 tracking-tight">
+                    บริษัท พัฒนาสิน (หนองคาย) จำกัด
+                </h1>
+                <h2 class="text-xl md:text-2xl text-slate-700 font-medium">
+                    <i class="fa-solid fa-chart-line text-blue-500 mr-2"></i>รายงานสรุปผลยอดขาย สาขาหนองคาย
+                </h2>
+                <div class="mt-3 inline-flex items-center px-4 py-1.5 rounded-full bg-blue-100 text-blue-800 text-sm font-semibold shadow-sm">
+                    <i class="fa-regular fa-calendar mr-2"></i> ประจำเดือนกรกฎาคม
+                </div>
+            </div>
+            
+            <div class="glass-card px-6 py-3 flex items-center gap-4 bg-white/70">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white text-xl shadow-lg">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-slate-500 font-medium">ทำผลงานดีที่สุด</p>
+                    <p class="text-xl font-bold text-slate-800">สาขาหนองคาย</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- KPI Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            
+            <!-- Card 1: ยอดขายจริง -->
+            <div class="glass-card p-6 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-xl"></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-slate-500 mb-1">ยอดขายจริง</p>
+                        <h3 class="text-3xl font-bold text-slate-800">637,144<span class="text-lg text-slate-500">.71</span></h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
+                        <i class="fa-solid fa-baht-sign"></i>
+                    </div>
+                </div>
+                <div class="mt-4 flex items-center text-sm font-medium text-emerald-600 bg-emerald-50 rounded-lg px-2 py-1 inline-block">
+                    <i class="fa-solid fa-arrow-up mr-1"></i> +87,144.71 บ. (ผลต่างจากเป้า)
+                </div>
+            </div>
+
+            <!-- Card 2: เป้าหมาย -->
+            <div class="glass-card p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-slate-500 mb-1">เป้าหมาย</p>
+                        <h3 class="text-2xl font-bold text-slate-700">550,000<span class="text-base text-slate-500">.00</span></h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                </div>
+                <div class="mt-4 w-full bg-slate-200 rounded-full h-2.5">
+                    <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2.5 rounded-full" style="width: 100%"></div>
+                </div>
+            </div>
+
+            <!-- Card 3: % ต่อเป้า -->
+            <div class="glass-card p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-sm font-medium text-slate-500 mb-1">% ต่อเป้า</p>
+                        <h3 class="text-3xl font-bold text-emerald-600">115.8%</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                        <i class="fa-solid fa-percent"></i>
+                    </div>
+                </div>
+                <p class="mt-4 text-sm text-slate-600">
+                    เกินเป้าหมายสูงสุดเป็นอันดับ 1
+                </p>
+            </div>
+
+            <!-- Card 4: ข้อมูลบิล -->
+            <div class="glass-card p-6">
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <p class="text-sm font-medium text-slate-500 mb-1">ยอดเฉลี่ยต่อบิล</p>
+                        <h3 class="text-2xl font-bold text-indigo-600">1,078<span class="text-base">.08</span></h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center text-sm border-t border-slate-200/60 pt-3">
+                    <span class="text-slate-500">จำนวนบิลทั้งหมด</span>
+                    <span class="font-bold text-slate-800">591 บิล</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Left Column: Charts & Overview -->
+            <div class="lg:col-span-1 space-y-8">
+                
+                <!-- Chart Card -->
+                <div class="glass-card p-6">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">
+                        <i class="fa-solid fa-chart-column text-blue-500 mr-2"></i>เปรียบเทียบเป้าหมาย / ยอดจริง
+                    </h3>
+                    <div class="relative h-64 w-full">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Highlight Note -->
+                <div class="glass-card p-6 bg-gradient-to-br from-indigo-50/50 to-blue-100/50 border-blue-200/50">
+                    <h3 class="text-lg font-bold text-blue-800 mb-3">
+                        <i class="fa-solid fa-lightbulb text-yellow-500 mr-2"></i>วิเคราะห์ผลการดำเนินงาน
+                    </h3>
+                    <p class="text-slate-700 leading-relaxed text-sm md:text-base">
+                        <span class="font-bold text-indigo-700">สาขาหนองคาย</span> เป็นสาขาที่ทำผลงานดีที่สุด โดยทำได้เกินเป้าหมายถึง <span class="font-bold text-emerald-600">15.8%</span> 
+                        <br><br>
+                        นอกจากนี้ ยอดเฉลี่ยต่อบิลที่ <span class="font-bold">1,078 บาท</span> ยังสูงกว่า <span class="font-semibold text-slate-900">POS อุดรฯ</span> ถึงประมาณ <span class="bg-yellow-200 text-yellow-800 px-1 rounded font-bold">5.7 เท่า</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Column: Detail Analysis -->
+            <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Strengths -->
+                <div class="glass-card p-6 border-t-4 border-t-emerald-400">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                        <div class="w-8 h-8 rounded bg-emerald-100 text-emerald-600 flex justify-center items-center mr-3">
+                            <i class="fa-solid fa-medal"></i>
+                        </div>
+                        จุดแข็ง
+                    </h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check text-emerald-500 mt-1 mr-3"></i>
+                            <span class="text-slate-700">ทำยอดเกินเป้าหมายสูงสุด</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check text-emerald-500 mt-1 mr-3"></i>
+                            <span class="text-slate-700">ยอดเฉลี่ยต่อบิลดี (สูงกว่าสาขาอื่นอย่างชัดเจน)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-check text-emerald-500 mt-1 mr-3"></i>
+                            <span class="text-slate-700">มีความสามารถในการปิดการขายสินค้าได้ดีมาก</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Contributing Factors -->
+                <div class="glass-card p-6 border-t-4 border-t-blue-400">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                        <div class="w-8 h-8 rounded bg-blue-100 text-blue-600 flex justify-center items-center mr-3">
+                            <i class="fa-solid fa-people-arrows"></i>
+                        </div>
+                        ปัจจัยที่น่าจะส่งผล
+                    </h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-arrow-right text-blue-400 mt-1 mr-3"></i>
+                            <span class="text-slate-700">ลูกค้าซื้อหลายรายการต่อบิล (Basket Size ใหญ่ขึ้น)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-arrow-right text-blue-400 mt-1 mr-3"></i>
+                            <span class="text-slate-700">สัดส่วนสินค้ามูลค่าสูงมีมากกว่า</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa-solid fa-arrow-right text-blue-400 mt-1 mr-3"></i>
+                            <span class="text-slate-700">ทีมขายสามารถแนะนำสินค้า Cross-sell / Up-sell ได้ดี</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Recommendations (Spans 2 columns on md breakpoint) -->
+                <div class="glass-card p-6 md:col-span-2 border-t-4 border-t-violet-400 bg-white/60">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+                        <div class="w-8 h-8 rounded bg-violet-100 text-violet-600 flex justify-center items-center mr-3">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                        </div>
+                        ข้อเสนอแนะและแนวทางต่อยอด
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+                        <div class="p-4 rounded-xl bg-white/50 border border-slate-100 hover:shadow-md transition">
+                            <div class="text-violet-500 mb-2"><i class="fa-solid fa-magnifying-glass text-xl"></i></div>
+                            <h4 class="font-semibold text-slate-800 mb-1">ศึกษาสินค้า</h4>
+                            <p class="text-sm text-slate-600">ศึกษาสินค้าขายดีของหนองคาย เพื่อจัดเตรียมกลยุทธ์โปรโมชั่น</p>
+                        </div>
+                        
+                        <div class="p-4 rounded-xl bg-white/50 border border-slate-100 hover:shadow-md transition">
+                            <div class="text-violet-500 mb-2"><i class="fa-solid fa-share-nodes text-xl"></i></div>
+                            <h4 class="font-semibold text-slate-800 mb-1">ขยายผลความสำเร็จ</h4>
+                            <p class="text-sm text-slate-600">นำแนวทางการขาย รูปแบบการนำเสนอของหนองคายไปใช้และฝึกอบรมให้กับ <strong>POS อุดรฯ</strong></p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-white/50 border border-slate-100 hover:shadow-md transition">
+                            <div class="text-violet-500 mb-2"><i class="fa-solid fa-boxes-stacked text-xl"></i></div>
+                            <h4 class="font-semibold text-slate-800 mb-1">บริหารสต็อก</h4>
+                            <p class="text-sm text-slate-600">เพิ่มสต็อกสินค้ากลุ่มที่สร้างยอดขายสูง ให้เพียงพอต่อความต้องการของลูกค้าในพื้นที่</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="mt-8 text-center text-sm text-slate-500 border-t border-white/50 pt-4">
+            Generated Dashboard Layout for Pattanasin Thai Trading Co., Ltd.
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            
+            // Gradient for Actual Sales bar
+            const gradientActual = ctx.createLinearGradient(0, 0, 0, 400);
+            gradientActual.addColorStop(0, 'rgba(16, 185, 129, 0.8)'); // Emerald 500
+            gradientActual.addColorStop(1, 'rgba(52, 211, 153, 0.4)'); // Emerald 400
+
+            // Gradient for Target bar
+            const gradientTarget = ctx.createLinearGradient(0, 0, 0, 400);
+            gradientTarget.addColorStop(0, 'rgba(99, 102, 241, 0.8)'); // Indigo 500
+            gradientTarget.addColorStop(1, 'rgba(165, 180, 252, 0.4)'); // Indigo 300
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['เป้าหมาย (Target)', 'ยอดขายจริง (Actual)'],
+                    datasets: [{
+                        label: 'จำนวนเงิน (บาท)',
+                        data: [550000, 637144.71],
+                        backgroundColor: [
+                            gradientTarget,
+                            gradientActual
+                        ],
+                        borderColor: [
+                            'rgb(79, 70, 229)',
+                            'rgb(5, 150, 105)'
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            },
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#1e293b',
+                            bodyColor: '#334155',
+                            borderColor: '#e2e8f0',
+                            borderWidth: 1,
+                            padding: 10,
+                            boxPadding: 4
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(203, 213, 225, 0.3)',
+                                borderDash: [5, 5]
+                            },
+                            ticks: {
+                                font: {
+                                    family: "'Prompt', sans-serif"
+                                },
+                                callback: function(value, index, values) {
+                                    return value / 1000 + 'k';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: "'Prompt', sans-serif"
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1500,
+                        easing: 'easeOutQuart'
+                    }
+                }
+            });
+        });
+    </script>
+<a href="stockretail.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (stock retail) ➜
+</body>
+</html>
