@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>รายงานสรุปข้อผิดพลาดจากการจัดส่ง | สิงหาคม 2569</title>
+  <style>
+    :root{--navy:#102a43;--blue:#2563eb;--cyan:#06b6d4;--green:#16a34a;--amber:#f59e0b;--red:#dc2626;--ink:#172033;--muted:#64748b;--line:#dbe5f0;--paper:#fff;--bg:#eef4fa}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(135deg,#e8f2ff 0,#f7fbff 48%,#ecfeff 100%);color:var(--ink);font-family:"Tahoma","Noto Sans Thai",sans-serif;font-size:17px;line-height:1.55}
+    .wrap{max-width:1320px;margin:auto;padding:28px}.hero{position:relative;overflow:hidden;border-radius:26px;padding:34px 38px;color:#fff;background:linear-gradient(120deg,#0f2d53,#174e8c 62%,#0891b2);box-shadow:0 18px 50px #10345a2e}.hero:after{content:"";position:absolute;width:330px;height:330px;border:55px solid #ffffff16;border-radius:50%;right:-90px;top:-145px}.hero small{font-weight:700;letter-spacing:.04em;color:#bae6fd}.hero h1{font-size:clamp(28px,4vw,48px);line-height:1.15;margin:8px 0}.hero p{margin:6px 0;color:#e0f2fe;font-size:19px}.actions{display:flex;gap:10px;position:absolute;right:28px;bottom:25px;z-index:2}.btn{border:1px solid #ffffff55;border-radius:12px;padding:10px 15px;background:#ffffff19;color:#fff;font:inherit;font-weight:700;cursor:pointer}.btn:hover{background:#ffffff2b}
+    .section{margin-top:24px}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.section-title h2{margin:0;color:var(--navy);font-size:25px}.tag{background:#dbeafe;color:#1d4ed8;border-radius:999px;padding:5px 12px;font-weight:700;font-size:14px}
+    .cards{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.card,.panel{background:#ffffffdc;border:1px solid #fff;border-radius:20px;box-shadow:0 8px 28px #17456f12}.card{padding:20px;border-top:5px solid var(--blue)}.card.green{border-top-color:var(--green)}.card.cyan{border-top-color:var(--cyan)}.card.amber{border-top-color:var(--amber)}.card.red{border-top-color:var(--red)}.label{color:var(--muted);font-size:15px;font-weight:700}.num{font-size:34px;font-weight:900;line-height:1.2;color:var(--navy);margin:5px 0}.note{font-size:14px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.panel{padding:23px}.panel h3{margin:0 0 17px;color:var(--navy);font-size:20px}.legend{display:flex;gap:15px;flex-wrap:wrap;font-size:14px;color:var(--muted)}.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}.bars{display:flex;align-items:flex-end;gap:11px;height:250px;padding:22px 4px 0;border-bottom:2px solid var(--line);background:repeating-linear-gradient(to top,transparent 0,transparent 49px,#e8eef5 50px)}.bar-item{height:100%;flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0}.bar-value{font-weight:900;color:var(--navy);margin-bottom:5px}.bar{width:min(42px,75%);min-height:3px;border-radius:10px 10px 0 0;background:linear-gradient(#38bdf8,#2563eb);transition:.25s}.bar.zero{height:3px!important;background:#cbd5e1}.bar-name{height:35px;margin-top:8px;font-size:13px;font-weight:700;white-space:nowrap}
+    .progress{height:14px;background:#e2e8f0;border-radius:20px;overflow:hidden;margin:8px 0 18px}.progress>i{display:block;height:100%;background:linear-gradient(90deg,#22c55e,#10b981);border-radius:inherit}.goal{padding:18px;border-radius:16px;background:#ecfdf5;border:1px solid #bbf7d0;margin-bottom:14px}.goal strong{font-size:26px;color:#15803d}.warning{padding:17px;border-radius:16px;background:#fff7ed;border-left:5px solid var(--amber);color:#854d0e}.warning strong{color:#9a3412}
+    .table-wrap{overflow:auto;border-radius:16px;border:1px solid var(--line)}table{width:100%;border-collapse:collapse;background:#fff;min-width:800px}th{background:#143a65;color:#fff;text-align:left;padding:13px 14px;white-space:nowrap}td{padding:12px 14px;border-bottom:1px solid #e8eef5}tbody tr:hover{background:#f1f7ff}.center{text-align:center}.pill{display:inline-block;padding:4px 11px;border-radius:999px;font-weight:800;font-size:14px}.pass{background:#dcfce7;color:#166534}.zero-pill{background:#e0f2fe;color:#075985}.near{background:#fef3c7;color:#92400e}
+    .insights{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.insight{padding:19px;border-radius:17px;background:#fff;border:1px solid var(--line)}.insight b{display:block;color:var(--navy);font-size:18px;margin-bottom:6px}.insight span{color:#475569}.footer{margin:28px 0 12px;text-align:center;color:#64748b;font-size:13px}
+    @media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}.grid,.insights{grid-template-columns:1fr}.actions{position:static;margin-top:18px}.hero{padding:28px}.bars{gap:5px}.bar-name{font-size:11px}}@media(max-width:560px){body{font-size:16px}.wrap{padding:12px}.cards{grid-template-columns:1fr}.num{font-size:30px}.hero h1{font-size:29px}.panel{padding:16px}}
+    @media print{body{background:#fff}.wrap{max-width:none;padding:0}.actions{display:none}.hero,.card,.panel{box-shadow:none}.section{break-inside:avoid}.hero{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <small>DELIVERY ERROR PERFORMANCE DASHBOARD</small>
+    <h1>รายงานสรุปข้อผิดพลาดจากการจัดส่ง</h1>
+    <p>บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด · ประจำเดือนสิงหาคม 2569</p>
+    <p>ขอบเขต: ผู้รับผิดชอบงานจัดส่ง 9 คน | แหล่งข้อมูล: Sheet “รายการงานข้อผิดพลาด(บุคคล)”</p>
+    <div class="actions"><button class="btn" onclick="window.print()">🖨 พิมพ์ / บันทึก PDF</button><button class="btn" onclick="window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})">↓ ดูข้อเสนอแนะ</button></div>
+  </header>
+
+  <section class="section">
+    <div class="section-title"><h2>ภาพรวมเดือนสิงหาคม</h2><span class="tag">อัปเดตจากไฟล์แนบ</span></div>
+    <div class="cards">
+      <article class="card cyan"><div class="label">ผู้รับผิดชอบ</div><div class="num">9 คน</div><div class="note">เฉพาะกลุ่มข้อผิดพลาดจากการจัดส่ง</div></article>
+      <article class="card amber"><div class="label">ข้อผิดพลาดรวมรายบุคคล</div><div class="num">5 ครั้ง</div><div class="note">เฉลี่ย 0.56 ครั้ง/คน</div></article>
+      <article class="card green"><div class="label">ผ่านเป้าหมาย</div><div class="num">9/9</div><div class="note">คิดเป็น 100%</div></article>
+      <article class="card"><div class="label">ไม่มีข้อผิดพลาด</div><div class="num">5 คน</div><div class="note">คิดเป็น 55.6% ของผู้รับผิดชอบ</div></article>
+      <article class="card red"><div class="label">มีข้อผิดพลาด</div><div class="num">4 คน</div><div class="note">คิดเป็น 44.4% ของผู้รับผิดชอบ</div></article>
+    </div>
+  </section>
+
+  <section class="section grid">
+    <article class="panel">
+      <h3>จำนวนข้อผิดพลาดรายบุคคล — สิงหาคม</h3>
+      <div class="bars" aria-label="กราฟแท่งข้อผิดพลาดรายบุคคล">
+        <div class="bar-item"><span class="bar-value">2</span><div class="bar" style="height:100%"></div><span class="bar-name">ปอนด์</span></div>
+        <div class="bar-item"><span class="bar-value">0</span><div class="bar zero"></div><span class="bar-name">ทราย</span></div>
+        <div class="bar-item"><span class="bar-value">0</span><div class="bar zero"></div><span class="bar-name">หนุ่ย</span></div>
+        <div class="bar-item"><span class="bar-value">0</span><div class="bar zero"></div><span class="bar-name">นัย</span></div>
+        <div class="bar-item"><span class="bar-value">0</span><div class="bar zero"></div><span class="bar-name">เจ</span></div>
+        <div class="bar-item"><span class="bar-value">1</span><div class="bar" style="height:50%"></div><span class="bar-name">โจ</span></div>
+        <div class="bar-item"><span class="bar-value">1</span><div class="bar" style="height:50%"></div><span class="bar-name">แร่</span></div>
+        <div class="bar-item"><span class="bar-value">0</span><div class="bar zero"></div><span class="bar-name">ใย</span></div>
+        <div class="bar-item"><span class="bar-value">1</span><div class="bar" style="height:50%"></div><span class="bar-name">โต้</span></div>
+      </div>
+      <div class="legend"><span><i class="dot" style="background:#2563eb"></i>จำนวนจริง</span><span><i class="dot" style="background:#f59e0b"></i>เป้าหมายสูงสุด 2 ครั้ง/คน</span></div>
+    </article>
+    <aside class="panel">
+      <h3>ผลเทียบเป้าหมาย</h3>
+      <div class="goal"><div class="label">เป้าหมายรายบุคคล</div><strong>ไม่เกิน 2 ครั้ง/คน</strong><div class="progress"><i style="width:100%"></i></div><div>ผ่านเกณฑ์ครบทั้ง 9 คน โดย 5 คนไม่มีข้อผิดพลาด</div></div>
+      <div class="warning"><strong>จุดที่ควรเฝ้าระวัง</strong><br>ปอนด์มีข้อผิดพลาด <b>2 ครั้ง</b> ซึ่งยังผ่านเกณฑ์แต่แตะเพดานเป้าหมายแล้ว ส่วนโจ แร่ และโต้ มีคนละ <b>1 ครั้ง</b> ควรติดตามเพื่อไม่ให้เกิดซ้ำในเดือนถัดไป</div>
+    </aside>
+  </section>
+
+  <section class="section panel">
+    <div class="section-title"><h2>รายละเอียดผู้รับผิดชอบ 9 คน</h2><span class="tag">เรียงจากจำนวนสูงสุด</span></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th class="center">อันดับ</th><th>ผู้รับผิดชอบ</th><th class="center">ก.ค.</th><th class="center">ส.ค.</th><th class="center">เปลี่ยนแปลง</th><th class="center">เป้าหมาย</th><th class="center">สถานะ</th></tr></thead>
+      <tbody>
+        <tr><td class="center">1</td><td><b>ปอนด์</b></td><td class="center">0</td><td class="center"><b>2</b></td><td class="center">+2</td><td class="center">≤ 2</td><td class="center"><span class="pill near">ผ่าน · แตะเพดาน</span></td></tr>
+        <tr><td class="center">2</td><td><b>โจ</b></td><td class="center">0</td><td class="center"><b>1</b></td><td class="center">+1</td><td class="center">≤ 2</td><td class="center"><span class="pill pass">ผ่าน</span></td></tr>
+        <tr><td class="center">3</td><td><b>แร่</b></td><td class="center">0</td><td class="center"><b>1</b></td><td class="center">+1</td><td class="center">≤ 2</td><td class="center"><span class="pill pass">ผ่าน</span></td></tr>
+        <tr><td class="center">4</td><td><b>โต้</b></td><td class="center">0</td><td class="center"><b>1</b></td><td class="center">+1</td><td class="center">≤ 2</td><td class="center"><span class="pill pass">ผ่าน</span></td></tr>
+        <tr><td class="center">5</td><td><b>ทราย</b></td><td class="center">0</td><td class="center"><b>0</b></td><td class="center">0</td><td class="center">≤ 2</td><td class="center"><span class="pill zero-pill">ดีเยี่ยม · 0 ครั้ง</span></td></tr>
+        <tr><td class="center">6</td><td><b>หนุ่ย</b></td><td class="center">0</td><td class="center"><b>0</b></td><td class="center">0</td><td class="center">≤ 2</td><td class="center"><span class="pill zero-pill">ดีเยี่ยม · 0 ครั้ง</span></td></tr>
+        <tr><td class="center">7</td><td><b>นัย</b></td><td class="center">0</td><td class="center"><b>0</b></td><td class="center">0</td><td class="center">≤ 2</td><td class="center"><span class="pill zero-pill">ดีเยี่ยม · 0 ครั้ง</span></td></tr>
+        <tr><td class="center">8</td><td><b>เจ</b></td><td class="center">0</td><td class="center"><b>0</b></td><td class="center">0</td><td class="center">≤ 2</td><td class="center"><span class="pill zero-pill">ดีเยี่ยม · 0 ครั้ง</span></td></tr>
+        <tr><td class="center">9</td><td><b>ใย</b></td><td class="center">0</td><td class="center"><b>0</b></td><td class="center">0</td><td class="center">≤ 2</td><td class="center"><span class="pill zero-pill">ดีเยี่ยม · 0 ครั้ง</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="section">
+    <div class="section-title"><h2>วิเคราะห์และแนวทางดำเนินการ</h2><span class="tag">Corrective & Preventive Action</span></div>
+    <div class="insights">
+      <div class="insight"><b>1. โฟกัสผู้แตะเพดาน</b><span>ปอนด์มี 2 ครั้ง เท่ากับเพดานเป้าหมาย ควรทบทวนใบจัดสินค้า จุดส่ง และหลักฐานรับมอบของทั้ง 2 เคส เพื่อไม่ให้เกินเกณฑ์ในเดือนถัดไป</span></div>
+      <div class="insight"><b>2. ป้องกันข้อผิดพลาดซ้ำ</b><span>ใช้เช็กลิสต์ก่อนรถออก: ลูกค้า–สินค้า–จำนวน–เส้นทาง–เบอร์ติดต่อ และให้ผู้จัดกับผู้ส่งตรวจไขว้รายการสำคัญ</span></div>
+      <div class="insight"><b>3. รักษามาตรฐานทีม</b><span>ถอดวิธีทำงานจาก 5 คนที่ทำได้ 0 ครั้ง แล้วนำมาเป็นขั้นตอนมาตรฐานสั้น ๆ สำหรับ Morning Brief และพนักงานใหม่</span></div>
+      <div class="insight"><b>4. ปรับปรุงการบันทึก</b><span>เพิ่มวันที่ เลขที่ออเดอร์ ประเภทข้อผิดพลาด สาเหตุ และสถานะปิดเคสในรายการรายบุคคล เพื่อให้สามารถวิเคราะห์สาเหตุและติดตามงานได้ชัดเจนขึ้น</span></div>
+      <div class="insight"><b>5. ติดตามเชิงรุก</b><span>ทบทวนรายสัปดาห์ ไม่รอสิ้นเดือน หากบุคคลใดมี 1 ครั้งให้แจ้งเตือน และเมื่อครบ 2 ครั้งให้ทำ RCA พร้อมแผนป้องกันทันที</span></div>
+      <div class="insight"><b>6. เป้าหมายเดือนถัดไป</b><span>รักษาผลของผู้ที่ไม่มีข้อผิดพลาด และตั้งเป้าลดจำนวนรวมจาก 5 ครั้งให้เหลือน้อยกว่า 5 ครั้ง โดยไม่มีผู้ใดเกิน 2 ครั้ง</span></div>
+    </div>
+  </section>
+  <footer class="footer">รายงานนี้ใช้ข้อมูลเฉพาะ Sheet “รายการงานข้อผิดพลาด(บุคคล)” จากไฟล์ “ข้อผิดพลาดจากการจัดส่ง 26(2).xlsx” · สิงหาคม 2569</footer>
+</main>
+
+</body>
+ <a href="fuelefficiency.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;     หน้าถัดไป (fuel efficiency) ➜
+
+</html>

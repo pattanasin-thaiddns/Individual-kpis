@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>รายงานข้อผิดพลาดจากการสื่อสาร - ตั๊กกี้ | สิงหาคม 2569</title>
+  <style>
+    :root{--navy:#102a43;--blue:#2563eb;--cyan:#06b6d4;--green:#10b981;--amber:#f59e0b;--red:#ef4444;--ink:#17324d;--muted:#64748b;--line:#dbe7f3;--bg:#f4f8fc;--card:#fff}
+    *{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#edf6ff 0%,#f8fbff 42%,#ecfdf5 100%);color:var(--ink);font-family:"Leelawadee UI","Noto Sans Thai",Tahoma,sans-serif}
+    .wrap{max-width:1280px;margin:auto;padding:28px}.hero{position:relative;overflow:hidden;padding:34px;border-radius:26px;color:#fff;background:linear-gradient(120deg,#102a43,#174d7a 58%,#0e7490);box-shadow:0 18px 45px #193b5e2b}.hero:after{content:"";position:absolute;width:360px;height:360px;border-radius:50%;right:-120px;top:-210px;background:#67e8f933}.eyebrow{font-weight:600;letter-spacing:.4px;color:#a5f3fc}.hero h1{font-size:clamp(26px,4vw,44px);line-height:1.2;margin:8px 0}.hero p{margin:4px 0;color:#dbeafe}.badge{display:inline-flex;gap:8px;align-items:center;margin-top:18px;padding:9px 14px;border-radius:999px;background:#ffffff1b;border:1px solid #ffffff38;font-weight:600}.dot{width:9px;height:9px;border-radius:50%;background:#34d399;box-shadow:0 0 0 5px #34d39928}
+    .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}.card,.panel{background:var(--card);border:1px solid #e3edf6;border-radius:20px;box-shadow:0 10px 28px #234a6b10}.card{padding:20px}.label{font-size:13px;color:var(--muted)}.metric{font-size:36px;font-weight:800;line-height:1.1;margin:8px 0}.unit{font-size:15px;font-weight:500;color:var(--muted)}.ok{color:var(--green)}.bad{color:var(--red)}.note{font-size:12px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1.45fr .85fr;gap:18px;margin:18px 0}.panel{padding:22px}.panel h2{font-size:19px;margin:0 0 4px}.sub{font-size:12px;color:var(--muted);margin-bottom:18px}.chart{height:270px;display:flex;gap:14px;align-items:flex-end;padding:15px 6px 30px;border-bottom:1px solid var(--line);position:relative;background:repeating-linear-gradient(to top,transparent 0,transparent 52px,#e8f0f7 53px)}.target{position:absolute;left:4px;right:4px;bottom:130px;border-top:2px dashed var(--amber)}.target span{position:absolute;right:0;top:-24px;color:#b45309;font-size:11px;background:#fffbeb;padding:2px 6px;border-radius:5px}.bar-wrap{flex:1;text-align:center;height:100%;display:flex;flex-direction:column;justify-content:flex-end;position:relative;z-index:1}.bar{width:min(50px,80%);margin:0 auto;border-radius:10px 10px 4px 4px;background:linear-gradient(#60a5fa,#2563eb);min-height:4px;box-shadow:0 6px 14px #2563eb2b}.bar.zero{background:#d9e7f3;box-shadow:none}.bar.fail{background:linear-gradient(#fb7185,#ef4444)}.val{font-weight:700;font-size:13px;margin-bottom:5px}.month{position:absolute;bottom:-25px;width:100%;font-size:12px;color:var(--muted)}
+    .statusbox{padding:18px;border-radius:16px;background:linear-gradient(135deg,#ecfdf5,#f0fdfa);border:1px solid #a7f3d0}.statusbox strong{font-size:25px;color:#047857}.progress{height:12px;border-radius:99px;background:#dce8f2;margin:18px 0 8px;overflow:hidden}.progress i{display:block;width:75%;height:100%;background:linear-gradient(90deg,#06b6d4,#10b981);border-radius:99px}.mini{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+    table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:12px;border-bottom:1px solid #e7eef5}th{color:#486581;background:#f7fafc}td.num{text-align:center;font-weight:700}.pill{display:inline-block;padding:4px 9px;border-radius:99px;font-size:11px;font-weight:600}.pass{color:#047857;background:#d1fae5}.failp{color:#b91c1c;background:#fee2e2}
+    .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.action{padding:18px;border:1px solid var(--line);border-radius:16px;background:#fbfdff}.n{width:31px;height:31px;border-radius:10px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--blue),var(--cyan));font-weight:700;margin-bottom:10px}.action b{font-size:14px}.action p{font-size:12px;color:var(--muted);margin:6px 0 0;line-height:1.7}.insight{border-left:4px solid var(--cyan);padding:13px 16px;background:#ecfeff;border-radius:0 12px 12px 0;font-size:13px;line-height:1.8}.footer{color:#7b8fa3;font-size:11px;text-align:center;padding:22px}.print{position:fixed;right:20px;bottom:20px;border:0;border-radius:999px;padding:12px 18px;background:var(--navy);color:white;font:600 13px Prompt;cursor:pointer;box-shadow:0 10px 25px #102a4340}
+    @media(max-width:850px){.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.wrap{padding:14px}.hero{padding:24px}.chart{gap:6px}}
+    .hero .owner{margin-top:14px;font-size:clamp(22px,3vw,32px);font-weight:700;color:#fff;line-height:1.35}.hero .owner b{font-size:1.15em;color:#a5f3fc}
+    @media print{body{background:#fff}.wrap{max-width:none;padding:0}.print{display:none}.hero,.card,.panel{box-shadow:none}.panel{break-inside:avoid}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <div class="eyebrow">DASHBOARD • COMMUNICATION QUALITY</div>
+    <h1>รายงานสรุปข้อผิดพลาดจากการสื่อสาร</h1>
+    <p>บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด • ประจำเดือนสิงหาคม 2569</p>
+    <p class="owner">ผู้รับผิดชอบ: <b>ตั๊กกี้</b></p>
+    <div class="badge"><span class="dot"></span> เดือนสิงหาคมผ่านเป้าหมาย</div>
+  </header>
+
+  <section class="cards">
+    <article class="card"><div class="label">ข้อผิดพลาดเดือนสิงหาคม</div><div class="metric ok">0 <span class="unit">ครั้ง</span></div><div class="note">ลดลงจากเดือนกรกฎาคม 1 ครั้ง</div></article>
+    <article class="card"><div class="label">เป้าหมายรายเดือน</div><div class="metric">≤ 2 <span class="unit">ครั้ง</span></div><div class="note">เกณฑ์จากไฟล์ต้นฉบับ</div></article>
+    <article class="card"><div class="label">สะสม ม.ค.–ส.ค.</div><div class="metric">10 <span class="unit">ครั้ง</span></div><div class="note">เฉลี่ย 1.25 ครั้งต่อเดือน</div></article>
+    <article class="card"><div class="label">เดือนที่ผ่านเป้าหมาย</div><div class="metric ok">6/8 <span class="unit">เดือน</span></div><div class="note">คิดเป็น 75% ของเดือนที่มีข้อมูล</div></article>
+  </section>
+
+  <section class="grid">
+    <article class="panel">
+      <h2>แนวโน้มข้อผิดพลาดรายเดือน</h2><div class="sub">มกราคม–สิงหาคม 2569 • เส้นประคือเป้าหมายสูงสุด 2 ครั้ง/เดือน</div>
+      <div class="chart">
+        <div class="target"><span>เป้าหมาย ≤ 2</span></div>
+        <div class="bar-wrap"><span class="val bad">4</span><div class="bar fail" style="height:208px"></div><span class="month">ม.ค.</span></div>
+        <div class="bar-wrap"><span class="val">0</span><div class="bar zero" style="height:4px"></div><span class="month">ก.พ.</span></div>
+        <div class="bar-wrap"><span class="val">1</span><div class="bar" style="height:52px"></div><span class="month">มี.ค.</span></div>
+        <div class="bar-wrap"><span class="val">1</span><div class="bar" style="height:52px"></div><span class="month">เม.ย.</span></div>
+        <div class="bar-wrap"><span class="val bad">3</span><div class="bar fail" style="height:156px"></div><span class="month">พ.ค.</span></div>
+        <div class="bar-wrap"><span class="val">0</span><div class="bar zero" style="height:4px"></div><span class="month">มิ.ย.</span></div>
+        <div class="bar-wrap"><span class="val">1</span><div class="bar" style="height:52px"></div><span class="month">ก.ค.</span></div>
+        <div class="bar-wrap"><span class="val ok">0</span><div class="bar zero" style="height:4px"></div><span class="month">ส.ค.</span></div>
+      </div>
+    </article>
+    <article class="panel">
+      <h2>สถานะเดือนสิงหาคม</h2><div class="sub">ผลเทียบกับเป้าหมายรายบุคคล</div>
+      <div class="statusbox"><div class="label">ผลการประเมิน</div><strong>ผ่านเป้าหมาย ✓</strong><p style="font-size:13px;margin:8px 0 0">เกิดข้อผิดพลาด 0 จากเพดาน 2 ครั้ง</p></div>
+      <div class="progress"><i></i></div><div class="mini"><span>ผ่านเป้าหมาย 6 เดือน</span><span>75%</span></div>
+      <p class="insight"><b>ประเด็นสำคัญ:</b> ผลเดือนสิงหาคมอยู่ในระดับดีที่สุดร่วมกับเดือนกุมภาพันธ์และมิถุนายน สะท้อนว่ามาตรการหรือวิธีทำงานที่ใช้ในเดือนนี้ควรถูกถอดเป็นแนวปฏิบัติมาตรฐาน</p>
+    </article>
+  </section>
+
+  <section class="grid">
+    <article class="panel">
+      <h2>รายละเอียดผลรายเดือน</h2><div class="sub">เฉพาะหัวข้อ “ข้อผิดพลาดจากการสื่อสาร” ของตั๊กกี้</div>
+      <table><thead><tr><th>เดือน</th><th style="text-align:center">จำนวน</th><th style="text-align:center">เทียบเป้าหมาย</th><th>สถานะ</th></tr></thead><tbody>
+        <tr><td>มกราคม</td><td class="num">4</td><td class="num bad">เกิน 2</td><td><span class="pill failp">ไม่ผ่าน</span></td></tr>
+        <tr><td>กุมภาพันธ์</td><td class="num">0</td><td class="num ok">ต่ำกว่า 2</td><td><span class="pill pass">ผ่าน</span></td></tr>
+        <tr><td>มีนาคม</td><td class="num">1</td><td class="num ok">ต่ำกว่า 1</td><td><span class="pill pass">ผ่าน</span></td></tr>
+        <tr><td>เมษายน</td><td class="num">1</td><td class="num ok">ต่ำกว่า 1</td><td><span class="pill pass">ผ่าน</span></td></tr>
+        <tr><td>พฤษภาคม</td><td class="num">3</td><td class="num bad">เกิน 1</td><td><span class="pill failp">ไม่ผ่าน</span></td></tr>
+        <tr><td>มิถุนายน</td><td class="num">0</td><td class="num ok">ต่ำกว่า 2</td><td><span class="pill pass">ผ่าน</span></td></tr>
+        <tr><td>กรกฎาคม</td><td class="num">1</td><td class="num ok">ต่ำกว่า 1</td><td><span class="pill pass">ผ่าน</span></td></tr>
+        <tr style="background:#f0fdfa"><td><b>สิงหาคม</b></td><td class="num ok">0</td><td class="num ok">ต่ำกว่า 2</td><td><span class="pill pass">ผ่าน</span></td></tr>
+      </tbody></table>
+    </article>
+    <article class="panel">
+      <h2>สรุปผลการวิเคราะห์</h2><div class="sub">ข้อค้นพบจากรูปแบบข้อมูลรายเดือน</div>
+      <div class="insight"><b>1. ผลล่าสุดดีขึ้น:</b> จาก 1 ครั้งในเดือนกรกฎาคม เหลือ 0 ครั้งในเดือนสิงหาคม</div>
+      <div class="insight" style="margin-top:10px;border-color:var(--amber);background:#fffbeb"><b>2. จุดเสี่ยงเป็นช่วง:</b> เดือนที่เกินเป้าหมายคือ มกราคม (4) และพฤษภาคม (3) ไม่ได้เกิดต่อเนื่องทุกเดือน</div>
+      <div class="insight" style="margin-top:10px;border-color:var(--green);background:#f0fdf4"><b>3. แนวโน้มควบคุมได้:</b> 4 เดือนล่าสุด พ.ค.–ส.ค. ลดจาก 3 → 0 → 1 → 0 ครั้ง</div>
+      <p class="note" style="margin-top:14px">หมายเหตุ: ชีตที่ใช้วิเคราะห์ระบุจำนวนครั้งรายเดือน แต่ไม่มีรายละเอียดเหตุการณ์หรือมูลค่ายอดขาย จึงไม่สรุปสาเหตุเฉพาะเหตุการณ์หรือผลกระทบทางยอดขายโดยไม่มีข้อมูลรองรับ</p>
+    </article>
+  </section>
+
+  <section class="panel">
+    <h2>แนวทางรักษาผลงานและป้องกันการเกิดซ้ำ</h2><div class="sub">ข้อเสนอแนะเชิงปฏิบัติสำหรับเดือนถัดไป</div>
+    <div class="actions">
+      <div class="action"><div class="n">1</div><b>ยืนยันข้อมูลก่อนส่งต่อ</b><p>ทวนชื่อสินค้า จำนวน ราคา ลูกค้า และวันส่งทุกครั้ง โดยใช้เช็กลิสต์สั้นก่อนยืนยันออเดอร์</p></div>
+      <div class="action"><div class="n">2</div><b>ปิดวงจรการสื่อสาร</b><p>ให้ผู้รับข้อมูลตอบกลับหรือย้ำสารสำคัญ เพื่อยืนยันว่าเข้าใจตรงกัน โดยเฉพาะงานเร่งด่วนและการเปลี่ยนแปลงรายการ</p></div>
+      <div class="action"><div class="n">3</div><b>ติดตามตัวชี้วัดรายสัปดาห์</b><p>บันทึกเหตุเกือบพลาดและข้อผิดพลาดจริงทุกสัปดาห์ หากเกิด 1 ครั้งให้ทบทวนสาเหตุทันที ไม่รอสรุปสิ้นเดือน</p></div>
+    </div>
+  </section>
+  <div class="footer">แหล่งข้อมูล: ข้อผิดพลาดจากการจัดส่ง 26.xlsx • ชีต “รายการงานข้อผิดพลาด(บุคคล)” • วิเคราะห์ข้อมูล ม.ค.–ส.ค. 2569</div>
+</main>
+<button class="print" onclick="window.print()">พิมพ์ / บันทึก PDF</button>
+
+
+</body>
+  <a href="deliveryError.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (delivery Error) ➜
+
+
+</html>

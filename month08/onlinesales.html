@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard ยอดขายออนไลน์ - พัฒนาสิน ไทยเทรดดิ้ง</title>
+    <!-- นำเข้า Tailwind CSS สำหรับจัดการ Layout และความสวยงาม -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- นำเข้า Chart.js สำหรับทำกราฟ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- นำเข้า Font 'Prompt' จาก Google Fonts เพื่อให้อ่านภาษาไทยได้สวยงาม -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f8fafc; /* Slate 50 - สีพื้นหลังสว่าง สะอาดตา */
+            color: #1e293b; /* Slate 800 */
+            /* เพิ่มมิติด้วย Radial Gradient อ่อนๆ */
+            background-image: radial-gradient(circle at top right, #e0f2fe 0%, transparent 40%),
+                              radial-gradient(circle at bottom left, #f3e8ff 0%, transparent 40%);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.08);
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #0ea5e9, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+
+    <div class="max-w-7xl mx-auto">
+        
+        <!-- Header Section -->
+        <header class="mb-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center border-b border-slate-200 pb-6">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold gradient-text mb-2 drop-shadow-sm">รายงานสรุปยอดขายช่องทางออนไลน์</h1>
+                <h2 class="text-xl text-slate-600 font-medium">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</h2>
+            </div>
+            <div class="mt-4 md:mt-0 text-right">
+                <p class="text-slate-500 font-medium">ประจำเดือน</p>
+                <p class="text-2xl font-bold text-indigo-600 bg-white px-6 py-2 rounded-xl border border-indigo-100 shadow-sm mt-1">สิงหาคม</p>
+            </div>
+        </header>
+
+        <!-- KPI Cards (ตัวเลขสำคัญ) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Card 1: ยอดขายทำได้ -->
+            <div class="glass-card p-6 relative overflow-hidden group">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-rose-400 opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition duration-500"></div>
+                <p class="text-slate-500 text-sm mb-1 font-medium">ยอดขายที่ทำได้ (ส.ค.)</p>
+                <h3 class="text-3xl font-extrabold text-rose-600 drop-shadow-sm">฿269,485</h3>
+                <p class="text-sm text-rose-700 mt-2 flex items-center font-medium bg-rose-50 border border-rose-100 w-max px-2 py-1 rounded-md">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6"></path></svg>
+                    พลาดเป้าหมาย 46.1%
+                </p>
+            </div>
+
+            <!-- Card 2: เป้าหมาย -->
+            <div class="glass-card p-6 relative overflow-hidden">
+                <p class="text-slate-500 text-sm mb-1 font-medium">เป้าหมายประจำเดือน</p>
+                <h3 class="text-3xl font-bold text-slate-700">฿500,000</h3>
+                <p class="text-sm text-slate-500 mt-2 font-medium bg-slate-100 border border-slate-200 w-max px-2 py-1 rounded-md">จำนวนวันทำงาน: 26 วัน</p>
+            </div>
+
+            <!-- Card 3: จำนวนวันที่ได้ตามเป้า -->
+            <div class="glass-card p-6 relative overflow-hidden group">
+                <div class="absolute -top-10 -right-10 w-32 h-32 bg-orange-400 opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition duration-500"></div>
+                <p class="text-slate-500 text-sm mb-1 font-medium">ยอดสะสมที่ตั้งเป้า/วัน</p>
+                <h3 class="text-3xl font-extrabold text-orange-600 drop-shadow-sm">฿19,231</h3>
+                <p class="text-sm text-orange-700 mt-2 font-medium bg-orange-50 border border-orange-100 w-max px-2 py-1 rounded-md">ต่อวันทำงาน (เฉลี่ย)</p>
+            </div>
+
+            <!-- Card 4: ฐานลูกค้า (ข่าวดีที่สุด) -->
+            <div class="glass-card p-6 border-l-4 border-slate-400 relative overflow-hidden group bg-gradient-to-br from-white to-slate-50/50">
+                <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-slate-400 opacity-20 rounded-full blur-2xl group-hover:opacity-30 transition duration-500"></div>
+                <p class="text-slate-500 text-sm mb-1 font-medium">สถานะยอดขายรวม</p>
+                <h3 class="text-2xl font-extrabold text-slate-600 drop-shadow-sm">ชะลอตัว</h3>
+                <p class="text-xs text-slate-700 mt-2 font-medium bg-slate-100 border border-slate-200 w-max px-2 py-1 rounded-md shadow-sm">
+                    ⚠️ ยอดขายลดลงจากเดือนก่อนหน้า
+                </p>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Bar Chart: เปรียบเทียบ 3 เดือน -->
+            <div class="glass-card p-6 lg:col-span-2">
+                <h3 class="text-xl font-bold mb-4 text-slate-800 flex items-center">
+                    <span class="bg-indigo-100 text-indigo-600 p-1.5 rounded-lg mr-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                    </span>
+                    กราฟเปรียบเทียบยอดขาย (มิ.ย. - ส.ค.)
+                </h3>
+                <div class="relative h-72">
+                    <canvas id="salesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Doughnut Chart: สัดส่วนวันทำงาน -->
+            <div class="glass-card p-6">
+                <h3 class="text-xl font-bold mb-4 text-slate-800 flex items-center">
+                    <span class="bg-orange-100 text-orange-600 p-1.5 rounded-lg mr-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </span>
+                    ความสำเร็จเทียบเป้าหมาย (ส.ค.)
+                </h3>
+                <div class="relative h-64 flex justify-center">
+                    <canvas id="daysChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Section -->
+        <div class="glass-card p-8 border-t-4 border-indigo-500 bg-white">
+            <h3 class="text-2xl font-bold mb-6 text-slate-800 flex items-center">
+                <div class="bg-indigo-100 p-2 rounded-lg mr-3 shadow-sm">
+                    <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                </div>
+                วิเคราะห์ผลประกอบการเชิงลึก (Executive Insights)
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- ข้อมูลเชิงบวก -->
+                <div class="bg-amber-50/70 p-6 rounded-2xl border border-amber-100">
+                    <h4 class="text-lg font-bold text-amber-800 mb-4 flex items-center pb-3 border-b border-amber-200">
+                        <svg class="w-6 h-6 mr-2 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        ข้อสังเกตและสาเหตุหลัก
+                    </h4>
+                    <ul class="space-y-4 text-slate-700 font-medium text-sm leading-relaxed">
+                        <li class="flex items-start">
+                            <span class="text-amber-500 mr-2 font-bold text-lg leading-none">•</span>
+                            <span><strong>ยอดขายลดลงอย่างมีนัยสำคัญ:</strong> เดือนสิงหาคมทำยอดขายได้เพียง 269,485 บาท ซึ่งต่ำกว่าเป้าหมายที่ตั้งไว้ (500,000 บาท) ถึง 46.1% และลดลงอย่างมากเมื่อเทียบกับเดือนมิถุนายนที่มีโปรโมชั่นใหญ่</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-amber-500 mr-2 font-bold text-lg leading-none">•</span>
+                            <span><strong>ผลกระทบจาก Post-Promotion:</strong> คาดว่าเป็นผลสืบเนื่องมาจากลูกค้าส่วนใหญ่ได้ทำการซื้อตุนสินค้าไปแล้วในช่วงแคมเปญ 6.6 กลางปี ทำให้กำลังซื้อในเดือนสิงหาคมชะลอตัวลงอย่างเห็นได้ชัด</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- ข้อควรระวังและข้อเสนอแนะ -->
+                <div class="bg-blue-50/70 p-6 rounded-2xl border border-blue-100">
+                    <h4 class="text-lg font-bold text-blue-800 mb-4 flex items-center pb-3 border-b border-blue-200">
+                        <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        ข้อเสนอแนะและกลยุทธ์ฟื้นฟู
+                    </h4>
+                    <ul class="space-y-4 text-slate-700 font-medium text-sm leading-relaxed">
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 font-bold text-lg leading-none">→</span>
+                            <span><strong>Action Plan 1 (กระตุ้นยอดขายระยะสั้น):</strong> จัดโปรโมชั่น Flash Sale ขนาดย่อมในกลุ่มสินค้าที่มียอดเคลื่อนไหวน้อย (Slow-moving) เพื่อกระตุ้นให้ลูกค้าเก่ากลับมาซื้อซ้ำและดึงกระแสเงินสดกลับมา</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 font-bold text-lg leading-none">→</span>
+                            <span><strong>Action Plan 2 (หาลูกค้ารายใหม่เชิงรุก):</strong> อัดงบโฆษณาออนไลน์ (Online Ads) และใช้ Lead Generation เพื่อเจาะกลุ่มเป้าหมายใหม่ๆ ลดการพึ่งพิงฐานลูกค้าเก่าที่กำลังซื้อเริ่มอิ่มตัวในระยะนี้</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-blue-500 mr-2 font-bold text-lg leading-none">→</span>
+                            <span><strong>Action Plan 3 (เตรียมรับมือปลายปี):</strong> วางแผนแคมเปญใหญ่ช่วงไตรมาสที่ 4 ล่วงหน้า (เช่น 9.9, 10.10) โดยจัด Bundle Set สินค้าที่น่าสนใจ เพื่อดึงยอดขายให้กลับมาพุ่งสูงอีกครั้ง</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer class="mt-8 mb-4 text-center text-slate-400 text-sm font-medium">
+            Generated Dashboard Layout &copy; 2026 บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด
+        </footer>
+
+    </div>
+
+    <!-- Script สำหรับวาดกราฟ -->
+    <script>
+        // เปลี่ยนสีพื้นฐานของ Chart.js ให้เข้ากับธีมสว่าง
+        Chart.defaults.color = '#64748b'; // Slate 500
+        Chart.defaults.font.family = "'Prompt', sans-serif";
+        Chart.defaults.font.size = 13;
+
+        // 1. Bar Chart (มิ.ย. - ส.ค.)
+        const ctxSales = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctxSales, {
+            type: 'bar',
+            data: {
+                labels: ['มิถุนายน', 'กรกฎาคม', 'สิงหาคม'],
+                datasets: [
+                    {
+                        label: 'ยอดขายที่ทำได้',
+                        data: [815450, 309011, 269485], // ข้อมูลอัปเดตถึง ส.ค.
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.85)',  // Emerald (Jun - โปร 6.6)
+                            'rgba(244, 63, 94, 0.8)',    // Rose (Jul)
+                            'rgba(249, 115, 22, 0.8)'    // Orange (Aug)
+                        ],
+                        borderRadius: 8,
+                        borderWidth: 0,
+                        barPercentage: 0.6
+                    },
+                    {
+                        label: 'เป้าหมาย',
+                        data: [600000, 500000, 500000],
+                        type: 'line',
+                        borderColor: 'rgba(99, 102, 241, 1)', // Indigo
+                        borderDash: [6, 4],
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: 'rgba(99, 102, 241, 1)',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { 
+                        position: 'top',
+                        labels: { usePointStyle: true, padding: 20, font: { family: 'Prompt' } }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleFont: { family: 'Prompt', size: 14 },
+                        bodyFont: { family: 'Prompt', size: 13 },
+                        padding: 12,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { 
+                            color: 'rgba(0, 0, 0, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return value / 1000 + 'k';
+                            },
+                            padding: 10,
+                            font: { family: 'Prompt' }
+                        }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { padding: 10, font: { family: 'Prompt' } }
+                    }
+                }
+            }
+        });
+
+        // 2. Doughnut Chart (สัดส่วนความสำเร็จ ส.ค.)
+        const ctxDays = document.getElementById('daysChart').getContext('2d');
+        const daysChart = new Chart(ctxDays, {
+            type: 'doughnut',
+            data: {
+                labels: ['ยอดที่ทำได้', 'ยอดที่ขาดหายไป'],
+                datasets: [{
+                    data: [269485, 230515], // ทำได้ 269k, ขาด 230k (เป้า 500k)
+                    backgroundColor: [
+                        'rgba(249, 115, 22, 0.9)', // Orange
+                        'rgba(226, 232, 240, 1)'    // Slate 200 (สว่าง)
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 3,
+                    hoverOffset: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: '#475569', padding: 15, usePointStyle: true, font: { family: 'Prompt' } }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleFont: { family: 'Prompt' },
+                        bodyFont: { family: 'Prompt' },
+                        padding: 12,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed !== null) {
+                                    label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB' }).format(context.parsed);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                cutout: '75%'
+            }
+        });
+    </script>
+<a href="newproduct.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;   หน้าถัดไป (new product) ➜
+</body>
+</html>
