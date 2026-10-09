@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>รายงานข้อผิดพลาดจากการจัดส่ง | กันยายน 2569</title>
+<style>
+:root{--navy:#102f4b;--blue:#1878bd;--aqua:#33b9bd;--green:#19986a;--amber:#f1a62b;--red:#dc5363;--ink:#1d2d3b;--muted:#667886;--paper:#f2f7fa;--card:#fff;--line:#dbe7ee}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(140deg,#eaf5fa 0,#f8fbfd 45%,#edf9f5 100%);font-family:"Leelawadee UI","Noto Sans Thai",Tahoma,sans-serif;color:var(--ink)}
+.wrap{max-width:1400px;margin:auto;padding:28px}.hero{position:relative;overflow:hidden;background:linear-gradient(120deg,var(--navy),#175e89 62%,#13878c);border-radius:26px;padding:36px 40px;color:#fff;box-shadow:0 18px 46px #153c5728}.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;border:52px solid #ffffff10}.hero:before{width:250px;height:250px;right:-65px;top:-125px}.hero:after{width:140px;height:140px;right:165px;bottom:-120px}.eyebrow{font-size:14px;font-weight:900;letter-spacing:.1em;color:#a0f0ec}.hero h1{font-size:clamp(30px,4vw,50px);line-height:1.15;margin:9px 0 7px}.hero p{font-size:20px;margin:4px 0;color:#dcecf5}.month{display:inline-flex;margin-top:18px;padding:9px 15px;border-radius:999px;background:#ffffff1b;border:1px solid #ffffff36;font-weight:800}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px}.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 8px 25px #204a6710}.metric{position:relative;overflow:hidden}.metric:before{content:"";position:absolute;inset:0 auto 0 0;width:6px;background:var(--blue)}.metric.good:before{background:var(--green)}.metric.aqua:before{background:var(--aqua)}.metric.amber:before{background:var(--amber)}.label{color:var(--muted);font-size:15px;font-weight:800}.value{font-size:39px;line-height:1.15;font-weight:950;color:var(--navy);margin:8px 0 3px}.unit{font-size:15px;color:var(--muted)}.status{display:inline-block;margin-top:10px;padding:6px 11px;border-radius:999px;background:#e6f7ef;color:#11724c;font-size:13px;font-weight:900}
+.section{margin-top:20px}.section h2{font-size:24px;color:var(--navy);margin:0 0 14px}.two{display:grid;grid-template-columns:1.08fr .92fr;gap:18px}.sub{color:var(--muted);font-size:14px;line-height:1.6}.goalbox{display:grid;grid-template-columns:96px 1fr;gap:16px;align-items:center;margin-top:18px;padding:16px;border-radius:16px;background:#eefaf5}.ring{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--green) 0 100%,#dfece7 0);position:relative}.ring:after{content:"";position:absolute;width:69px;height:69px;background:#fff;border-radius:50%}.ring b{z-index:1;color:var(--green);font-size:22px}.goalbox h3{margin:0 0 5px;color:#13724c}.goalbox p{margin:0;color:#4e665b;line-height:1.55}
+.bars{display:grid;gap:12px;margin-top:16px}.barrow{display:grid;grid-template-columns:66px 1fr 44px;align-items:center;gap:12px}.bar{height:25px;background:#edf2f5;border-radius:8px;overflow:hidden;position:relative}.bar:after{content:"เป้าหมาย 2";position:absolute;right:6px;top:3px;font-size:11px;color:#7b8a94}.bar i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,var(--blue),var(--aqua));position:relative;z-index:1}.barrow strong{text-align:right}.zero{color:#94a2ac}
+.trend{display:flex;align-items:flex-end;gap:12px;height:220px;padding:24px 8px 4px;border-bottom:1px solid var(--line)}.col{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:7px}.col b{font-size:13px;color:var(--navy)}.stick{width:min(46px,75%);height:var(--h);min-height:2px;background:linear-gradient(180deg,var(--aqua),var(--blue));border-radius:9px 9px 3px 3px}.col.active .stick{background:linear-gradient(180deg,#f8c24e,var(--amber));box-shadow:0 0 0 5px #f1a62b16}.col span{font-size:12px;color:var(--muted)}.insight{margin-top:16px;padding:14px 16px;background:#fff8e9;border-left:5px solid var(--amber);border-radius:12px;line-height:1.6;color:#65502c}
+.tablebox{overflow:auto;border:1px solid var(--line);border-radius:17px}table{width:100%;border-collapse:collapse;min-width:760px;background:#fff}th{background:var(--navy);color:#fff;padding:14px 15px;text-align:left;font-size:14px}td{padding:14px 15px;border-bottom:1px solid #e8eff3;font-size:14px}tbody tr:last-child td{border:0}tbody tr:hover{background:#f4fafc}.num{font-size:18px;font-weight:950;color:var(--navy)}.pill{display:inline-block;padding:5px 10px;border-radius:999px;font-size:12px;font-weight:900;background:#e7f7ef;color:#13724c}.pill.watch{background:#fff3d9;color:#8c5a00}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.action{border-top:5px solid var(--blue)}.action:nth-child(2){border-color:var(--aqua)}.action:nth-child(3){border-color:var(--green)}.action h3{margin:0 0 8px;color:var(--navy)}.action p{margin:0;color:#4c5e6c;line-height:1.65}.summary{background:linear-gradient(120deg,#eef8ff,#fff);border-left:6px solid var(--blue)}.summary p{font-size:16px;line-height:1.7;margin:0}.source{display:flex;justify-content:space-between;gap:14px;margin:18px 4px 0;font-size:12px;color:#73828d}.print{position:fixed;right:24px;bottom:24px;border:0;border-radius:13px;background:var(--navy);color:#fff;padding:13px 18px;font-weight:900;cursor:pointer;box-shadow:0 8px 23px #12304a40}
+@media(max-width:920px){.grid{grid-template-columns:repeat(2,1fr)}.two,.actions{grid-template-columns:1fr}.wrap{padding:14px}.hero{padding:28px 23px}}@media(max-width:540px){.grid{grid-template-columns:1fr}.hero h1{font-size:31px}.value{font-size:35px}.source{display:block}.source span{display:block;margin-top:5px}}@media print{body{background:#fff}.wrap{max-width:none;padding:0}.hero,.card{box-shadow:none}.print{display:none}.section{break-inside:avoid}.hero,th,.stick{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="hero">
+ <div class="eyebrow">DELIVERY ERROR DASHBOARD • SEPTEMBER 2026</div>
+ <h1>รายงานสรุปข้อผิดพลาดจากการจัดส่ง</h1>
+ <p>บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</p>
+ <div class="month">ประจำเดือนกันยายน 2569</div>
+</header>
+
+<section class="grid">
+ <article class="card metric amber"><div class="label">ข้อผิดพลาดเดือนกันยายน</div><div class="value">2</div><div class="unit">ครั้ง</div></article>
+ <article class="card metric aqua"><div class="label">พนักงานที่เกิดข้อผิดพลาด</div><div class="value">2</div><div class="unit">จากทั้งหมด 9 คน</div></article>
+ <article class="card metric good"><div class="label">ผ่านเป้าหมายรายบุคคล</div><div class="value">9/9</div><div class="unit">คน</div><span class="status">✓ ผ่านครบทุกคน</span></article>
+ <article class="card metric"><div class="label">เทียบเดือนสิงหาคม</div><div class="value">−60%</div><div class="unit">ลดจาก 5 เหลือ 2 ครั้ง</div></article>
+</section>
+
+<section class="two section">
+ <article class="card">
+  <h2>ผลเทียบเป้าหมาย</h2>
+  <div class="sub">เกณฑ์ในชีต: ผู้รับผิดชอบแต่ละคนต้องมีข้อผิดพลาดไม่เกิน 2 ครั้งต่อเดือน</div>
+  <div class="goalbox"><div class="ring"><b>100%</b></div><div><h3>ผ่านเป้าหมายทั้งหมด</h3><p>เดือนกันยายนไม่มีพนักงานคนใดเกินเกณฑ์ หนุ่ยและแร่คนละ 1 ครั้ง ส่วนอีก 7 คนไม่มีข้อผิดพลาด</p></div></div>
+  <div class="insight"><b>จุดที่ควรติดตาม:</b> แม้ผลรวมลดลงชัดเจน แต่ควรตรวจสอบสาเหตุของ 2 ครั้งที่เกิดขึ้น เพื่อป้องกันไม่ให้เกิดซ้ำในเดือนตุลาคม</div>
+ </article>
+ <article class="card">
+  <h2>ข้อผิดพลาดรายบุคคล</h2>
+  <div class="bars">
+   <div class="barrow"><span>หนุ่ย</span><div class="bar"><i style="width:50%"></i></div><strong>1</strong></div>
+   <div class="barrow"><span>แร่</span><div class="bar"><i style="width:50%"></i></div><strong>1</strong></div>
+   <div class="barrow"><span>ปอนด์</span><div class="bar"><i style="width:0"></i></div><strong class="zero">0</strong></div>
+   <div class="barrow"><span>ทราย</span><div class="bar"><i style="width:0"></i></div><strong class="zero">0</strong></div>
+   <div class="barrow"><span>นัย</span><div class="bar"><i style="width:0"></i></div><strong class="zero">0</strong></div>
+   <div class="barrow"><span>เจ</span><div class="bar"><i style="width:0"></i></div><strong class="zero">0</strong></div>
+   <div class="barrow"><span>โจ</span><div class="bar"><i style="width:0"></i></div><strong class="zero">0</strong></div>
+   <div class="barrow"><span>ใย</span><div class="bar"><i style="width:0"></i></div><strong class="zero">0</strong></div>
+   <div class="barrow"><span>โต้</span><div class="bar"><i style="width:0"></i></div><strong class="zero">0</strong></div>
+  </div>
+ </article>
+</section>
+
+<section class="section">
+ <article class="card">
+  <h2>แนวโน้มข้อผิดพลาดจากการจัดส่ง มกราคม–กันยายน</h2>
+  <div class="trend">
+   <div class="col"><b>3</b><div class="stick" style="--h:60%"></div><span>ม.ค.</span></div>
+   <div class="col"><b>5</b><div class="stick" style="--h:100%"></div><span>ก.พ.</span></div>
+   <div class="col"><b>4</b><div class="stick" style="--h:80%"></div><span>มี.ค.</span></div>
+   <div class="col"><b>1</b><div class="stick" style="--h:20%"></div><span>เม.ย.</span></div>
+   <div class="col"><b>5</b><div class="stick" style="--h:100%"></div><span>พ.ค.</span></div>
+   <div class="col"><b>2</b><div class="stick" style="--h:40%"></div><span>มิ.ย.</span></div>
+   <div class="col"><b>0</b><div class="stick" style="--h:2%"></div><span>ก.ค.</span></div>
+   <div class="col"><b>5</b><div class="stick" style="--h:100%"></div><span>ส.ค.</span></div>
+   <div class="col active"><b>2</b><div class="stick" style="--h:40%"></div><span>ก.ย.</span></div>
+  </div>
+  <p class="sub">สะสม 9 เดือน 27 ครั้ง • เฉลี่ย 3 ครั้งต่อเดือน • กันยายนต่ำกว่าค่าเฉลี่ย 1 ครั้ง</p>
+ </article>
+</section>
+
+<section class="section">
+ <h2>สรุปรายบุคคล — เดือนกันยายน</h2>
+ <div class="tablebox"><table>
+  <thead><tr><th>ลำดับ</th><th>ผู้รับผิดชอบ</th><th>เป้าหมาย</th><th>ผลเดือนกันยายน</th><th>สถานะ</th></tr></thead>
+  <tbody>
+   <tr><td>1</td><td><b>ปอนด์</b></td><td>ไม่เกิน 2 ครั้ง</td><td class="num">0</td><td><span class="pill">ผ่าน</span></td></tr>
+   <tr><td>2</td><td><b>ทราย</b></td><td>ไม่เกิน 2 ครั้ง</td><td class="num">0</td><td><span class="pill">ผ่าน</span></td></tr>
+   <tr><td>3</td><td><b>หนุ่ย</b></td><td>ไม่เกิน 2 ครั้ง</td><td class="num">1</td><td><span class="pill watch">ผ่าน • ติดตาม</span></td></tr>
+   <tr><td>4</td><td><b>นัย</b></td><td>ไม่เกิน 2 ครั้ง</td><td class="num">0</td><td><span class="pill">ผ่าน</span></td></tr>
+   <tr><td>5</td><td><b>เจ</b></td><td>ไม่เกิน 2 ครั้ง</td><td class="num">0</td><td><span class="pill">ผ่าน</span></td></tr>
+   <tr><td>6</td><td><b>โจ</b></td><td>ไม่เกิน 2 ครั้ง</td><td class="num">0</td><td><span class="pill">ผ่าน</span></td></tr>
+   <tr><td>7</td><td><b>แร่</b></td><td>ไม่เกิน 2 ครั้ง</td><td class="num">1</td><td><span class="pill watch">ผ่าน • ติดตาม</span></td></tr>
+   <tr><td>8</td><td><b>ใย</b></td><td>ไม่เกิน 2 ครั้ง</td><td class="num">0</td><td><span class="pill">ผ่าน</span></td></tr>
+   <tr><td>9</td><td><b>โต้</b></td><td>ไม่เกิน 2 ครั้ง</td><td class="num">0</td><td><span class="pill">ผ่าน</span></td></tr>
+  </tbody>
+ </table></div>
+</section>
+
+<section class="section">
+ <h2>แนวทางแก้ไขและป้องกัน</h2>
+ <div class="actions">
+  <article class="card action"><h3>1. ทบทวนข้อผิดพลาดรายกรณี</h3><p>ให้หัวหน้าทีมสอบทานข้อผิดพลาดของหนุ่ยและแร่ แยกสาเหตุว่าเกิดจากการหยิบสินค้า ตรวจจำนวน หรือการจัดขึ้นรถ พร้อมบันทึกวิธีป้องกัน</p></article>
+  <article class="card action"><h3>2. ตรวจซ้ำก่อนรถออก</h3><p>ใช้เช็กลิสต์ “สินค้า–จำนวน–ลูกค้า–เที่ยวรถ” และให้ผู้ตรวจคนที่สองลงชื่อยืนยันก่อนปิดงานจัดส่งทุกเที่ยว</p></article>
+  <article class="card action"><h3>3. ติดตามผลรายสัปดาห์</h3><p>สรุปข้อผิดพลาดทุกสัปดาห์ หากพบเหตุซ้ำให้คุยหน้างานทันที ไม่รอสรุปปลายเดือน เพื่อรักษาผลให้อยู่ในเกณฑ์ต่อเนื่อง</p></article>
+ </div>
+</section>
+
+<section class="section"><article class="card summary"><h2>ข้อสรุปสำหรับผู้บริหาร</h2><p>เดือนกันยายนมีข้อผิดพลาดจากการจัดส่งรวม <b>2 ครั้ง</b> ลดลงจากเดือนสิงหาคม <b>3 ครั้ง หรือ 60%</b> พนักงานทั้ง 9 คนผ่านเกณฑ์ไม่เกิน 2 ครั้งต่อคน โดยมีผู้ที่ต้องติดตาม 2 คน คือ <b>หนุ่ย</b> และ <b>แร่</b> คนละ 1 ครั้ง ควรรักษาระบบตรวจซ้ำก่อนรถออกและติดตามสาเหตุรายสัปดาห์</p></article></section>
+
+<footer class="source"><span>แหล่งข้อมูล: ชีต “รายการงานข้อผิดพลาด(บุคคล)” เท่านั้น</span><span>ข้อมูลเดือนกันยายน 2569 • เป้าหมายรายบุคคลไม่เกิน 2 ครั้ง</span></footer>
+</main>
+<button class="print" onclick="window.print()">พิมพ์ / บันทึก PDF</button>
+
+<a href="fuelefficiency.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;     หน้าถัดไป (fuel efficiency) ➜
+</body>
+</html>

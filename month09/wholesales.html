@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard คลังขายส่งและยอดรวม - ก.ย. 2569 | พัฒนาสิน ไทยเทรดดิ้ง</title>
+    
+    <!-- Load Tailwind CSS for Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Chart.js for Data Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Load Google Font (Sarabun) -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Sarabun', 'sans-serif'],
+                    },
+                    colors: {
+                        pts: {
+                            orange: '#ea580c', // สีส้มคลังขายส่ง
+                            dark: '#0f172a',   // สีเข้มยอดรวม
+                            blue: '#0284c7'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #f8fafc;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: white; }
+            .shadow-sm { box-shadow: none !important; border: 1px solid #e2e8f0; }
+        }
+    </style>
+</head>
+<body class="text-slate-800 font-sans antialiased p-4 md:p-6 lg:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <header class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="inline-flex items-center justify-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pts-orange text-white">
+                        รายงานสรุปผลงาน
+                    </span>
+                    <span class="text-sm font-semibold text-slate-500">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</span>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 mt-1">Dashboard สรุปยอดขาย "คลังขายส่ง" และ "ยอดรวม"</h1>
+                <p class="text-slate-500 font-medium mt-1">ประจำเดือน: <span class="text-pts-blue">กันยายน 2569 (ข้อมูลสิ้นเดือน 30 ก.ย.)</span></p>
+            </div>
+            
+            <div class="flex flex-col items-start md:items-end text-sm border-t md:border-t-0 border-slate-100 pt-3 md:pt-0 w-full md:w-auto">
+                <p class="text-slate-500">จำนวนวันทำการ: <span class="font-bold text-slate-800">26 วัน</span> (ปิดวันอาทิตย์)</p>
+                <div class="mt-2 flex gap-2 no-print">
+                    <button onclick="window.print()" class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg transition-colors shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                        พิมพ์รายงาน
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Wholesale Summary Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-orange-100 p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
+                
+                <div class="flex justify-between items-start z-10">
+                    <div>
+                        <h2 class="text-lg font-bold text-pts-orange flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z" /><path fill-rule="evenodd" d="M3 8h14v7a2 2 0 01-2 2H5a2 2 0 01-2-2V8zm5 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>
+                            ผลงานคลังขายส่ง
+                        </h2>
+                        <p class="text-xs text-slate-500 mt-1">เปรียบเทียบยอดขายทำได้จริงกับเป้าหมาย</p>
+                    </div>
+                    <div class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-bold shadow-inner" id="ws-pct-badge">
+                        --%
+                    </div>
+                </div>
+
+                <div class="mt-6 z-10">
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-4xl font-black text-slate-900 tracking-tight" id="ws-actual">0</span>
+                        <span class="text-sm font-medium text-slate-500">บาท (จริง)</span>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs text-slate-500">เป้าหมายทั้งเดือน</p>
+                            <p class="text-lg font-bold text-slate-700 mt-0.5" id="ws-target">0</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-500">ขาดอีก (เพื่อให้ถึงเป้า)</p>
+                            <p class="text-lg font-bold text-rose-500 mt-0.5" id="ws-diff">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-slate-100 rounded-full h-2.5 mt-5 shadow-inner overflow-hidden">
+                        <div class="bg-pts-orange h-2.5 rounded-full transition-all duration-1000" id="ws-progress" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Summary Card -->
+            <div class="bg-slate-900 rounded-2xl shadow-sm p-6 flex flex-col justify-between relative overflow-hidden group text-white">
+                <div class="absolute -right-10 -top-10 w-48 h-48 bg-white/5 rounded-full blur-2xl -z-10 pointer-events-none"></div>
+                
+                <div class="flex justify-between items-start z-10">
+                    <div>
+                        <h2 class="text-lg font-bold text-sky-400 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd" /></svg>
+                            ยอดขายรวมทั้งบริษัท
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">รวมทุกสาขาและทุกช่องทาง</p>
+                    </div>
+                    <div class="px-3 py-1 bg-sky-500/20 border border-sky-500/30 text-sky-300 rounded-full text-sm font-bold" id="total-pct-badge">
+                        --%
+                    </div>
+                </div>
+
+                <div class="mt-6 z-10">
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-4xl font-black text-white tracking-tight" id="total-actual">0</span>
+                        <span class="text-sm font-medium text-slate-400">บาท (จริง)</span>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-slate-700/50 grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs text-slate-400">เป้าหมายทั้งเดือน</p>
+                            <p class="text-lg font-bold text-slate-200 mt-0.5" id="total-target">0</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-slate-400">ขาดอีก (เพื่อให้ถึงเป้า)</p>
+                            <p class="text-lg font-bold text-rose-400 mt-0.5" id="total-diff">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-slate-800 rounded-full h-2.5 mt-5 shadow-inner overflow-hidden">
+                        <div class="bg-gradient-to-r from-sky-500 to-indigo-500 h-2.5 rounded-full transition-all duration-1000" id="total-progress" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 sm:p-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800">แนวโน้มยอดขายรายวัน ประจำเดือนกันยายน 2569</h3>
+                    <p class="text-xs text-slate-500 mt-1">เปรียบเทียบยอดทำได้รายวัน กับเป้าหมายเฉลี่ยรายวัน</p>
+                </div>
+                
+                <!-- Chart Controls -->
+                <div class="flex bg-slate-100 p-1 rounded-lg no-print text-sm">
+                    <button onclick="updateChart('wholesale')" id="btn-wholesale" class="px-4 py-1.5 rounded-md font-semibold text-white bg-pts-orange shadow-sm transition-all">คลังขายส่ง</button>
+                    <button onclick="updateChart('total')" id="btn-total" class="px-4 py-1.5 rounded-md font-medium text-slate-600 hover:text-slate-900 transition-all">ยอดรวมบริษัท</button>
+                </div>
+            </div>
+
+            <!-- Legends -->
+            <div class="flex flex-wrap items-center gap-4 mb-4 text-xs font-medium text-slate-600">
+                <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> ถึงเป้า (≥100%)</div>
+                <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-amber-400"></span> ใกล้เป้า (≥85%)</div>
+                <div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-rose-500"></span> ต่ำกว่าเป้า (<85%)</div>
+                <div class="flex items-center gap-1.5"><span class="w-8 border-t-2 border-dashed border-slate-400"></span> เส้นเป้าหมาย/วัน</div>
+            </div>
+
+            <div class="relative w-full h-[300px] md:h-[350px]">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                <h3 class="text-lg font-bold text-slate-800">ตารางข้อมูลยอดขายรายวัน</h3>
+            </div>
+            
+            <div class="overflow-x-auto custom-scrollbar max-h-[500px]">
+                <table class="w-full text-sm text-left whitespace-nowrap">
+                    <thead class="text-xs text-slate-600 uppercase bg-slate-100 sticky top-0 z-20">
+                        <tr>
+                            <th class="px-4 py-3 border-r border-slate-200 sticky left-0 bg-slate-100 z-30 font-bold">วันที่</th>
+                            
+                            <!-- Wholesale Cols -->
+                            <th class="px-4 py-3 text-right text-orange-800 bg-orange-50 font-bold border-l border-slate-200">ขายส่ง (จริง)</th>
+                            <th class="px-4 py-3 text-right text-slate-500 bg-orange-50/50 font-medium">เป้าขายส่ง/วัน</th>
+                            <th class="px-4 py-3 text-center border-r border-slate-200 bg-orange-50 font-bold">% ขายส่ง</th>
+                            
+                            <!-- Total Cols -->
+                            <th class="px-4 py-3 text-right text-sky-900 bg-sky-50 font-bold">ยอดรวม (จริง)</th>
+                            <th class="px-4 py-3 text-right text-slate-500 bg-sky-50/50 font-medium">เป้ารวม/วัน</th>
+                            <th class="px-4 py-3 text-center bg-sky-50 font-bold">% ยอดรวม</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="divide-y divide-slate-100">
+                        <!-- Populated by JS -->
+                    </tbody>
+                    <tfoot class="bg-slate-800 text-white font-bold sticky bottom-0 z-20" id="table-foot">
+                        <!-- Populated by JS -->
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-xs text-slate-400 py-6">
+            <p>ข้อมูลรายงาน ณ วันที่ 30 กันยายน 2569 | พัฒนาสิน ไทยเทรดดิ้ง จำกัด</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // ข้อมูลเป้าหมายทั้งเดือน (ดึงข้อมูลจากเอกสารอ้างอิง)
+        const TARGET = {
+            wholesale_month: 5900000,
+            total_month: 7000000,
+            working_days: 26
+        };
+
+        // คำนวณเป้าหมายรายวัน
+        TARGET.wholesale_daily = Math.round(TARGET.wholesale_month / TARGET.working_days);
+        TARGET.total_daily = Math.round(TARGET.total_month / TARGET.working_days);
+
+        // ข้อมูลยอดขายจริงรายวัน เดือนกันยายน 2569
+        const salesData = [
+            { date: '1 ก.ย.', dayNum: 1, isHoliday: false, wholesale: 2294, total: 31285 },
+            { date: '2 ก.ย.', dayNum: 2, isHoliday: false, wholesale: 193086, total: 233706 },
+            { date: '3 ก.ย.', dayNum: 3, isHoliday: false, wholesale: 579, total: 33717 },
+            { date: '4 ก.ย.', dayNum: 4, isHoliday: false, wholesale: 421877, total: 459733 },
+            { date: '5 ก.ย.', dayNum: 5, isHoliday: false, wholesale: 354803, total: 406734 },
+            { date: '6 ก.ย.', dayNum: 6, isHoliday: true, wholesale: 0, total: 0 },
+            { date: '7 ก.ย.', dayNum: 7, isHoliday: false, wholesale: 291925, total: 324926 },
+            { date: '8 ก.ย.', dayNum: 8, isHoliday: false, wholesale: 131031, total: 202685 },
+            { date: '9 ก.ย.', dayNum: 9, isHoliday: false, wholesale: 213133, total: 233769 },
+            { date: '10 ก.ย.', dayNum: 10, isHoliday: false, wholesale: 11875, total: 53747 },
+            { date: '11 ก.ย.', dayNum: 11, isHoliday: false, wholesale: 307362, total: 335236 },
+            { date: '12 ก.ย.', dayNum: 12, isHoliday: false, wholesale: 82869, total: 128594 },
+            { date: '13 ก.ย.', dayNum: 13, isHoliday: true, wholesale: 0, total: 0 },
+            { date: '14 ก.ย.', dayNum: 14, isHoliday: false, wholesale: 335426, total: 369540 },
+            { date: '15 ก.ย.', dayNum: 15, isHoliday: false, wholesale: 136562, total: 164305 },
+            { date: '16 ก.ย.', dayNum: 16, isHoliday: false, wholesale: 134601, total: 147666 },
+            { date: '17 ก.ย.', dayNum: 17, isHoliday: false, wholesale: 192592, total: 267255 },
+            { date: '18 ก.ย.', dayNum: 18, isHoliday: false, wholesale: 234111, total: 255135 },
+            { date: '19 ก.ย.', dayNum: 19, isHoliday: false, wholesale: 212705, total: 257509 },
+            { date: '20 ก.ย.', dayNum: 20, isHoliday: true, wholesale: 0, total: 0 },
+            { date: '21 ก.ย.', dayNum: 21, isHoliday: false, wholesale: 293753, total: 334460 },
+            { date: '22 ก.ย.', dayNum: 22, isHoliday: false, wholesale: 293410, total: 325147 },
+            { date: '23 ก.ย.', dayNum: 23, isHoliday: false, wholesale: 256060, total: 276743 },
+            { date: '24 ก.ย.', dayNum: 24, isHoliday: false, wholesale: 157289, total: 190657 },
+            { date: '25 ก.ย.', dayNum: 25, isHoliday: false, wholesale: 78322, total: 113453 },
+            { date: '26 ก.ย.', dayNum: 26, isHoliday: false, wholesale: 134971, total: 158141 },
+            { date: '27 ก.ย.', dayNum: 27, isHoliday: true, wholesale: 0, total: 0 },
+            { date: '28 ก.ย.', dayNum: 28, isHoliday: false, wholesale: 235043, total: 263217 },
+            { date: '29 ก.ย.', dayNum: 29, isHoliday: false, wholesale: 168724, total: 206236 },
+            { date: '30 ก.ย.', dayNum: 30, isHoliday: false, wholesale: 109454, total: 133527 }
+        ];
+
+        // Functions สำหรับ Format ตัวเลข
+        const formatNum = (num) => num.toLocaleString('en-US');
+        const calcPct = (actual, target) => target === 0 ? 0 : ((actual / target) * 100).toFixed(1);
+        
+        const getPctColor = (pct) => {
+            if (pct >= 100) return 'text-emerald-600';
+            if (pct >= 85) return 'text-amber-600';
+            return 'text-rose-600';
+        };
+
+        const getChartColor = (pct) => {
+            if (pct >= 100) return '#10b981'; // emerald
+            if (pct >= 85) return '#fbbf24';  // amber
+            return '#f43f5e';                 // rose
+        };
+
+        // คำนวณผลรวมทั้งเดือน
+        let sumWholesale = 0;
+        let sumTotal = 0;
+        salesData.forEach(d => {
+            sumWholesale += d.wholesale;
+            sumTotal += d.total;
+        });
+
+        // อัพเดทหน้าจอ (KPI Cards)
+        document.getElementById('ws-actual').innerText = formatNum(sumWholesale);
+        document.getElementById('ws-target').innerText = formatNum(TARGET.wholesale_month);
+        document.getElementById('ws-diff').innerText = formatNum(TARGET.wholesale_month - sumWholesale);
+        const wsPct = calcPct(sumWholesale, TARGET.wholesale_month);
+        document.getElementById('ws-pct-badge').innerText = wsPct + '%';
+        
+        document.getElementById('total-actual').innerText = formatNum(sumTotal);
+        document.getElementById('total-target').innerText = formatNum(TARGET.total_month);
+        document.getElementById('total-diff').innerText = formatNum(TARGET.total_month - sumTotal);
+        const totalPct = calcPct(sumTotal, TARGET.total_month);
+        document.getElementById('total-pct-badge').innerText = totalPct + '%';
+
+        // Animate Progress Bars
+        setTimeout(() => {
+            document.getElementById('ws-progress').style.width = Math.min(wsPct, 100) + '%';
+            document.getElementById('total-progress').style.width = Math.min(totalPct, 100) + '%';
+        }, 300);
+
+        // สร้างตารางข้อมูล
+        const tbody = document.getElementById('table-body');
+        salesData.forEach(row => {
+            const tr = document.createElement('tr');
+            
+            if (row.isHoliday) {
+                tr.className = "bg-slate-50/80 text-slate-400 italic";
+                tr.innerHTML = `
+                    <td class="px-4 py-2 border-r border-slate-200 sticky left-0 bg-slate-50 font-medium">${row.date}</td>
+                    <td colspan="6" class="px-4 py-2 text-center">วันอาทิตย์ (ปิดทำการ)</td>
+                `;
+            } else {
+                const wsPctDay = calcPct(row.wholesale, TARGET.wholesale_daily);
+                const totalPctDay = calcPct(row.total, TARGET.total_daily);
+                
+                tr.className = "hover:bg-slate-50 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-4 py-2 border-r border-slate-200 sticky left-0 bg-white font-medium text-slate-800">${row.date}</td>
+                    
+                    <td class="px-4 py-2 text-right font-medium text-slate-800 border-l border-slate-200">${formatNum(row.wholesale)}</td>
+                    <td class="px-4 py-2 text-right text-slate-400 text-xs">${formatNum(TARGET.wholesale_daily)}</td>
+                    <td class="px-4 py-2 text-center border-r border-slate-200 font-bold ${getPctColor(wsPctDay)}">${wsPctDay}%</td>
+                    
+                    <td class="px-4 py-2 text-right font-bold text-slate-900 bg-sky-50/30">${formatNum(row.total)}</td>
+                    <td class="px-4 py-2 text-right text-slate-400 text-xs bg-sky-50/30">${formatNum(TARGET.total_daily)}</td>
+                    <td class="px-4 py-2 text-center font-bold bg-sky-50/30 ${getPctColor(totalPctDay)}">${totalPctDay}%</td>
+                `;
+            }
+            tbody.appendChild(tr);
+        });
+
+        // สร้าง TFOOT
+        document.getElementById('table-foot').innerHTML = `
+            <tr>
+                <td class="px-4 py-3 border-r border-slate-700 sticky left-0 bg-slate-800">รวม 26 วัน</td>
+                <td class="px-4 py-3 text-right text-orange-400 border-l border-slate-700 text-base">${formatNum(sumWholesale)}</td>
+                <td class="px-4 py-3 text-right text-slate-400">${formatNum(TARGET.wholesale_month)}</td>
+                <td class="px-4 py-3 text-center border-r border-slate-700 text-orange-400">${wsPct}%</td>
+                
+                <td class="px-4 py-3 text-right text-sky-400 text-base">${formatNum(sumTotal)}</td>
+                <td class="px-4 py-3 text-right text-slate-400">${formatNum(TARGET.total_month)}</td>
+                <td class="px-4 py-3 text-center text-sky-400">${totalPct}%</td>
+            </tr>
+        `;
+
+        // ระบบ Chart.js
+        let chartInstance = null;
+        const ctx = document.getElementById('salesChart').getContext('2d');
+
+        // ฟังก์ชันอัพเดทกราฟ
+        window.updateChart = function(type) {
+            // Style Buttons
+            const btnWs = document.getElementById('btn-wholesale');
+            const btnTot = document.getElementById('btn-total');
+            
+            if (type === 'wholesale') {
+                btnWs.className = "px-4 py-1.5 rounded-md font-semibold text-white bg-pts-orange shadow-sm transition-all";
+                btnTot.className = "px-4 py-1.5 rounded-md font-medium text-slate-600 hover:text-slate-900 transition-all";
+            } else {
+                btnTot.className = "px-4 py-1.5 rounded-md font-semibold text-white bg-slate-800 shadow-sm transition-all";
+                btnWs.className = "px-4 py-1.5 rounded-md font-medium text-slate-600 hover:text-slate-900 transition-all";
+            }
+
+            // เตรียม Data
+            const labels = salesData.map(d => d.dayNum);
+            const actualData = [];
+            const targetLineData = [];
+            const barColors = [];
+            
+            const targetVal = type === 'wholesale' ? TARGET.wholesale_daily : TARGET.total_daily;
+            
+            salesData.forEach(d => {
+                if (d.isHoliday) {
+                    actualData.push(null);
+                    targetLineData.push(null);
+                    barColors.push('transparent');
+                } else {
+                    const val = type === 'wholesale' ? d.wholesale : d.total;
+                    actualData.push(val);
+                    targetLineData.push(targetVal);
+                    barColors.push(getChartColor((val/targetVal)*100));
+                }
+            });
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            type: 'line',
+                            label: 'เป้าหมายต่อวัน',
+                            data: targetLineData,
+                            borderColor: '#94a3b8',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            fill: false,
+                            order: 1
+                        },
+                        {
+                            type: 'bar',
+                            label: 'ยอดขายทำได้จริง',
+                            data: actualData,
+                            backgroundColor: barColors,
+                            borderRadius: 4,
+                            barPercentage: 0.6,
+                            order: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.parsed.y !== null) {
+                                        return ' ' + context.dataset.label + ': ' + formatNum(context.parsed.y) + ' บาท';
+                                    }
+                                    return '';
+                                },
+                                title: function(context) {
+                                    return context[0].label + ' ก.ย. 69';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f1f5f9' },
+                            ticks: {
+                                callback: function(value) {
+                                    if (value >= 1000) return (value / 1000).toFixed(0) + 'k';
+                                    return value;
+                                },
+                                font: { family: "'Sarabun', sans-serif", size: 11 }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { family: "'Sarabun', sans-serif", size: 11 } }
+                        }
+                    }
+                }
+            });
+        };
+
+        // Render ค่าเริ่มต้น
+        window.onload = () => {
+            updateChart('wholesale');
+        };
+
+    </script>
+
+<a href="nksales.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+    หน้าถัดไป (PTN sale) ➜
+
+
+</body>
+</html>
