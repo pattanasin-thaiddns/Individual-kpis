@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPIs ติดตามผลการดำเนินงานรายบุคคล 2026 - บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Kanit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #f8fafc;
+        }
+        .kpi-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-blue-800 to-blue-600 text-white shadow-lg sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="bg-white p-3 rounded-full shadow-md text-blue-700">
+                        <i class="fas fa-chart-line text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold tracking-wide">KPIs ติดตามผลการดำเนินงานรายบุคคล 2026</h1>
+                        <p class="text-blue-100 text-sm mt-1">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</p>
+                    </div>
+                </div>
+                
+                <!-- Month Selector -->
+                <div class="w-full md:w-auto bg-white/10 p-2 rounded-lg backdrop-blur-sm flex items-center gap-3">
+                    <label for="monthSelector" class="text-sm font-medium whitespace-nowrap"><i class="far fa-calendar-alt mr-2"></i>เลือกเดือน:</label>
+                    <select id="monthSelector" class="bg-white border-0 text-slate-800 text-sm rounded-md focus:ring-2 focus:ring-blue-300 block w-full py-2 px-3 shadow-sm cursor-pointer outline-none">
+                        <option value="month01">มกราคม (January)</option>
+                        <option value="month02">กุมภาพันธ์ (February)</option>
+                        <option value="month03">มีนาคม (March)</option>
+                        <option value="month04">เมษายน (April)</option>
+                        <option value="month05">พฤษภาคม (May)</option>
+                        <option value="month06">มิถุนายน (June)</option>
+                        <option value="month07">กรกฎาคม (July)</option>
+                        <option value="month08">สิงหาคม (August)</option>
+                        <option value="month09">กันยายน (September)</option>
+                        <option value="month10">ตุลาคม (October)</option>
+                        <option value="month11">พฤศจิกายน (November)</option>
+                        <option value="month12">ธันวาคม (December)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        
+        <div class="mb-6 flex justify-between items-end">
+            <div>
+                <h2 class="text-xl font-semibold text-slate-700">หัวข้อการประเมินประจำเดือน: <span id="currentMonthDisplay" class="text-blue-600 font-bold border-b-2 border-blue-600"></span></h2>
+                <p class="text-slate-500 text-sm mt-1">กรุณาคลิกเลือกหัวข้อที่ต้องการตรวจสอบรายละเอียด</p>
+            </div>
+            <div class="hidden sm:block">
+                <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full border border-blue-200">
+                    ทั้งหมด 15 หัวข้อ
+                </span>
+            </div>
+        </div>
+
+        <!-- KPI Grid -->
+        <div id="kpiGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 xl:gap-6 transition-opacity duration-300">
+            
+            <!-- Item 1 -->
+            <div onclick="navigateTo('onlinesales.html', 'ยอดขายช่องทางออนไลน์')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-blue-50 text-blue-600 p-3.5 rounded-lg group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-laptop-house text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-blue-600 transition-colors leading-tight">1. ยอดขายช่องทางออนไลน์</h3>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div onclick="navigateTo('newproduct.html', 'ยอดขายสินค้าใหม่ 2026')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-amber-50 text-amber-500 p-3.5 rounded-lg group-hover:bg-amber-500 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-star text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-amber-500 transition-colors leading-tight">2. ยอดขายสินค้าใหม่ 2026</h3>
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div onclick="navigateTo('trainingemployee.html', 'การฝึกอบรมพนักงาน')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-emerald-50 text-emerald-600 p-3.5 rounded-lg group-hover:bg-emerald-600 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-chalkboard-user text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-emerald-600 transition-colors leading-tight">3. การฝึกอบรมพนักงาน</h3>
+                </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div onclick="navigateTo('newcustomersale.html', 'ยอดขายลูกค้าใหม่ ปี 2026')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-indigo-50 text-indigo-500 p-3.5 rounded-lg group-hover:bg-indigo-500 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-user-plus text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-indigo-500 transition-colors leading-tight">4. ยอดขายลูกค้าใหม่ ปี 2569</h3>
+                </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div onclick="navigateTo('debtTracking.html', 'การชำระหนี้ลูกค้า')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-red-50 text-red-500 p-3.5 rounded-lg group-hover:bg-red-500 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-file-invoice-dollar text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-red-500 transition-colors leading-tight">5. การชำระหนี้ลูกค้า</h3>
+                </div>
+            </div>
+
+            <!-- Item 6 -->
+            <div onclick="navigateTo('retailsales.html', 'ยอดขายปลีก')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-cyan-50 text-cyan-600 p-3.5 rounded-lg group-hover:bg-cyan-600 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-store text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-cyan-600 transition-colors leading-tight">6. ยอดขายปลีก</h3>
+                </div>
+            </div>
+
+            <!-- Item 7 -->
+            <div onclick="navigateTo('wholesales.html', 'ยอดขายส่ง')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-violet-50 text-violet-600 p-3.5 rounded-lg group-hover:bg-violet-600 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-boxes-packing text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-violet-600 transition-colors leading-tight">7. ยอดขายส่ง</h3>
+                </div>
+            </div>
+
+            <!-- Item 8 -->
+            <div onclick="navigateTo('nksales.html', 'ยอดขาย สาขาหนองคาย')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-pink-50 text-pink-500 p-3.5 rounded-lg group-hover:bg-pink-500 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-map-location-dot text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-pink-500 transition-colors leading-tight">8. ยอดขาย สาขาหนองคาย</h3>
+                </div>
+            </div>
+
+            <!-- Item 9 -->
+            <div onclick="navigateTo('stockretail.html', 'ตรวจนับสินค้าคงคลัง (หน้าร้าน)')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-teal-50 text-teal-600 p-3.5 rounded-lg group-hover:bg-teal-600 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-clipboard-list text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-teal-600 transition-colors leading-tight">9. ตรวจนับสินค้าคงคลัง (หน้าร้าน)</h3>
+                </div>
+            </div>
+
+            <!-- Item 10 -->
+            <div onclick="navigateTo('stockwarehouse.html', 'ตรวจนับสินค้าคงคลัง (คลังสินค้า/โกดัง)')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-fuchsia-50 text-fuchsia-600 p-3.5 rounded-lg group-hover:bg-fuchsia-600 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-warehouse text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-fuchsia-600 transition-colors leading-tight">10. ตรวจนับสินค้าคงคลัง (คลังสินค้า/โกดัง)</h3>
+                </div>
+            </div>
+
+            <!-- Item 11 -->
+            <div onclick="navigateTo('stocknk.html', 'ตรวจนับสินค้าคงคลัง (หนองคาย)')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-rose-50 text-rose-500 p-3.5 rounded-lg group-hover:bg-rose-500 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-map-pin text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-rose-500 transition-colors leading-tight">11. ตรวจนับสินค้าคงคลัง (หนองคาย)</h3>
+                </div>
+            </div>
+
+            <!-- Item 12 -->
+            <div onclick="navigateTo('caruseefficiency.html', 'ประสิทธิภาพการใช้รถ')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-sky-50 text-sky-500 p-3.5 rounded-lg group-hover:bg-sky-500 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-truck-fast text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-sky-500 transition-colors leading-tight">12. ประสิทธิภาพการใช้รถ</h3>
+                </div>
+            </div>
+
+            <!-- Item 13 -->
+            <div onclick="navigateTo('communication.html', 'ข้อผิดพลาดจากการสื่อสาร')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-orange-50 text-orange-500 p-3.5 rounded-lg group-hover:bg-orange-500 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-comments text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-orange-500 transition-colors leading-tight">13. ข้อผิดพลาดจากการสื่อสาร</h3>
+                </div>
+            </div>
+
+            <!-- Item 14 -->
+            <div onclick="navigateTo('deliveryError.html', 'ข้อผิดพลาดจากการจัดส่ง')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-red-50 text-red-600 p-3.5 rounded-lg group-hover:bg-red-600 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-box-open text-xl w-6 text-center"></i>
+                    <i class="fas fa-exclamation-circle text-xs absolute -mt-2 -ml-2 text-red-500 bg-white rounded-full"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-red-600 transition-colors leading-tight">14. ข้อผิดพลาดจากการจัดส่ง</h3>
+                </div>
+            </div>
+
+            <!-- Item 15 -->
+            <div onclick="navigateTo('fuelefficiency.html', 'ประสิทธิภาพการใช้เชื้อเพลิง')" class="kpi-card cursor-pointer bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-slate-200 p-5 flex items-start gap-4 group">
+                <div class="bg-lime-50 text-lime-600 p-3.5 rounded-lg group-hover:bg-lime-600 group-hover:text-white transition-colors shrink-0">
+                    <i class="fas fa-gas-pump text-xl w-6 text-center"></i>
+                </div>
+                <div class="pt-1">
+                    <h3 class="font-medium text-slate-800 group-hover:text-lime-600 transition-colors leading-tight">15. ประสิทธิภาพการใช้เชื้อเพลิง</h3>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-auto py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm text-slate-500">
+                &copy; 2026 บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด. สงวนลิขสิทธิ์. <br class="sm:hidden">ระบบ KPIs ติดตามผลการดำเนินงานภายในองค์กร
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // ฟังก์ชันเมื่อคลิกที่การ์ดแต่ละหัวข้อ (ปรับรับชื่อไฟล์แทน ID)
+        function navigateTo(fileName, topicName) {
+            // ดึงค่าเดือนปัจจุบันจาก Dropdown (เช่น 'month01')
+            const selectedMonth = document.getElementById('monthSelector').value;
+            
+            // สร้าง URL ปลายทางโดยอ้างอิงตามโฟลเดอร์เดือน และชื่อไฟล์ที่ส่งเข้ามา
+            // ตัวอย่าง: "month01/onlinesales.html" 
+            const destinationUrl = `${selectedMonth}/${fileName}`;
+
+            // เปลี่ยนหน้าต่างไปยัง URL ปลายทางจริงๆ
+            window.location.href = destinationUrl;
+        }
+
+        // ฟังก์ชันอัปเดตการแสดงผลเมื่อผู้ใช้เปลี่ยนเดือน
+        function updateMonthDisplay() {
+            const selectElement = document.getElementById('monthSelector');
+            const selectedText = selectElement.options[selectElement.selectedIndex].text;
+            
+            // ดึงเฉพาะชื่อเดือนภาษาไทย (ตัดส่วนภาษาอังกฤษออก)
+            const thaiMonth = selectedText.split(' (')[0];
+            document.getElementById('currentMonthDisplay').innerText = thaiMonth;
+
+            // เพิ่มเอฟเฟกต์กระพริบเพื่อจำลองการโหลดข้อมูลใหม่
+            const grid = document.getElementById('kpiGrid');
+            grid.style.opacity = '0.3';
+            setTimeout(() => {
+                grid.style.opacity = '1';
+            }, 300);
+
+            // บันทึกเดือนที่เลือกลงในหน่วยความจำเบราว์เซอร์ (Local Storage) เพื่อให้จดจำเมื่อกดย้อนกลับ
+            localStorage.setItem('selectedKpiMonth', selectElement.value);
+        }
+
+        // จับเหตุการณ์ (Event) เมื่อมีการเปลี่ยนตัวเลือกใน Dropdown
+        document.getElementById('monthSelector').addEventListener('change', updateMonthDisplay);
+        
+        // ทำงานเมื่อโหลดหน้าเว็บ
+        window.onload = function() {
+            const selectElement = document.getElementById('monthSelector');
+            
+            // 1. ลองดึงค่าเดือนที่เคยเลือกไว้จาก Local Storage ก่อน
+            const savedMonth = localStorage.getItem('selectedKpiMonth');
+            let targetMonthValue = savedMonth;
+
+            // 2. ถ้าไม่มีค่าที่บันทึกไว้ (เช่น เข้าเว็บครั้งแรก) ให้ใช้เดือนมกราคม ('month01') เป็นค่าเริ่มต้น
+            if (!targetMonthValue) {
+                targetMonthValue = 'month01';
+            }
+            
+            // ตรวจสอบว่ามี value นี้อยู่ใน dropdown หรือไม่ ถ้ามีให้ตั้งเป็นค่าเริ่มต้น
+            const options = Array.from(selectElement.options);
+            const hasOption = options.some(opt => opt.value === targetMonthValue);
+            if (hasOption) {
+                selectElement.value = targetMonthValue;
+            }
+
+            // เรียกใช้ฟังก์ชันอัปเดตข้อความครั้งแรกตอนโหลดหน้าเว็บ
+            updateMonthDisplay();
+        };
+    </script>
+</body>
+</html>
