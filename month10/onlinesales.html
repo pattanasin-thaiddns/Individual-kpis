@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Sales Dashboard - ตุลาคม 2569 | บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Prompt & Sarabun -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        cardBg: 'rgba(30, 41, 59, 0.7)',
+                        accentOrange: '#FF6B00',
+                        accentOrangeHover: '#E05D00',
+                        neonOrange: '#FF8C00',
+                        glowOrange: 'rgba(255, 107, 0, 0.25)',
+                    },
+                    fontFamily: {
+                        prompt: ['Prompt', 'sans-serif'],
+                        sarabun: ['Sarabun', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(255, 107, 0, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(30, 58, 138, 0.3) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #f8fafc;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Prompt', sans-serif;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glass-panel-accent {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 107, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 107, 0, 0.15);
+        }
+
+        /* Glowing Effects */
+        .glow-text {
+            text-shadow: 0 0 12px rgba(255, 107, 0, 0.6);
+        }
+
+        .glow-box {
+            box-shadow: 0 0 15px rgba(255, 107, 0, 0.2);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF6B00;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
+            .glass-panel, .glass-panel-accent {
+                background: #ffffff !important;
+                border: 1px solid #ccc !important;
+                color: #000000 !important;
+                box-shadow: none !important;
+            }
+            .text-white, .text-slate-300, .text-slate-400 {
+                color: #000000 !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-12">
+
+    <!-- Header Bar -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-slate-700/50 mb-8 px-4 lg:px-8 py-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-accentOrange to-amber-400 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-orange-500/30">
+                    PTS
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-xl md:text-2xl font-bold text-white tracking-wide">บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด</h1>
+                        <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs px-2.5 py-0.5 rounded-full font-medium">สำนักงานใหญ่</span>
+                    </div>
+                    <p class="text-sm text-slate-400 flex items-center gap-2 mt-0.5">
+                        <i class="fa-solid fa-chart-line text-accentOrange"></i>
+                        <span>รายงานสรุปยอดขายลูกค้าออนไลน์ ประจำเดือนตุลาคม 2569</span>
+                        <span class="text-slate-600">|</span>
+                        <span class="text-slate-400 text-xs">ช่วงข้อมูล: 1 - 31 ต.ค. 2569 (OL-0001 - OL-0196)</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 no-print">
+                <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                    <i class="fa-solid fa-print text-accentOrange"></i> พิมพ์ / Export PDF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 lg:px-8 space-y-8">
+
+        <!-- KPI Cards Grid -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <!-- Card 1: ยอดขายสุทธิรวม -->
+            <div class="glass-panel-accent rounded-2xl p-5 relative overflow-hidden group">
+                <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-accentOrange/10 rounded-full blur-xl group-hover:bg-accentOrange/20 transition-all"></div>
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">ยอดขายสุทธิรวม (รวม VAT)</p>
+                        <h3 class="text-3xl font-bold text-white mt-1 font-heading glow-text">฿306,764.<span class="text-xl">46</span></h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-accentOrange/20 border border-accentOrange/40 flex items-center justify-center text-accentOrange">
+                        <i class="fa-solid fa-wallet text-lg"></i>
+                    </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-700/50 flex justify-between text-xs text-slate-400">
+                    <span>ส่วนลดรวม: <strong class="text-slate-200">0.18 บาท</strong></span>
+                    <span class="text-emerald-400 font-medium"><i class="fa-solid fa-check-circle"></i> 16 วันขาย</span>
+                </div>
+            </div>
+
+            <!-- Card 2: มูลค่าก่อน VAT -->
+            <div class="glass-panel rounded-2xl p-5 relative overflow-hidden group hover:border-slate-600 transition">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">มูลค่าก่อน VAT / ภาษี 7%</p>
+                        <h3 class="text-2xl font-bold text-white mt-1 font-heading">฿286,695.<span class="text-lg">76</span></h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center text-blue-400">
+                        <i class="fa-solid fa-file-invoice-dollar text-lg"></i>
+                    </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-700/50 flex justify-between text-xs text-slate-400">
+                    <span>VAT (7%): <strong class="text-amber-400">฿20,068.70</strong></span>
+                    <span class="text-slate-400">ประเภทภาษี 1</span>
+                </div>
+            </div>
+
+            <!-- Card 3: จำนวนบิล & ลูกค้า -->
+            <div class="glass-panel rounded-2xl p-5 relative overflow-hidden group hover:border-slate-600 transition">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">จำนวนบิล / จำนวนลูกค้า</p>
+                        <h3 class="text-2xl font-bold text-white mt-1 font-heading">
+                            23 <span class="text-base text-slate-400 font-normal">บิล</span> 
+                            <span class="text-slate-500 mx-1">/</span> 
+                            18 <span class="text-base text-slate-400 font-normal">ราย</span>
+                        </h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
+                        <i class="fa-solid fa-users text-lg"></i>
+                    </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-700/50 flex justify-between text-xs text-slate-400">
+                    <span>ซื้อซ้ำ (≥2 ครั้ง): <strong class="text-emerald-400">5 ราย (27.8%)</strong></span>
+                </div>
+            </div>
+
+            <!-- Card 4: ยอดเฉลี่ยต่อบิล -->
+            <div class="glass-panel rounded-2xl p-5 relative overflow-hidden group hover:border-slate-600 transition">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400">ยอดเฉลี่ยต่อบิล (AOV)</p>
+                        <h3 class="text-2xl font-bold text-white mt-1 font-heading">฿13,337.<span class="text-lg">59</span></h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-lg bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400">
+                        <i class="fa-solid fa-calculator text-lg"></i>
+                    </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-700/50 flex justify-between text-xs text-slate-400">
+                    <span>มัธยฐาน (Median): <strong class="text-slate-200">฿13,226.62</strong></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section (Grid 2 Columns) -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Weekly Trend Chart (2 Cols on Large Screen) -->
+            <div class="glass-panel rounded-2xl p-6 lg:col-span-2 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-chart-simple text-accentOrange"></i> แนวโน้มยอดขายรายสัปดาห์ (Weekly Sales Trend)
+                            </h3>
+                            <p class="text-xs text-slate-400">เปรียบเทียบยอดขายรวมและจำนวนบิลในแต่ละช่วงสัปดาห์</p>
+                        </div>
+                        <span class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-3 py-1 rounded-lg">4 สัปดาห์</span>
+                    </div>
+                    <div class="h-64 sm:h-72 w-full">
+                        <canvas id="weeklyChart"></canvas>
+                    </div>
+                </div>
+                <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 pt-4 border-t border-slate-700/40 text-center">
+                    <div class="bg-slate-800/40 p-2 rounded-lg border border-slate-700/30">
+                        <p class="text-xs text-slate-400">1-7 ต.ค. (6 บิล)</p>
+                        <p class="text-sm font-semibold text-accentOrange mt-0.5">฿101,532.51</p>
+                    </div>
+                    <div class="bg-slate-800/40 p-2 rounded-lg border border-slate-700/30">
+                        <p class="text-xs text-slate-400">8-14 ต.ค. (4 บิล)</p>
+                        <p class="text-sm font-semibold text-slate-300 mt-0.5">฿34,443.05</p>
+                    </div>
+                    <div class="bg-slate-800/40 p-2 rounded-lg border border-slate-700/30">
+                        <p class="text-xs text-slate-400">15-21 ต.ค. (7 บิล)</p>
+                        <p class="text-sm font-semibold text-slate-300 mt-0.5">฿75,044.71</p>
+                    </div>
+                    <div class="bg-slate-800/40 p-2 rounded-lg border border-slate-700/30">
+                        <p class="text-xs text-slate-400">22-31 ต.ค. (6 บิล)</p>
+                        <p class="text-sm font-semibold text-amber-400 mt-0.5">฿95,744.19</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cashier Sales Breakdown (1 Col) -->
+            <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-user-gear text-accentOrange"></i> สัดส่วนตาม Cashier
+                            </h3>
+                            <p class="text-xs text-slate-400">แยกตามผู้บันทึกรายการขาย</p>
+                        </div>
+                    </div>
+                    <div class="h-56 relative flex items-center justify-center my-2">
+                        <canvas id="cashierChart"></canvas>
+                    </div>
+                </div>
+                <div class="space-y-2 pt-4 border-t border-slate-700/40">
+                    <div class="flex justify-between items-center p-2.5 rounded-xl bg-slate-800/50 border border-slate-700/40">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-3 h-3 rounded-full bg-accentOrange inline-block"></span>
+                            <div>
+                                <p class="text-sm font-medium text-slate-200">PTS-019</p>
+                                <p class="text-xs text-slate-400">11 บิล (47.8%)</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-bold text-white">฿161,857.65</p>
+                            <p class="text-xs text-accentOrange font-semibold">52.8%</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center p-2.5 rounded-xl bg-slate-800/50 border border-slate-700/40">
+                        <div class="flex items-center gap-2.5">
+                            <span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span>
+                            <div>
+                                <p class="text-sm font-medium text-slate-200">PTS-101</p>
+                                <p class="text-xs text-slate-400">12 บิล (52.2%)</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-bold text-white">฿144,906.81</p>
+                            <p class="text-xs text-blue-400 font-semibold">47.2%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Top 5 Customers & Key Highlights Grid -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Top 5 Table & Chart (2 Cols) -->
+            <div class="glass-panel rounded-2xl p-6 lg:col-span-2 space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div>
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-crown text-amber-400"></i> ลูกค้าที่มียอดซื้อสูงสุด 5 อันดับแรก (Top 5 Customers)
+                        </h3>
+                        <p class="text-xs text-slate-400">รวมกันคิดเป็น 58.8% ของยอดขายทั้งเดือน (180,512.94 บาท)</p>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-800/80 text-xs uppercase text-slate-400 font-semibold border-b border-slate-700">
+                            <tr>
+                                <th class="px-4 py-3 rounded-l-lg">อันดับ</th>
+                                <th class="px-4 py-3">ชื่อลูกค้า / รหัส</th>
+                                <th class="px-4 py-3 text-center">จำนวนบิล</th>
+                                <th class="px-4 py-3 text-right">ยอดซื้อ (บาท)</th>
+                                <th class="px-4 py-3 text-right rounded-r-lg">สัดส่วน (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-700/50">
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="px-4 py-3 font-medium text-amber-400"><i class="fa-solid fa-trophy mr-1"></i> 1</td>
+                                <td class="px-4 py-3 font-semibold text-white">หจก. โฮมเพลสค้าวัสดุ <span class="text-xs text-slate-400 font-normal">(OL-0009)</span></td>
+                                <td class="px-4 py-3 text-center"><span class="bg-slate-800 px-2 py-0.5 rounded text-xs border border-slate-700">2 บิล</span></td>
+                                <td class="px-4 py-3 text-right font-bold text-accentOrange">66,784.00</td>
+                                <td class="px-4 py-3 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <span>21.8%</span>
+                                        <div class="w-12 bg-slate-700 rounded-full h-1.5 hidden sm:block">
+                                            <div class="bg-accentOrange h-1.5 rounded-full" style="width: 21.8%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="px-4 py-3 font-medium text-slate-300"><span class="w-5 h-5 rounded-full bg-slate-700 inline-flex items-center justify-center text-xs mr-1">2</span></td>
+                                <td class="px-4 py-3 font-semibold text-white">หจก. คลังเกษตร สกลนคร <span class="text-xs text-slate-400 font-normal">(OL-0007)</span></td>
+                                <td class="px-4 py-3 text-center"><span class="bg-slate-800 px-2 py-0.5 rounded text-xs border border-slate-700">2 บิล</span></td>
+                                <td class="px-4 py-3 text-right font-bold text-white">46,617.60</td>
+                                <td class="px-4 py-3 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <span>15.2%</span>
+                                        <div class="w-12 bg-slate-700 rounded-full h-1.5 hidden sm:block">
+                                            <div class="bg-amber-500 h-1.5 rounded-full" style="width: 15.2%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="px-4 py-3 font-medium text-slate-300"><span class="w-5 h-5 rounded-full bg-slate-700 inline-flex items-center justify-center text-xs mr-1">3</span></td>
+                                <td class="px-4 py-3 font-semibold text-white">ร้านโชคอุดมวัสดุก่อสร้าง <span class="text-xs text-slate-400 font-normal">(OL-0176)</span></td>
+                                <td class="px-4 py-3 text-center"><span class="bg-slate-800 px-2 py-0.5 rounded text-xs border border-slate-700">2 บิล</span></td>
+                                <td class="px-4 py-3 text-right font-bold text-white">28,633.95</td>
+                                <td class="px-4 py-3 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <span>9.3%</span>
+                                        <div class="w-12 bg-slate-700 rounded-full h-1.5 hidden sm:block">
+                                            <div class="bg-blue-400 h-1.5 rounded-full" style="width: 9.3%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="px-4 py-3 font-medium text-slate-300"><span class="w-5 h-5 rounded-full bg-slate-700 inline-flex items-center justify-center text-xs mr-1">4</span></td>
+                                <td class="px-4 py-3 font-semibold text-white">บริษัท เพื่อนช่างอุปกรณ์ จำกัด <span class="text-xs text-slate-400 font-normal">(OL-0128)</span></td>
+                                <td class="px-4 py-3 text-center"><span class="bg-slate-800 px-2 py-0.5 rounded text-xs border border-slate-700">1 บิล</span></td>
+                                <td class="px-4 py-3 text-right font-bold text-white">19,923.00</td>
+                                <td class="px-4 py-3 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <span>6.5%</span>
+                                        <div class="w-12 bg-slate-700 rounded-full h-1.5 hidden sm:block">
+                                            <div class="bg-purple-400 h-1.5 rounded-full" style="width: 6.5%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-700/30 transition">
+                                <td class="px-4 py-3 font-medium text-slate-300"><span class="w-5 h-5 rounded-full bg-slate-700 inline-flex items-center justify-center text-xs mr-1">5</span></td>
+                                <td class="px-4 py-3 font-semibold text-white">ร้าน ส.เจริญวัสดุ <span class="text-xs text-slate-400 font-normal">(OL-0177)</span></td>
+                                <td class="px-4 py-3 text-center"><span class="bg-slate-800 px-2 py-0.5 rounded text-xs border border-slate-700">2 บิล</span></td>
+                                <td class="px-4 py-3 text-right font-bold text-white">18,554.39</td>
+                                <td class="px-4 py-3 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <span>6.0%</span>
+                                        <div class="w-12 bg-slate-700 rounded-full h-1.5 hidden sm:block">
+                                            <div class="bg-emerald-400 h-1.5 rounded-full" style="width: 6.0%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Top 5 Horizontal Bar Chart -->
+                <div class="pt-4 border-t border-slate-700/40">
+                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">เปรียบเทียบสัดส่วนมูลค่ายอดซื้อ Top 5</h4>
+                    <div class="h-44 w-full">
+                        <canvas id="topCustomersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Highlights & Repeat Purchase Info (1 Col) -->
+            <div class="space-y-6">
+                <!-- Notable Invoices -->
+                <div class="glass-panel rounded-2xl p-6">
+                    <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-receipt text-accentOrange"></i> บิลที่โดดเด่นประจำเดือน
+                    </h3>
+                    <div class="space-y-3">
+                        <!-- Max Invoice -->
+                        <div class="p-3.5 rounded-xl bg-slate-800/70 border border-amber-500/30 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-2 h-full bg-amber-500"></div>
+                            <div class="flex justify-between items-start">
+                                <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">บิลมูลค่าสูงสุด (Top #1)</span>
+                                <span class="text-xs text-slate-400">27/10/2569</span>
+                            </div>
+                            <p class="text-sm font-semibold text-white mt-1">INV26100490</p>
+                            <p class="text-xs text-slate-300">โฮมเพลสค้าวัสดุ</p>
+                            <p class="text-lg font-bold text-amber-400 mt-1">฿43,420.00</p>
+                        </div>
+
+                        <!-- 2nd Invoice -->
+                        <div class="p-3 rounded-xl bg-slate-800/40 border border-slate-700/60">
+                            <div class="flex justify-between items-start">
+                                <span class="text-xs font-semibold text-slate-400">บิลอันดับ 2</span>
+                                <span class="text-xs text-slate-400">07/10/2569</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-1">
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-200">INV26100102</p>
+                                    <p class="text-xs text-slate-400">คลังเกษตร สกลนคร</p>
+                                </div>
+                                <span class="text-sm font-bold text-white">฿33,390.98</span>
+                            </div>
+                        </div>
+
+                        <!-- Min Invoice -->
+                        <div class="p-3 rounded-xl bg-slate-800/40 border border-slate-700/60">
+                            <div class="flex justify-between items-start">
+                                <span class="text-xs font-semibold text-slate-400">บิลต่ำสุด</span>
+                                <span class="text-xs text-slate-400">13/10/2569</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-1">
+                                <div>
+                                    <p class="text-sm font-semibold text-slate-200">INV26100235</p>
+                                    <p class="text-xs text-slate-400">หจก.อู่ทองวัสดุก่อสร้าง</p>
+                                </div>
+                                <span class="text-sm font-bold text-slate-300">฿1,375.20</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Repeat Customer Summary -->
+                <div class="glass-panel rounded-2xl p-6">
+                    <h3 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-rotate text-emerald-400"></i> สรุปลูกค้าซื้อซ้ำ (Repeat Buyers)
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">มีลูกค้า <strong class="text-emerald-400">5 ราย</strong> ที่มีการสั่งซื้อ 2 ครั้งในเดือนนี้</p>
+                    
+                    <div class="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-center mb-4">
+                        <p class="text-xs text-slate-300">ยอดรวมกลุ่มซื้อซ้ำ</p>
+                        <h4 class="text-2xl font-bold text-emerald-400 font-heading">฿168,257.14</h4>
+                        <p class="text-xs text-emerald-300 mt-1 font-semibold">คิดเป็น 54.8% ของยอดขายทั้งเดือน</p>
+                    </div>
+
+                    <div class="text-xs text-slate-400 space-y-1 bg-slate-800/40 p-3 rounded-xl border border-slate-700/40">
+                        <p class="font-medium text-slate-300 mb-1">รายชื่อลูกค้าซื้อซ้ำ 5 ราย:</p>
+                        <ul class="list-disc list-inside space-y-0.5 text-slate-400">
+                            <li>โฮมเพลสค้าวัสดุ</li>
+                            <li>คลังเกษตร สกลนคร</li>
+                            <li>ร้านโชคอุดมวัสดุก่อสร้าง</li>
+                            <li>ร้าน ส.เจริญวัสดุ</li>
+                            <li>หจก.อู่ทองวัสดุก่อสร้าง</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Executive Insights & Actionable Recommendations -->
+        <section class="glass-panel rounded-2xl p-6 lg:p-8 border-l-4 border-l-accentOrange">
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3 font-heading">
+                <div class="w-9 h-9 rounded-lg bg-accentOrange/20 border border-accentOrange/50 flex items-center justify-center text-accentOrange">
+                    <i class="fa-solid fa-lightbulb"></i>
+                </div>
+                ข้อสังเกตและข้อเสนอแนะเชิงบริหาร (Executive Insights & Recommendations)
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Insight 1 -->
+                <div class="bg-slate-800/50 rounded-xl p-5 border border-slate-700/50 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-amber-400 text-sm font-semibold mb-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>1. ความเสี่ยงจากการพึ่งพาลูกค้ารายใหญ่</span>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            ลูกค้า Top 2 รายแรก (<span class="text-white font-medium">โฮมเพลส</span> และ <span class="text-white font-medium">คลังเกษตร</span>) สร้างยอดขายรวมกันสูงถึง 113,401.60 บาท คิดเป็น <strong class="text-amber-400">37%</strong> ของยอดขายทั้งเดือน
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/50">
+                        <span class="text-xs text-accentOrange font-medium">ข้อเสนอแนะ:</span>
+                        <p class="text-xs text-slate-400 mt-0.5">ควรจัดทำแผนดูแลความสัมพันธ์ (VIP Retention) อย่างใกล้ชิด พร้อมเร่งขยายฐานลูกค้ารายกลางเพื่อลดความเสี่ยงกระจุกตัว</p>
+                    </div>
+                </div>
+
+                <!-- Insight 2 -->
+                <div class="bg-slate-800/50 rounded-xl p-5 border border-slate-700/50 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-blue-400 text-sm font-semibold mb-2">
+                            <i class="fa-solid fa-clock"></i>
+                            <span>2. รูปแบบเวลาซื้อ & ช่วงยอดตก</span>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            บิลทั้งหมดเปิดในช่วง <strong class="text-white">13:00 - 18:57 น.</strong> โดยช่วง <span class="text-rose-400 font-medium">8-14 ต.ค. ยอดขายซบเซาที่สุด (34,443 บาท)</span> ก่อนจะฟื้นตัวอย่างดีในช่วงปลายเดือน
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/50">
+                        <span class="text-xs text-accentOrange font-medium">ข้อเสนอแนะ:</span>
+                        <p class="text-xs text-slate-400 mt-0.5">ใช้วางแผนจัดกำลังคนเตรียมคำสั่งซื้อ/จัดส่งช่วงบ่าย และทบทวนโปรโมชั่นกลางเดือนเพื่อกระตุ้นยอดช่วงซบเซา</p>
+                    </div>
+                </div>
+
+                <!-- Insight 3 -->
+                <div class="bg-slate-800/50 rounded-xl p-5 border border-slate-700/50 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-emerald-400 text-sm font-semibold mb-2">
+                            <i class="fa-solid fa-bullseye"></i>
+                            <span>3. โอกาสจากลูกค้าซื้อครั้งเดียว</span>
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            มีลูกค้าซื้อครั้งเดียวถึง <strong class="text-white">13 ราย</strong> โดยบางรายมียอดซื้อสูง เช่น <span class="text-slate-200">เพื่อนช่างอุปกรณ์ (19,923 บ.)</span> และ <span class="text-slate-200">บ้านฝางการไฟฟ้า (16,974.72 บ.)</span>
+                        </p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-700/50">
+                        <span class="text-xs text-accentOrange font-medium">ข้อเสนอแนะ:</span>
+                        <p class="text-xs text-slate-400 mt-0.5">กำหนดเป็นกลุ่มเป้าหมายหลักให้ทีมขายติดตาม (Follow-up) ภายในเดือนพฤศจิกายน เพื่อผลักดันให้กลับมาซื้อซ้ำ</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto px-4 lg:px-8 mt-12 text-center text-xs text-slate-500">
+        <p>© 2569 บริษัท พัฒนาสิน ไทยเทรดดิ้ง จำกัด (สำนักงานใหญ่) | ที่มา: รายงานการขายสินค้าและบริการ (พิมพ์เมื่อ 03/11/2569)</p>
+    </footer>
+
+    <!-- Chart.js Scripts Initializations -->
+    <script>
+        // Chart Global Settings
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = "'Sarabun', sans-serif";
+
+        // 1. Weekly Sales Trend Chart (Bar + Line Hybrid)
+        const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+        new Chart(weeklyCtx, {
+            type: 'bar',
+            data: {
+                labels: ['1-7 ต.ค.', '8-14 ต.ค.', '15-21 ต.ค.', '22-31 ต.ค.'],
+                datasets: [
+                    {
+                        label: 'ยอดขาย (บาท)',
+                        data: [101532.51, 34443.05, 75044.71, 95744.19],
+                        backgroundColor: [
+                            'rgba(255, 107, 0, 0.85)',
+                            'rgba(148, 163, 184, 0.5)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(245, 158, 11, 0.85)'
+                        ],
+                        borderColor: [
+                            '#FF6B00',
+                            '#94a3b8',
+                            '#3b82f6',
+                            '#f59e0b'
+                        ],
+                        borderWidth: 1.5,
+                        borderRadius: 8,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'จำนวนบิล',
+                        data: [6, 4, 7, 6],
+                        type: 'line',
+                        borderColor: '#38bdf8',
+                        backgroundColor: '#38bdf8',
+                        borderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: { boxWidth: 12, font: { size: 12 } }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                if (context.dataset.type === 'line') {
+                                    return ` จำนวนบิล: ${context.parsed.y} บิล`;
+                                }
+                                return ` ยอดขาย: ฿${context.parsed.y.toLocaleString('th-TH', {minimumFractionDigits: 2})}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: {
+                            callback: function(value) {
+                                return '฿' + (value/1000) + 'k';
+                            }
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        min: 0,
+                        max: 10,
+                        grid: { drawOnChartArea: false },
+                        ticks: {
+                            stepSize: 2,
+                            callback: function(value) {
+                                return value + ' บิล';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. Cashier Breakdown Doughnut Chart
+        const cashierCtx = document.getElementById('cashierChart').getContext('2d');
+        new Chart(cashierCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['PTS-019 (11 บิล)', 'PTS-101 (12 บิล)'],
+                datasets: [{
+                    data: [161857.65, 144906.81],
+                    backgroundColor: [
+                        '#FF6B00',
+                        '#3b82f6'
+                    ],
+                    borderColor: '#0f172a',
+                    borderWidth: 3,
+                    hoverOffset: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = 306764.46;
+                                const val = context.parsed;
+                                const pct = ((val / total) * 100).toFixed(1);
+                                return ` ยอดขาย: ฿${val.toLocaleString('th-TH', {minimumFractionDigits: 2})} (${pct}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+
+        // 3. Top 5 Customers Horizontal Bar Chart
+        const topCustCtx = document.getElementById('topCustomersChart').getContext('2d');
+        new Chart(topCustCtx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    'หจก. โฮมเพลสค้าวัสดุ',
+                    'หจก. คลังเกษตร สกลนคร',
+                    'ร้านโชคอุดมวัสดุก่อสร้าง',
+                    'บจก. เพื่อนช่างอุปกรณ์',
+                    'ร้าน ส.เจริญวัสดุ'
+                ],
+                datasets: [{
+                    label: 'ยอดซื้อ (บาท)',
+                    data: [66784.00, 46617.60, 28633.95, 19923.00, 18554.39],
+                    backgroundColor: [
+                        'rgba(255, 107, 0, 0.85)',
+                        'rgba(245, 158, 11, 0.85)',
+                        'rgba(59, 130, 246, 0.85)',
+                        'rgba(168, 85, 247, 0.85)',
+                        'rgba(16, 185, 129, 0.85)'
+                    ],
+                    borderRadius: 6,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return ` ยอดซื้อ: ฿${context.parsed.x.toLocaleString('th-TH', {minimumFractionDigits: 2})}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: {
+                            callback: function(value) {
+                                return '฿' + (value/1000) + 'k';
+                            }
+                        }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { font: { size: 11 } }
+                    }
+                }
+            }
+        });
+    </script>
+<a href="newproduct.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;   หน้าถัดไป (new product) ➜
+</body>
+</html>

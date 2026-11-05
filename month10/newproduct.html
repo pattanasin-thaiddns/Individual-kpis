@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สรุปผลยอดขายสินค้าใหม่ 2026 - เดือนตุลาคม</title>
+    <!-- Tailwind CSS CDN for Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for Interactive Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Prompt -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="text-slate-800 pb-12">
+
+    <!-- Header Section -->
+    <header class="bg-indigo-900 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <span class="bg-indigo-700 text-indigo-200 text-xs font-semibold px-2.5 py-0.5 rounded uppercase">พัฒนาสิน อุดรธานี-หนองคาย</span>
+                    <h1 class="text-2xl md:text-3xl font-bold mt-1">รายงานสรุปผลยอดขายสินค้าใหม่ 2026</h1>
+                    <p class="text-indigo-200 text-sm mt-1">ข้อมูลประจำเดือนตุลาคม 2026 (ข้อมูลถึงสิ้นเดือน ต.ค. 2569 | จัดทำเมื่อ 3 พ.ย. 2026)</p>
+                </div>
+                <div class="bg-indigo-800 border border-indigo-700 rounded-lg p-3 text-right">
+                    <p class="text-xs text-indigo-300">ผลงานสูงสุดของปี</p>
+                    <p class="text-xl font-bold text-green-400">เดือนตุลาคม (+75.6%)</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-8">
+
+        <!-- Executive Summary Cards (KPIs) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Card 1: Oct Sales -->
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-indigo-600">
+                <p class="text-sm font-medium text-slate-500">ยอดขายเดือนตุลาคม</p>
+                <p class="text-2xl font-bold text-slate-900 mt-2">฿141,938.73</p>
+                <div class="flex items-center justify-between mt-3 text-xs">
+                    <span class="text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded">▲ +75.6% จาก ก.ย.</span>
+                    <span class="text-slate-500">23.7% ของเป้าเดือน</span>
+                </div>
+            </div>
+
+            <!-- Card 2: Cumulative Sales -->
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+                <p class="text-sm font-medium text-slate-500">ยอดขายสะสม (10 เดือน)</p>
+                <p class="text-2xl font-bold text-slate-900 mt-2">฿774,554.38</p>
+                <div class="flex items-center justify-between mt-3 text-xs">
+                    <span class="text-slate-600 bg-slate-100 px-2 py-0.5 rounded">เป้าสะสม: ฿6.0M</span>
+                    <span class="text-slate-500">12.9% ของเป้าสะสม</span>
+                </div>
+            </div>
+
+            <!-- Card 3: Gross Profit -->
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-emerald-500">
+                <p class="text-sm font-medium text-slate-500">กำไรขั้นต้น (ตุลาคม)</p>
+                <p class="text-2xl font-bold text-emerald-600 mt-2">฿37,889.71</p>
+                <div class="flex items-center justify-between mt-3 text-xs">
+                    <span class="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-medium">Margin ~26.7%</span>
+                    <span class="text-slate-500">หักส่วนลดแล้ว</span>
+                </div>
+            </div>
+
+            <!-- Card 4: Run-rate Gap -->
+            <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-amber-500">
+                <p class="text-sm font-medium text-slate-500">เป้าหมายที่เหลือ (พ.ย.-ธ.ค.)</p>
+                <p class="text-2xl font-bold text-amber-600 mt-2">~฿3.2M /เดือน</p>
+                <div class="flex items-center justify-between mt-3 text-xs">
+                    <span class="text-amber-700 bg-amber-50 px-2 py-0.5 rounded">เป้าทั้งปี ฿7.2M</span>
+                    <span class="text-slate-500">ต้องโตขึ้น ~22 เท่า</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Sales Performance & Branch Share -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Monthly Sales Trend Chart -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-bold text-slate-800">ยอดขายรายเดือนเทียบเป้าหมาย (ม.ค. - ต.ค. 2026)</h2>
+                    <span class="text-xs text-slate-500">เป้ารายเดือน: ฿600,000</span>
+                </div>
+                <div class="h-72">
+                    <canvas id="monthlySalesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Branch Sales Breakdown -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-lg font-bold text-slate-800 mb-4">สัดส่วนยอดขายแยกสาขา (ต.ค.)</h2>
+                <div class="h-56 relative flex justify-center">
+                    <canvas id="branchShareChart"></canvas>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-100 space-y-2 text-sm">
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-indigo-600"></span>อุดรธานี (PTS)</span>
+                        <span class="font-bold">฿121,191.13 <span class="text-xs text-emerald-600">(+72.4%)</span></span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-amber-500"></span>หนองคาย (PTN)</span>
+                        <span class="font-bold">฿20,747.60 <span class="text-xs text-emerald-600">(+96.8%)</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Top 10 Best Sellers & Key Insights -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Top 10 Best Selling Products Table -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">สินค้าขายดี 10 อันดับแรก (ตุลาคม 2026)</h2>
+                        <p class="text-xs text-slate-500">10 อันดับแรกคิดเป็น 50.2% ของยอดขายเดือนนี้</p>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left text-slate-600">
+                        <thead class="text-xs text-slate-700 uppercase bg-slate-50 border-b">
+                            <tr>
+                                <th scope="col" class="px-3 py-3 text-center">อันดับ</th>
+                                <th scope="col" class="px-4 py-3">รายการสินค้า</th>
+                                <th scope="col" class="px-4 py-3 text-right">ยอดขายรวม (บาท)</th>
+                                <th scope="col" class="px-4 py-3 text-center">กำไรขั้นต้น (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-3 py-2.5 text-center font-bold text-indigo-600">1</td>
+                                <td class="px-4 py-2.5 font-medium text-slate-900">บอลวาล์วพีวีซี 2" ท่อน้ำไทย (14)</td>
+                                <td class="px-4 py-2.5 text-right font-semibold">12,015.00</td>
+                                <td class="px-4 py-2.5 text-center"><span class="bg-slate-100 px-2 py-1 rounded text-xs">19.3%</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-3 py-2.5 text-center font-bold text-indigo-600">2</td>
+                                <td class="px-4 py-2.5 font-medium text-slate-900">บอลวาล์วพีวีซี 1" ท่อน้ำไทย (50)</td>
+                                <td class="px-4 py-2.5 text-right font-semibold">11,557.00</td>
+                                <td class="px-4 py-2.5 text-center"><span class="bg-slate-100 px-2 py-1 rounded text-xs">20.5%</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-3 py-2.5 text-center font-bold text-indigo-600">3</td>
+                                <td class="px-4 py-2.5 font-medium text-slate-900">แป๊ปแบนสังกะสี 3"×1 1/2" 1.5mm</td>
+                                <td class="px-4 py-2.5 text-right font-semibold">9,000.00</td>
+                                <td class="px-4 py-2.5 text-center"><span class="bg-slate-100 px-2 py-1 rounded text-xs">25.8%</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-3 py-2.5 text-center font-bold text-indigo-600">4</td>
+                                <td class="px-4 py-2.5 font-medium text-slate-900">เทปน้ำหยด HATO 0.16x10cmx1,000m</td>
+                                <td class="px-4 py-2.5 text-right font-semibold">7,500.00</td>
+                                <td class="px-4 py-2.5 text-center"><span class="bg-slate-100 px-2 py-1 rounded text-xs">15.3%</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-3 py-2.5 text-center font-bold text-indigo-600">5</td>
+                                <td class="px-4 py-2.5 font-medium text-slate-900">อ่างเปล PVC ใหญ่ 220L</td>
+                                <td class="px-4 py-2.5 text-right font-semibold">7,240.00</td>
+                                <td class="px-4 py-2.5 text-center"><span class="bg-slate-100 px-2 py-1 rounded text-xs">20.5%</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-3 py-2.5 text-center text-slate-500">6</td>
+                                <td class="px-4 py-2.5">ท่อพีวีซี 10" ชั้น 13.5 บานหัว วอเตอร์ไพพ์</td>
+                                <td class="px-4 py-2.5 text-right">6,978.00</td>
+                                <td class="px-4 py-2.5 text-center"><span class="bg-amber-100 text-amber-800 px-2 py-1 rounded text-xs font-semibold">10.6%</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-3 py-2.5 text-center text-slate-500">7</td>
+                                <td class="px-4 py-2.5">เซี่ยม PVC สำเร็จรูป 5mm x 2m (#3)</td>
+                                <td class="px-4 py-2.5 text-right">4,875.00</td>
+                                <td class="px-4 py-2.5 text-center"><span class="bg-slate-100 px-2 py-1 rounded text-xs">26.2%</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-3 py-2.5 text-center text-slate-500">8</td>
+                                <td class="px-4 py-2.5">กาวน้ำไทย 100 กรัม รุ่นมีแปรง (20)</td>
+                                <td class="px-4 py-2.5 text-right">4,407.70</td>
+                                <td class="px-4 py-2.5 text-center"><span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-xs font-semibold">30.4%</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-3 py-2.5 text-center text-slate-500">9</td>
+                                <td class="px-4 py-2.5">เคียว ศุภชัย ใหญ่ (32 ซม.)</td>
+                                <td class="px-4 py-2.5 text-right">4,010.00</td>
+                                <td class="px-4 py-2.5 text-center"><span class="bg-slate-100 px-2 py-1 rounded text-xs">18.9%</span></td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-3 py-2.5 text-center text-slate-500">10</td>
+                                <td class="px-4 py-2.5">กาวตะปู 3DI หลอดน้ำตาล (24)</td>
+                                <td class="px-4 py-2.5 text-right">3,735.00</td>
+                                <td class="px-4 py-2.5 text-center"><span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded text-xs font-semibold">31.1%</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Profitability Highlights & Data Integrity -->
+            <div class="space-y-6">
+                <!-- High Profit Margin Items -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-base font-bold text-slate-800 border-b pb-2 mb-3 flex items-center gap-2">
+                        <span class="text-emerald-600">💡</span> สินค้ากำไรสูง & ขายดีรายสาขา
+                    </h3>
+                    <ul class="text-sm space-y-2.5 text-slate-600">
+                        <li class="flex justify-between items-center">
+                            <span>ท่อย่นขาวยืด 3/4"</span>
+                            <span class="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">กำไร 65.1%</span>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span>ใบตัด SUMO Super Cut 4"</span>
+                            <span class="font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">กำไร 55.0%</span>
+                        </li>
+                        <li class="border-t pt-2 mt-2">
+                            <span class="font-semibold text-slate-800">อุดรธานี:</span> บอลวาล์ว 2" (12,015.-) และ 1" (11,347.-)
+                        </li>
+                        <li>
+                            <span class="font-semibold text-slate-800">หนองคาย:</span> แป๊ปแบนสังกะสี (9,000.-) และปุ๋ยเคมี 25-7-7 (3,585.-)
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Low Profit Warning -->
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-5">
+                    <h3 class="text-sm font-bold text-amber-900 mb-2 flex items-center gap-1.5">
+                        ⚠️ ข้อสังเกตกำไรต่ำ & ส่วนลด
+                    </h3>
+                    <ul class="text-xs text-amber-800 space-y-1.5 list-disc list-inside">
+                        <li><b>ขายดีแต่กำไรต่ำ:</b> ท่อพีวีซี 10" (กำไร 10.6%) และปุ๋ยเคมี 25-7-7 (กำไร 5.4%)</li>
+                        <li><b>กลุ่มกำไรต่ำพิเศษ (6.5%):</b> ขลุมวัว, ที่ดูดกระจก, เชือกไนล่อน, เครื่องพ่นเมล็ด</li>
+                        <li><b>สินค้าลดราคาต.ค.:</b> สีน้ำมันปลาฉลาม A999 (ลด 155.-) และเทปน้ำหยด HATO 30cm (ลด 900.-)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section: Strategic Recommendations & Action Items -->
+        <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-indigo-900">
+            <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                📌 ข้อเสนอแนะเชิงกลยุทธ์ (Strategic Recommendations)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                    <div class="font-bold text-indigo-900 mb-1">1. ทบทวนเป้าหมาย</div>
+                    <p class="text-xs text-slate-600">ผลงานสูงสุดอยู่ที่ ~142K/เดือน เทียบเป้า 600K พิจารณาปรับเป้าหมายให้สอดคล้องกับความเป็นจริง</p>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                    <div class="font-bold text-indigo-900 mb-1">2. ดันสินค้ากำไรสูง</div>
+                    <p class="text-xs text-slate-600">ผลักดันกลุ่มใบตัด/ใบเจียร (กำไร ~53%), ท่อย่น และกาวตะปู เพื่อยกระดับ Margin รวม</p>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                    <div class="font-bold text-indigo-900 mb-1">3. ปรับราคาสินค้า</div>
+                    <p class="text-xs text-slate-600">ทบทวนต้นทุนและราคาขายสินค้ากำไรต่ำ เช่น ท่อพีวีซี 10" และปุ๋ยเคมี 25-7-7</p>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                    <div class="font-bold text-indigo-900 mb-1">4. ขยายสินค้าหนองคาย</div>
+                    <p class="text-xs text-slate-600">กระจายสินค้าขายดีจากอุดรธานี (เช่น บอลวาล์ว, เทปน้ำหยด) ไปวางขายที่สาขาหนองคาย</p>
+                </div>
+                <div class="p-4 bg-slate-50 rounded-lg border border-slate-100">
+                    <div class="font-bold text-indigo-900 mb-1">5. อุดช่องว่างข้อมูล</div>
+                    <p class="text-xs text-slate-600">บันทึกต้นทุนแท่นตัดไฟเบอร์ 14" และหัวเทียน NGK ให้ครบถ้วนเพื่อความถูกต้องของกำไร</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Chart Configuration Script -->
+    <script>
+        // 1. Monthly Sales Trend Chart
+        const ctxMonthly = document.getElementById('monthlySalesChart').getContext('2d');
+        new Chart(ctxMonthly, {
+            type: 'bar',
+            data: {
+                labels: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.'],
+                datasets: [
+                    {
+                        label: 'ยอดขายจริง (บาท)',
+                        data: [2943.00, 26596.60, 100610.41, 69290.36, 48370.00, 73448.03, 135970.66, 94543.80, 80842.79, 141938.73],
+                        backgroundColor: function(context) {
+                            const index = context.dataIndex;
+                            return index === 9 ? '#4f46e5' : '#818cf8'; // Highlight Oct in darker indigo
+                        },
+                        borderRadius: 6
+                    },
+                    {
+                        label: 'เป้าหมายรายเดือน (บาท)',
+                        data: Array(10).fill(600000),
+                        type: 'line',
+                        borderColor: '#ef4444',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        pointStyle: false,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ฿' + context.raw.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) { return '฿' + (value/1000) + 'k'; }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. Branch Sales Share Chart (Donut Chart)
+        const ctxBranch = document.getElementById('branchShareChart').getContext('2d');
+        new Chart(ctxBranch, {
+            type: 'doughnut',
+            data: {
+                labels: ['อุดรธานี (PTS)', 'หนองคาย (PTN)'],
+                datasets: [{
+                    data: [121191.13, 20747.60],
+                    backgroundColor: ['#4f46e5', '#f59e0b'],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.raw / total) * 100).toFixed(1);
+                                return context.label + ': ฿' + context.raw.toLocaleString() + ' (' + percentage + '%)';
+                            }
+                        }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+    </script>
+<a href="trainingemployee.html" style="position: fixed; bottom: 20px; right: 20px; background-color: #0d6efd; color: white; padding: 10px 20px; text-decoration: none; border-radius: 30px; font-weight: bold; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); z-index: 9999;">
+
+&nbsp;   หน้าถัดไป (training employee) ➜
+</body>
+</html>
